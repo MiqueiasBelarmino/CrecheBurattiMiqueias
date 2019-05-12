@@ -7,7 +7,6 @@ package view;
 
 import controller.CriancaJpaController;
 import java.util.ArrayList;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
@@ -21,7 +20,7 @@ public class Crianca extends javax.swing.JDialog {
      * Creates new form Crianca
      */
     
-    private CriancaJpaController controllerCrianca;
+    private CriancaJpaController controllerCrianca = null;
     
     public Crianca(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
