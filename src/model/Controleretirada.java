@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,16 +24,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "controleretirada")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Controleretirada.findAll", query = "SELECT c FROM Controleretirada c"),
-    @NamedQuery(name = "Controleretirada.findByCodigo", query = "SELECT c FROM Controleretirada c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "Controleretirada.findByData", query = "SELECT c FROM Controleretirada c WHERE c.data = :data"),
-    @NamedQuery(name = "Controleretirada.findByJustificativa", query = "SELECT c FROM Controleretirada c WHERE c.justificativa = :justificativa")})
+    @NamedQuery(name = "Controleretirada.findAll", query = "SELECT c FROM Controleretirada c")
+    , @NamedQuery(name = "Controleretirada.findByCodigo", query = "SELECT c FROM Controleretirada c WHERE c.codigo = :codigo")
+    , @NamedQuery(name = "Controleretirada.findByData", query = "SELECT c FROM Controleretirada c WHERE c.data = :data")
+    , @NamedQuery(name = "Controleretirada.findByJustificativa", query = "SELECT c FROM Controleretirada c WHERE c.justificativa = :justificativa")})
 public class Controleretirada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,10 +49,10 @@ public class Controleretirada implements Serializable {
     @Column(name = "justificativa")
     private String justificativa;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
+    @ManyToOne(optional = false)
+    private Crianca_1 criancacodigo;
     @JoinColumn(name = "PessoaAutorizada_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Pessoaautorizada pessoaAutorizadacodigo;
 
     public Controleretirada() {
@@ -92,11 +91,11 @@ public class Controleretirada implements Serializable {
         this.justificativa = justificativa;
     }
 
-    public Crianca getCriancacodigo() {
+    public Crianca_1 getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
+    public void setCriancacodigo(Crianca_1 criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
@@ -130,7 +129,7 @@ public class Controleretirada implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Controleretirada[ codigo=" + codigo + " ]";
+        return "view.Controleretirada[ codigo=" + codigo + " ]";
     }
     
 }

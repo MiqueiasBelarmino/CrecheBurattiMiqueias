@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package Controle;
 
-import controller.exceptions.IllegalOrphanException;
-import controller.exceptions.NonexistentEntityException;
+import Controle.exceptions.IllegalOrphanException;
+import Controle.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Crianca;
+import model.Crianca_1;
 import model.Controleretirada;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import model.Pessoaautorizada;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 public class PessoaautorizadaJpaController implements Serializable {
 
@@ -43,7 +43,7 @@ public class PessoaautorizadaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = pessoaautorizada.getCriancacodigo();
+            Crianca_1 criancacodigo = pessoaautorizada.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
                 pessoaautorizada.setCriancacodigo(criancacodigo);
@@ -82,8 +82,8 @@ public class PessoaautorizadaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Pessoaautorizada persistentPessoaautorizada = em.find(Pessoaautorizada.class, pessoaautorizada.getCodigo());
-            Crianca criancacodigoOld = persistentPessoaautorizada.getCriancacodigo();
-            Crianca criancacodigoNew = pessoaautorizada.getCriancacodigo();
+            Crianca_1 criancacodigoOld = persistentPessoaautorizada.getCriancacodigo();
+            Crianca_1 criancacodigoNew = pessoaautorizada.getCriancacodigo();
             List<Controleretirada> controleretiradaListOld = persistentPessoaautorizada.getControleretiradaList();
             List<Controleretirada> controleretiradaListNew = pessoaautorizada.getControleretiradaList();
             List<String> illegalOrphanMessages = null;
@@ -169,7 +169,7 @@ public class PessoaautorizadaJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Crianca criancacodigo = pessoaautorizada.getCriancacodigo();
+            Crianca_1 criancacodigo = pessoaautorizada.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo.getPessoaautorizadaList().remove(pessoaautorizada);
                 criancacodigo = em.merge(criancacodigo);

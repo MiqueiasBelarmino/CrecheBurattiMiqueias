@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,21 +23,22 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "servidor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Servidor.findAll", query = "SELECT s FROM Servidor s"),
-    @NamedQuery(name = "Servidor.findByCodigo", query = "SELECT s FROM Servidor s WHERE s.codigo = :codigo"),
-    @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome = :nome"),
-    @NamedQuery(name = "Servidor.findByTelefone", query = "SELECT s FROM Servidor s WHERE s.telefone = :telefone"),
-    @NamedQuery(name = "Servidor.findByCelular", query = "SELECT s FROM Servidor s WHERE s.celular = :celular"),
-    @NamedQuery(name = "Servidor.findByEmail", query = "SELECT s FROM Servidor s WHERE s.email = :email"),
-    @NamedQuery(name = "Servidor.findByEndereco", query = "SELECT s FROM Servidor s WHERE s.endereco = :endereco"),
-    @NamedQuery(name = "Servidor.findByNivelacesso", query = "SELECT s FROM Servidor s WHERE s.nivelacesso = :nivelacesso"),
-    @NamedQuery(name = "Servidor.findBySenha", query = "SELECT s FROM Servidor s WHERE s.senha = :senha")})
+    @NamedQuery(name = "Servidor.findAll", query = "SELECT s FROM Servidor s")
+    , @NamedQuery(name = "Servidor.findByCodigo", query = "SELECT s FROM Servidor s WHERE s.codigo = :codigo")
+    , @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome = :nome")
+    , @NamedQuery(name = "Servidor.findByCpf", query = "SELECT s FROM Servidor s WHERE s.cpf = :cpf")
+    , @NamedQuery(name = "Servidor.findByTelefone", query = "SELECT s FROM Servidor s WHERE s.telefone = :telefone")
+    , @NamedQuery(name = "Servidor.findByCelular", query = "SELECT s FROM Servidor s WHERE s.celular = :celular")
+    , @NamedQuery(name = "Servidor.findByEmail", query = "SELECT s FROM Servidor s WHERE s.email = :email")
+    , @NamedQuery(name = "Servidor.findByEndereco", query = "SELECT s FROM Servidor s WHERE s.endereco = :endereco")
+    , @NamedQuery(name = "Servidor.findByNivelacesso", query = "SELECT s FROM Servidor s WHERE s.nivelacesso = :nivelacesso")
+    , @NamedQuery(name = "Servidor.findBySenha", query = "SELECT s FROM Servidor s WHERE s.senha = :senha")})
 public class Servidor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,6 +50,9 @@ public class Servidor implements Serializable {
     @Basic(optional = false)
     @Column(name = "nome")
     private String nome;
+    @Basic(optional = false)
+    @Column(name = "cpf")
+    private String cpf;
     @Column(name = "telefone")
     private String telefone;
     @Column(name = "celular")
@@ -64,11 +67,11 @@ public class Servidor implements Serializable {
     private int nivelacesso;
     @Column(name = "senha")
     private String senha;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo")
     private List<Ocorrencia> ocorrenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidor", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidor")
     private List<Reservaambiente> reservaambienteList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo")
     private List<Frequenciaservidor> frequenciaservidorList;
 
     public Servidor() {
@@ -78,9 +81,10 @@ public class Servidor implements Serializable {
         this.codigo = codigo;
     }
 
-    public Servidor(Integer codigo, String nome, String endereco, int nivelacesso) {
+    public Servidor(Integer codigo, String nome, String cpf, String endereco, int nivelacesso) {
         this.codigo = codigo;
         this.nome = nome;
+        this.cpf = cpf;
         this.endereco = endereco;
         this.nivelacesso = nivelacesso;
     }
@@ -99,6 +103,14 @@ public class Servidor implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getTelefone() {
@@ -198,7 +210,7 @@ public class Servidor implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Servidor[ codigo=" + codigo + " ]";
+        return "view.Servidor[ codigo=" + codigo + " ]";
     }
     
 }

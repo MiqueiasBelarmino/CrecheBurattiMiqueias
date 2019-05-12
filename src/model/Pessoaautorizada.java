@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,21 +25,21 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "pessoaautorizada")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Pessoaautorizada.findAll", query = "SELECT p FROM Pessoaautorizada p"),
-    @NamedQuery(name = "Pessoaautorizada.findByCodigo", query = "SELECT p FROM Pessoaautorizada p WHERE p.codigo = :codigo"),
-    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome = :nome"),
-    @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf = :cpf"),
-    @NamedQuery(name = "Pessoaautorizada.findByEndereco", query = "SELECT p FROM Pessoaautorizada p WHERE p.endereco = :endereco"),
-    @NamedQuery(name = "Pessoaautorizada.findByTelefone", query = "SELECT p FROM Pessoaautorizada p WHERE p.telefone = :telefone"),
-    @NamedQuery(name = "Pessoaautorizada.findByCelular", query = "SELECT p FROM Pessoaautorizada p WHERE p.celular = :celular"),
-    @NamedQuery(name = "Pessoaautorizada.findByEmail", query = "SELECT p FROM Pessoaautorizada p WHERE p.email = :email"),
-    @NamedQuery(name = "Pessoaautorizada.findByStatusContato", query = "SELECT p FROM Pessoaautorizada p WHERE p.statusContato = :statusContato")})
+    @NamedQuery(name = "Pessoaautorizada.findAll", query = "SELECT p FROM Pessoaautorizada p")
+    , @NamedQuery(name = "Pessoaautorizada.findByCodigo", query = "SELECT p FROM Pessoaautorizada p WHERE p.codigo = :codigo")
+    , @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome = :nome")
+    , @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf = :cpf")
+    , @NamedQuery(name = "Pessoaautorizada.findByEndereco", query = "SELECT p FROM Pessoaautorizada p WHERE p.endereco = :endereco")
+    , @NamedQuery(name = "Pessoaautorizada.findByTelefone", query = "SELECT p FROM Pessoaautorizada p WHERE p.telefone = :telefone")
+    , @NamedQuery(name = "Pessoaautorizada.findByCelular", query = "SELECT p FROM Pessoaautorizada p WHERE p.celular = :celular")
+    , @NamedQuery(name = "Pessoaautorizada.findByEmail", query = "SELECT p FROM Pessoaautorizada p WHERE p.email = :email")
+    , @NamedQuery(name = "Pessoaautorizada.findByStatusContato", query = "SELECT p FROM Pessoaautorizada p WHERE p.statusContato = :statusContato")})
 public class Pessoaautorizada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,9 +66,9 @@ public class Pessoaautorizada implements Serializable {
     @Column(name = "statusContato")
     private Integer statusContato;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo", fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    private Crianca_1 criancacodigo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo")
     private List<Controleretirada> controleretiradaList;
 
     public Pessoaautorizada() {
@@ -150,11 +149,11 @@ public class Pessoaautorizada implements Serializable {
         this.statusContato = statusContato;
     }
 
-    public Crianca getCriancacodigo() {
+    public Crianca_1 getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
+    public void setCriancacodigo(Crianca_1 criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
@@ -189,7 +188,7 @@ public class Pessoaautorizada implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Pessoaautorizada[ codigo=" + codigo + " ]";
+        return "view.Pessoaautorizada[ codigo=" + codigo + " ]";
     }
     
 }

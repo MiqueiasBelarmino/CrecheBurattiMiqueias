@@ -12,7 +12,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,21 +26,21 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "crianca")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Crianca.findAll", query = "SELECT c FROM Crianca c"),
-    @NamedQuery(name = "Crianca.findByCodigo", query = "SELECT c FROM Crianca c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "Crianca.findByNome", query = "SELECT c FROM Crianca c WHERE c.nome = :nome"),
-    @NamedQuery(name = "Crianca.findByCpf", query = "SELECT c FROM Crianca c WHERE c.cpf = :cpf"),
-    @NamedQuery(name = "Crianca.findByDataNascimento", query = "SELECT c FROM Crianca c WHERE c.dataNascimento = :dataNascimento"),
-    @NamedQuery(name = "Crianca.findByTelefone", query = "SELECT c FROM Crianca c WHERE c.telefone = :telefone"),
-    @NamedQuery(name = "Crianca.findByCelular", query = "SELECT c FROM Crianca c WHERE c.celular = :celular"),
-    @NamedQuery(name = "Crianca.findByResponsavel", query = "SELECT c FROM Crianca c WHERE c.responsavel = :responsavel")})
-public class Crianca implements Serializable {
+    @NamedQuery(name = "Crianca_1.findAll", query = "SELECT c FROM Crianca_1 c")
+    , @NamedQuery(name = "Crianca_1.findByCodigo", query = "SELECT c FROM Crianca_1 c WHERE c.codigo = :codigo")
+    , @NamedQuery(name = "Crianca_1.findByNome", query = "SELECT c FROM Crianca_1 c WHERE c.nome = :nome")
+    , @NamedQuery(name = "Crianca_1.findByCpf", query = "SELECT c FROM Crianca_1 c WHERE c.cpf = :cpf")
+    , @NamedQuery(name = "Crianca_1.findByDataNascimento", query = "SELECT c FROM Crianca_1 c WHERE c.dataNascimento = :dataNascimento")
+    , @NamedQuery(name = "Crianca_1.findByTelefone", query = "SELECT c FROM Crianca_1 c WHERE c.telefone = :telefone")
+    , @NamedQuery(name = "Crianca_1.findByCelular", query = "SELECT c FROM Crianca_1 c WHERE c.celular = :celular")
+    , @NamedQuery(name = "Crianca_1.findByResponsavel", query = "SELECT c FROM Crianca_1 c WHERE c.responsavel = :responsavel")})
+public class Crianca_1 implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,27 +65,27 @@ public class Crianca implements Serializable {
     @Basic(optional = false)
     @Column(name = "responsavel")
     private String responsavel;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Remedio> remedioList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Observacao> observacaoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Ocorrencia> ocorrenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Frequencia> frequenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Pessoaautorizada> pessoaautorizadaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Controleretirada> controleretiradaList;
 
-    public Crianca() {
+    public Crianca_1() {
     }
 
-    public Crianca(Integer codigo) {
+    public Crianca_1(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public Crianca(Integer codigo, String nome, String cpf, Date dataNascimento, String responsavel) {
+    public Crianca_1(Integer codigo, String nome, String cpf, Date dataNascimento, String responsavel) {
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
@@ -214,10 +213,10 @@ public class Crianca implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Crianca)) {
+        if (!(object instanceof Crianca_1)) {
             return false;
         }
-        Crianca other = (Crianca) object;
+        Crianca_1 other = (Crianca_1) object;
         if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
             return false;
         }
@@ -226,7 +225,7 @@ public class Crianca implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Crianca[ codigo=" + codigo + " ]";
+        return "view.Crianca_1[ codigo=" + codigo + " ]";
     }
     
 }

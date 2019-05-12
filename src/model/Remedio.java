@@ -9,7 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,17 +21,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "remedio")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Remedio.findAll", query = "SELECT r FROM Remedio r"),
-    @NamedQuery(name = "Remedio.findByCodigo", query = "SELECT r FROM Remedio r WHERE r.codigo = :codigo"),
-    @NamedQuery(name = "Remedio.findByNome", query = "SELECT r FROM Remedio r WHERE r.nome = :nome"),
-    @NamedQuery(name = "Remedio.findByPosologia", query = "SELECT r FROM Remedio r WHERE r.posologia = :posologia"),
-    @NamedQuery(name = "Remedio.findByObservacao", query = "SELECT r FROM Remedio r WHERE r.observacao = :observacao")})
+    @NamedQuery(name = "Remedio.findAll", query = "SELECT r FROM Remedio r")
+    , @NamedQuery(name = "Remedio.findByCodigo", query = "SELECT r FROM Remedio r WHERE r.codigo = :codigo")
+    , @NamedQuery(name = "Remedio.findByNome", query = "SELECT r FROM Remedio r WHERE r.nome = :nome")
+    , @NamedQuery(name = "Remedio.findByPosologia", query = "SELECT r FROM Remedio r WHERE r.posologia = :posologia")
+    , @NamedQuery(name = "Remedio.findByObservacao", query = "SELECT r FROM Remedio r WHERE r.observacao = :observacao")})
 public class Remedio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,8 +49,8 @@ public class Remedio implements Serializable {
     @Column(name = "observacao")
     private String observacao;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
+    @ManyToOne(optional = false)
+    private Crianca_1 criancacodigo;
 
     public Remedio() {
     }
@@ -98,11 +97,11 @@ public class Remedio implements Serializable {
         this.observacao = observacao;
     }
 
-    public Crianca getCriancacodigo() {
+    public Crianca_1 getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
+    public void setCriancacodigo(Crianca_1 criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
@@ -128,7 +127,7 @@ public class Remedio implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Remedio[ codigo=" + codigo + " ]";
+        return "view.Remedio[ codigo=" + codigo + " ]";
     }
     
 }

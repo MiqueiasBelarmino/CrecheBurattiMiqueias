@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package Controle;
 
-import controller.exceptions.IllegalOrphanException;
-import controller.exceptions.NonexistentEntityException;
+import Controle.exceptions.IllegalOrphanException;
+import Controle.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -21,7 +21,7 @@ import model.Ambiente;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 public class AmbienteJpaController implements Serializable {
 

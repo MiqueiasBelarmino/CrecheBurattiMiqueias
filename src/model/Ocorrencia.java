@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,16 +24,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "ocorrencia")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ocorrencia.findAll", query = "SELECT o FROM Ocorrencia o"),
-    @NamedQuery(name = "Ocorrencia.findByCodigo", query = "SELECT o FROM Ocorrencia o WHERE o.codigo = :codigo"),
-    @NamedQuery(name = "Ocorrencia.findByData", query = "SELECT o FROM Ocorrencia o WHERE o.data = :data"),
-    @NamedQuery(name = "Ocorrencia.findByDescricao", query = "SELECT o FROM Ocorrencia o WHERE o.descricao = :descricao")})
+    @NamedQuery(name = "Ocorrencia.findAll", query = "SELECT o FROM Ocorrencia o")
+    , @NamedQuery(name = "Ocorrencia.findByCodigo", query = "SELECT o FROM Ocorrencia o WHERE o.codigo = :codigo")
+    , @NamedQuery(name = "Ocorrencia.findByData", query = "SELECT o FROM Ocorrencia o WHERE o.data = :data")
+    , @NamedQuery(name = "Ocorrencia.findByDescricao", query = "SELECT o FROM Ocorrencia o WHERE o.descricao = :descricao")})
 public class Ocorrencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,10 +49,10 @@ public class Ocorrencia implements Serializable {
     @Column(name = "descricao")
     private String descricao;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
+    @ManyToOne(optional = false)
+    private Crianca_1 criancacodigo;
     @JoinColumn(name = "Servidor_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Servidor servidorcodigo;
 
     public Ocorrencia() {
@@ -92,11 +91,11 @@ public class Ocorrencia implements Serializable {
         this.descricao = descricao;
     }
 
-    public Crianca getCriancacodigo() {
+    public Crianca_1 getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
+    public void setCriancacodigo(Crianca_1 criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
@@ -130,7 +129,7 @@ public class Ocorrencia implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Ocorrencia[ codigo=" + codigo + " ]";
+        return "view.Ocorrencia[ codigo=" + codigo + " ]";
     }
     
 }

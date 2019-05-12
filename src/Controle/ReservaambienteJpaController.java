@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package Controle;
 
-import controller.exceptions.NonexistentEntityException;
-import controller.exceptions.PreexistingEntityException;
+import Controle.exceptions.NonexistentEntityException;
+import Controle.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -22,7 +22,7 @@ import model.Servidor;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 public class ReservaambienteJpaController implements Serializable {
 
@@ -39,8 +39,8 @@ public class ReservaambienteJpaController implements Serializable {
         if (reservaambiente.getReservaambientePK() == null) {
             reservaambiente.setReservaambientePK(new ReservaambientePK());
         }
-        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         reservaambiente.getReservaambientePK().setServidorcodigo(reservaambiente.getServidor().getCodigo());
+        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -78,8 +78,8 @@ public class ReservaambienteJpaController implements Serializable {
     }
 
     public void edit(Reservaambiente reservaambiente) throws NonexistentEntityException, Exception {
-        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         reservaambiente.getReservaambientePK().setServidorcodigo(reservaambiente.getServidor().getCodigo());
+        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         EntityManager em = null;
         try {
             em = getEntityManager();

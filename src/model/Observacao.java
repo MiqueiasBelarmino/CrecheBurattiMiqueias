@@ -9,7 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,16 +21,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "observacao")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Observacao.findAll", query = "SELECT o FROM Observacao o"),
-    @NamedQuery(name = "Observacao.findByCodigo", query = "SELECT o FROM Observacao o WHERE o.codigo = :codigo"),
-    @NamedQuery(name = "Observacao.findByDescricao", query = "SELECT o FROM Observacao o WHERE o.descricao = :descricao"),
-    @NamedQuery(name = "Observacao.findByPrioridade", query = "SELECT o FROM Observacao o WHERE o.prioridade = :prioridade")})
+    @NamedQuery(name = "Observacao.findAll", query = "SELECT o FROM Observacao o")
+    , @NamedQuery(name = "Observacao.findByCodigo", query = "SELECT o FROM Observacao o WHERE o.codigo = :codigo")
+    , @NamedQuery(name = "Observacao.findByDescricao", query = "SELECT o FROM Observacao o WHERE o.descricao = :descricao")
+    , @NamedQuery(name = "Observacao.findByPrioridade", query = "SELECT o FROM Observacao o WHERE o.prioridade = :prioridade")})
 public class Observacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,8 +45,8 @@ public class Observacao implements Serializable {
     @Column(name = "prioridade")
     private Character prioridade;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
+    @ManyToOne(optional = false)
+    private Crianca_1 criancacodigo;
 
     public Observacao() {
     }
@@ -85,11 +84,11 @@ public class Observacao implements Serializable {
         this.prioridade = prioridade;
     }
 
-    public Crianca getCriancacodigo() {
+    public Crianca_1 getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
+    public void setCriancacodigo(Crianca_1 criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
@@ -115,7 +114,7 @@ public class Observacao implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Observacao[ codigo=" + codigo + " ]";
+        return "view.Observacao[ codigo=" + codigo + " ]";
     }
     
 }

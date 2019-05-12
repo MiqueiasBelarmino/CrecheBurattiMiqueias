@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -23,17 +22,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "reservaambiente")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Reservaambiente.findAll", query = "SELECT r FROM Reservaambiente r"),
-    @NamedQuery(name = "Reservaambiente.findByAmbientecodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.ambientecodigo = :ambientecodigo"),
-    @NamedQuery(name = "Reservaambiente.findByServidorcodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.servidorcodigo = :servidorcodigo"),
-    @NamedQuery(name = "Reservaambiente.findByData", query = "SELECT r FROM Reservaambiente r WHERE r.data = :data"),
-    @NamedQuery(name = "Reservaambiente.findByHora", query = "SELECT r FROM Reservaambiente r WHERE r.hora = :hora")})
+    @NamedQuery(name = "Reservaambiente.findAll", query = "SELECT r FROM Reservaambiente r")
+    , @NamedQuery(name = "Reservaambiente.findByAmbientecodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.ambientecodigo = :ambientecodigo")
+    , @NamedQuery(name = "Reservaambiente.findByServidorcodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.servidorcodigo = :servidorcodigo")
+    , @NamedQuery(name = "Reservaambiente.findByData", query = "SELECT r FROM Reservaambiente r WHERE r.data = :data")
+    , @NamedQuery(name = "Reservaambiente.findByHora", query = "SELECT r FROM Reservaambiente r WHERE r.hora = :hora")})
 public class Reservaambiente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,10 +46,10 @@ public class Reservaambiente implements Serializable {
     @Temporal(TemporalType.TIME)
     private Date hora;
     @JoinColumn(name = "Ambiente_codigo", referencedColumnName = "codigo", insertable = false, updatable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Ambiente ambiente;
     @JoinColumn(name = "Servidor_codigo", referencedColumnName = "codigo", insertable = false, updatable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Servidor servidor;
 
     public Reservaambiente() {
@@ -131,7 +130,7 @@ public class Reservaambiente implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Reservaambiente[ reservaambientePK=" + reservaambientePK + " ]";
+        return "view.Reservaambiente[ reservaambientePK=" + reservaambientePK + " ]";
     }
     
 }

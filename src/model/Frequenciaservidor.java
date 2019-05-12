@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,17 +24,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "frequenciaservidor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Frequenciaservidor.findAll", query = "SELECT f FROM Frequenciaservidor f"),
-    @NamedQuery(name = "Frequenciaservidor.findByCodigo", query = "SELECT f FROM Frequenciaservidor f WHERE f.codigo = :codigo"),
-    @NamedQuery(name = "Frequenciaservidor.findByData", query = "SELECT f FROM Frequenciaservidor f WHERE f.data = :data"),
-    @NamedQuery(name = "Frequenciaservidor.findBySituacao", query = "SELECT f FROM Frequenciaservidor f WHERE f.situacao = :situacao"),
-    @NamedQuery(name = "Frequenciaservidor.findByJustificativa", query = "SELECT f FROM Frequenciaservidor f WHERE f.justificativa = :justificativa")})
+    @NamedQuery(name = "Frequenciaservidor.findAll", query = "SELECT f FROM Frequenciaservidor f")
+    , @NamedQuery(name = "Frequenciaservidor.findByCodigo", query = "SELECT f FROM Frequenciaservidor f WHERE f.codigo = :codigo")
+    , @NamedQuery(name = "Frequenciaservidor.findByData", query = "SELECT f FROM Frequenciaservidor f WHERE f.data = :data")
+    , @NamedQuery(name = "Frequenciaservidor.findBySituacao", query = "SELECT f FROM Frequenciaservidor f WHERE f.situacao = :situacao")
+    , @NamedQuery(name = "Frequenciaservidor.findByJustificativa", query = "SELECT f FROM Frequenciaservidor f WHERE f.justificativa = :justificativa")})
 public class Frequenciaservidor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,7 +51,7 @@ public class Frequenciaservidor implements Serializable {
     @Column(name = "justificativa")
     private String justificativa;
     @JoinColumn(name = "Servidor_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Servidor servidorcodigo;
 
     public Frequenciaservidor() {
@@ -124,7 +123,7 @@ public class Frequenciaservidor implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Frequenciaservidor[ codigo=" + codigo + " ]";
+        return "view.Frequenciaservidor[ codigo=" + codigo + " ]";
     }
     
 }

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package Controle;
 
-import controller.exceptions.NonexistentEntityException;
+import Controle.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -14,16 +14,16 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Crianca;
-import model.Remedio;
+import model.Crianca_1;
+import model.Frequencia;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
-public class RemedioJpaController implements Serializable {
+public class FrequenciaJpaController implements Serializable {
 
-    public RemedioJpaController(EntityManagerFactory emf) {
+    public FrequenciaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -32,19 +32,19 @@ public class RemedioJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Remedio remedio) {
+    public void create(Frequencia frequencia) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = remedio.getCriancacodigo();
+            Crianca_1 criancacodigo = frequencia.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
-                remedio.setCriancacodigo(criancacodigo);
+                frequencia.setCriancacodigo(criancacodigo);
             }
-            em.persist(remedio);
+            em.persist(frequencia);
             if (criancacodigo != null) {
-                criancacodigo.getRemedioList().add(remedio);
+                criancacodigo.getFrequenciaList().add(frequencia);
                 criancacodigo = em.merge(criancacodigo);
             }
             em.getTransaction().commit();
@@ -55,34 +55,34 @@ public class RemedioJpaController implements Serializable {
         }
     }
 
-    public void edit(Remedio remedio) throws NonexistentEntityException, Exception {
+    public void edit(Frequencia frequencia) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Remedio persistentRemedio = em.find(Remedio.class, remedio.getCodigo());
-            Crianca criancacodigoOld = persistentRemedio.getCriancacodigo();
-            Crianca criancacodigoNew = remedio.getCriancacodigo();
+            Frequencia persistentFrequencia = em.find(Frequencia.class, frequencia.getCodigo());
+            Crianca_1 criancacodigoOld = persistentFrequencia.getCriancacodigo();
+            Crianca_1 criancacodigoNew = frequencia.getCriancacodigo();
             if (criancacodigoNew != null) {
                 criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
-                remedio.setCriancacodigo(criancacodigoNew);
+                frequencia.setCriancacodigo(criancacodigoNew);
             }
-            remedio = em.merge(remedio);
+            frequencia = em.merge(frequencia);
             if (criancacodigoOld != null && !criancacodigoOld.equals(criancacodigoNew)) {
-                criancacodigoOld.getRemedioList().remove(remedio);
+                criancacodigoOld.getFrequenciaList().remove(frequencia);
                 criancacodigoOld = em.merge(criancacodigoOld);
             }
             if (criancacodigoNew != null && !criancacodigoNew.equals(criancacodigoOld)) {
-                criancacodigoNew.getRemedioList().add(remedio);
+                criancacodigoNew.getFrequenciaList().add(frequencia);
                 criancacodigoNew = em.merge(criancacodigoNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = remedio.getCodigo();
-                if (findRemedio(id) == null) {
-                    throw new NonexistentEntityException("The remedio with id " + id + " no longer exists.");
+                Integer id = frequencia.getCodigo();
+                if (findFrequencia(id) == null) {
+                    throw new NonexistentEntityException("The frequencia with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -98,19 +98,19 @@ public class RemedioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Remedio remedio;
+            Frequencia frequencia;
             try {
-                remedio = em.getReference(Remedio.class, id);
-                remedio.getCodigo();
+                frequencia = em.getReference(Frequencia.class, id);
+                frequencia.getCodigo();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The remedio with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The frequencia with id " + id + " no longer exists.", enfe);
             }
-            Crianca criancacodigo = remedio.getCriancacodigo();
+            Crianca_1 criancacodigo = frequencia.getCriancacodigo();
             if (criancacodigo != null) {
-                criancacodigo.getRemedioList().remove(remedio);
+                criancacodigo.getFrequenciaList().remove(frequencia);
                 criancacodigo = em.merge(criancacodigo);
             }
-            em.remove(remedio);
+            em.remove(frequencia);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -119,19 +119,19 @@ public class RemedioJpaController implements Serializable {
         }
     }
 
-    public List<Remedio> findRemedioEntities() {
-        return findRemedioEntities(true, -1, -1);
+    public List<Frequencia> findFrequenciaEntities() {
+        return findFrequenciaEntities(true, -1, -1);
     }
 
-    public List<Remedio> findRemedioEntities(int maxResults, int firstResult) {
-        return findRemedioEntities(false, maxResults, firstResult);
+    public List<Frequencia> findFrequenciaEntities(int maxResults, int firstResult) {
+        return findFrequenciaEntities(false, maxResults, firstResult);
     }
 
-    private List<Remedio> findRemedioEntities(boolean all, int maxResults, int firstResult) {
+    private List<Frequencia> findFrequenciaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Remedio.class));
+            cq.select(cq.from(Frequencia.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -143,20 +143,20 @@ public class RemedioJpaController implements Serializable {
         }
     }
 
-    public Remedio findRemedio(Integer id) {
+    public Frequencia findFrequencia(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Remedio.class, id);
+            return em.find(Frequencia.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getRemedioCount() {
+    public int getFrequenciaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Remedio> rt = cq.from(Remedio.class);
+            Root<Frequencia> rt = cq.from(Frequencia.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

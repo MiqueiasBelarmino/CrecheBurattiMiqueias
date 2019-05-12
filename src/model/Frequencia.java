@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,16 +24,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "frequencia")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Frequencia.findAll", query = "SELECT f FROM Frequencia f"),
-    @NamedQuery(name = "Frequencia.findByCodigo", query = "SELECT f FROM Frequencia f WHERE f.codigo = :codigo"),
-    @NamedQuery(name = "Frequencia.findByData", query = "SELECT f FROM Frequencia f WHERE f.data = :data"),
-    @NamedQuery(name = "Frequencia.findBySituacao", query = "SELECT f FROM Frequencia f WHERE f.situacao = :situacao")})
+    @NamedQuery(name = "Frequencia.findAll", query = "SELECT f FROM Frequencia f")
+    , @NamedQuery(name = "Frequencia.findByCodigo", query = "SELECT f FROM Frequencia f WHERE f.codigo = :codigo")
+    , @NamedQuery(name = "Frequencia.findByData", query = "SELECT f FROM Frequencia f WHERE f.data = :data")
+    , @NamedQuery(name = "Frequencia.findBySituacao", query = "SELECT f FROM Frequencia f WHERE f.situacao = :situacao")})
 public class Frequencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,8 +48,8 @@ public class Frequencia implements Serializable {
     @Column(name = "situacao")
     private Character situacao;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
+    @ManyToOne(optional = false)
+    private Crianca_1 criancacodigo;
 
     public Frequencia() {
     }
@@ -83,11 +82,11 @@ public class Frequencia implements Serializable {
         this.situacao = situacao;
     }
 
-    public Crianca getCriancacodigo() {
+    public Crianca_1 getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
+    public void setCriancacodigo(Crianca_1 criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
@@ -113,7 +112,7 @@ public class Frequencia implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Frequencia[ codigo=" + codigo + " ]";
+        return "view.Frequencia[ codigo=" + codigo + " ]";
     }
     
 }

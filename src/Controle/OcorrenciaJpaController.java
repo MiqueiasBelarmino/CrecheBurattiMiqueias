@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package Controle;
 
-import controller.exceptions.NonexistentEntityException;
+import Controle.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -14,13 +14,13 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Crianca;
+import model.Crianca_1;
 import model.Ocorrencia;
 import model.Servidor;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 public class OcorrenciaJpaController implements Serializable {
 
@@ -38,7 +38,7 @@ public class OcorrenciaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = ocorrencia.getCriancacodigo();
+            Crianca_1 criancacodigo = ocorrencia.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
                 ocorrencia.setCriancacodigo(criancacodigo);
@@ -71,8 +71,8 @@ public class OcorrenciaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Ocorrencia persistentOcorrencia = em.find(Ocorrencia.class, ocorrencia.getCodigo());
-            Crianca criancacodigoOld = persistentOcorrencia.getCriancacodigo();
-            Crianca criancacodigoNew = ocorrencia.getCriancacodigo();
+            Crianca_1 criancacodigoOld = persistentOcorrencia.getCriancacodigo();
+            Crianca_1 criancacodigoNew = ocorrencia.getCriancacodigo();
             Servidor servidorcodigoOld = persistentOcorrencia.getServidorcodigo();
             Servidor servidorcodigoNew = ocorrencia.getServidorcodigo();
             if (criancacodigoNew != null) {
@@ -129,7 +129,7 @@ public class OcorrenciaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The ocorrencia with id " + id + " no longer exists.", enfe);
             }
-            Crianca criancacodigo = ocorrencia.getCriancacodigo();
+            Crianca_1 criancacodigo = ocorrencia.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo.getOcorrenciaList().remove(ocorrencia);
                 criancacodigo = em.merge(criancacodigo);

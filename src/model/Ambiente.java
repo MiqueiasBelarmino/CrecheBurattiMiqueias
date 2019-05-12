@@ -11,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,16 +23,16 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Entity
 @Table(name = "ambiente")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ambiente.findAll", query = "SELECT a FROM Ambiente a"),
-    @NamedQuery(name = "Ambiente.findByCodigo", query = "SELECT a FROM Ambiente a WHERE a.codigo = :codigo"),
-    @NamedQuery(name = "Ambiente.findByNome", query = "SELECT a FROM Ambiente a WHERE a.nome = :nome"),
-    @NamedQuery(name = "Ambiente.findByCapacidade", query = "SELECT a FROM Ambiente a WHERE a.capacidade = :capacidade")})
+    @NamedQuery(name = "Ambiente.findAll", query = "SELECT a FROM Ambiente a")
+    , @NamedQuery(name = "Ambiente.findByCodigo", query = "SELECT a FROM Ambiente a WHERE a.codigo = :codigo")
+    , @NamedQuery(name = "Ambiente.findByNome", query = "SELECT a FROM Ambiente a WHERE a.nome = :nome")
+    , @NamedQuery(name = "Ambiente.findByCapacidade", query = "SELECT a FROM Ambiente a WHERE a.capacidade = :capacidade")})
 public class Ambiente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,7 +47,7 @@ public class Ambiente implements Serializable {
     @Basic(optional = false)
     @Column(name = "capacidade")
     private int capacidade;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ambiente", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ambiente")
     private List<Reservaambiente> reservaambienteList;
 
     public Ambiente() {
@@ -119,7 +118,7 @@ public class Ambiente implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Ambiente[ codigo=" + codigo + " ]";
+        return "view.Ambiente[ codigo=" + codigo + " ]";
     }
     
 }

@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 @Embeddable
 public class ReservaambientePK implements Serializable {
@@ -74,7 +74,7 @@ public class ReservaambientePK implements Serializable {
 
     @Override
     public String toString() {
-        return "model.ReservaambientePK[ ambientecodigo=" + ambientecodigo + ", servidorcodigo=" + servidorcodigo + " ]";
+        return "view.ReservaambientePK[ ambientecodigo=" + ambientecodigo + ", servidorcodigo=" + servidorcodigo + " ]";
     }
     
 }

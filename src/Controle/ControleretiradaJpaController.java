@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package Controle;
 
-import controller.exceptions.NonexistentEntityException;
+import Controle.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -15,12 +15,12 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import model.Controleretirada;
-import model.Crianca;
+import model.Crianca_1;
 import model.Pessoaautorizada;
 
 /**
  *
- * @author Belarmino
+ * @author vfrei
  */
 public class ControleretiradaJpaController implements Serializable {
 
@@ -38,7 +38,7 @@ public class ControleretiradaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = controleretirada.getCriancacodigo();
+            Crianca_1 criancacodigo = controleretirada.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
                 controleretirada.setCriancacodigo(criancacodigo);
@@ -71,8 +71,8 @@ public class ControleretiradaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Controleretirada persistentControleretirada = em.find(Controleretirada.class, controleretirada.getCodigo());
-            Crianca criancacodigoOld = persistentControleretirada.getCriancacodigo();
-            Crianca criancacodigoNew = controleretirada.getCriancacodigo();
+            Crianca_1 criancacodigoOld = persistentControleretirada.getCriancacodigo();
+            Crianca_1 criancacodigoNew = controleretirada.getCriancacodigo();
             Pessoaautorizada pessoaAutorizadacodigoOld = persistentControleretirada.getPessoaAutorizadacodigo();
             Pessoaautorizada pessoaAutorizadacodigoNew = controleretirada.getPessoaAutorizadacodigo();
             if (criancacodigoNew != null) {
@@ -129,7 +129,7 @@ public class ControleretiradaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The controleretirada with id " + id + " no longer exists.", enfe);
             }
-            Crianca criancacodigo = controleretirada.getCriancacodigo();
+            Crianca_1 criancacodigo = controleretirada.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo.getControleretiradaList().remove(controleretirada);
                 criancacodigo = em.merge(criancacodigo);
