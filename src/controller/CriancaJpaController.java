@@ -356,6 +356,29 @@ public class CriancaJpaController implements Serializable {
             }
         }
     }
+    public void editSimplefied(Crianca crianca){
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        em.merge(crianca);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    
+    
+    public List<Crianca> findNome(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByNome");
+        query.setParameter("nome", str + "%");
+        return query.getResultList();
+    }
+
+    public List<Crianca> findCPF(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByCPF");
+        query.setParameter("cpf", "%" + str + "%");
+        return query.getResultList();
+    }
 
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
