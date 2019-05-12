@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controle;
+package controller;
 
-import Controle.exceptions.NonexistentEntityException;
+import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -14,7 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Crianca_1;
+import model.Crianca;
 import model.Frequencia;
 
 /**
@@ -37,7 +37,7 @@ public class FrequenciaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca_1 criancacodigo = frequencia.getCriancacodigo();
+            Crianca criancacodigo = frequencia.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
                 frequencia.setCriancacodigo(criancacodigo);
@@ -61,8 +61,8 @@ public class FrequenciaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Frequencia persistentFrequencia = em.find(Frequencia.class, frequencia.getCodigo());
-            Crianca_1 criancacodigoOld = persistentFrequencia.getCriancacodigo();
-            Crianca_1 criancacodigoNew = frequencia.getCriancacodigo();
+            Crianca criancacodigoOld = persistentFrequencia.getCriancacodigo();
+            Crianca criancacodigoNew = frequencia.getCriancacodigo();
             if (criancacodigoNew != null) {
                 criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
                 frequencia.setCriancacodigo(criancacodigoNew);
@@ -105,7 +105,7 @@ public class FrequenciaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The frequencia with id " + id + " no longer exists.", enfe);
             }
-            Crianca_1 criancacodigo = frequencia.getCriancacodigo();
+            Crianca criancacodigo = frequencia.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo.getFrequenciaList().remove(frequencia);
                 criancacodigo = em.merge(criancacodigo);

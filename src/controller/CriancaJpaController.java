@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controle;
+package controller;
 
-import Controle.exceptions.IllegalOrphanException;
-import Controle.exceptions.NonexistentEntityException;
+import controller.exceptions.IllegalOrphanException;
+import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -22,15 +22,15 @@ import model.Ocorrencia;
 import model.Frequencia;
 import model.Pessoaautorizada;
 import model.Controleretirada;
-import model.Crianca_1;
+import model.Crianca;
 
 /**
  *
  * @author vfrei
  */
-public class Crianca_1JpaController implements Serializable {
+public class CriancaJpaController implements Serializable {
 
-    public Crianca_1JpaController(EntityManagerFactory emf) {
+    public CriancaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -39,7 +39,7 @@ public class Crianca_1JpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Crianca_1 crianca_1) {
+    public void create(Crianca crianca_1) {
         if (crianca_1.getRemedioList() == null) {
             crianca_1.setRemedioList(new ArrayList<Remedio>());
         }
@@ -100,7 +100,7 @@ public class Crianca_1JpaController implements Serializable {
             crianca_1.setControleretiradaList(attachedControleretiradaList);
             em.persist(crianca_1);
             for (Remedio remedioListRemedio : crianca_1.getRemedioList()) {
-                Crianca_1 oldCriancacodigoOfRemedioListRemedio = remedioListRemedio.getCriancacodigo();
+                Crianca oldCriancacodigoOfRemedioListRemedio = remedioListRemedio.getCriancacodigo();
                 remedioListRemedio.setCriancacodigo(crianca_1);
                 remedioListRemedio = em.merge(remedioListRemedio);
                 if (oldCriancacodigoOfRemedioListRemedio != null) {
@@ -109,7 +109,7 @@ public class Crianca_1JpaController implements Serializable {
                 }
             }
             for (Observacao observacaoListObservacao : crianca_1.getObservacaoList()) {
-                Crianca_1 oldCriancacodigoOfObservacaoListObservacao = observacaoListObservacao.getCriancacodigo();
+                Crianca oldCriancacodigoOfObservacaoListObservacao = observacaoListObservacao.getCriancacodigo();
                 observacaoListObservacao.setCriancacodigo(crianca_1);
                 observacaoListObservacao = em.merge(observacaoListObservacao);
                 if (oldCriancacodigoOfObservacaoListObservacao != null) {
@@ -118,7 +118,7 @@ public class Crianca_1JpaController implements Serializable {
                 }
             }
             for (Ocorrencia ocorrenciaListOcorrencia : crianca_1.getOcorrenciaList()) {
-                Crianca_1 oldCriancacodigoOfOcorrenciaListOcorrencia = ocorrenciaListOcorrencia.getCriancacodigo();
+                Crianca oldCriancacodigoOfOcorrenciaListOcorrencia = ocorrenciaListOcorrencia.getCriancacodigo();
                 ocorrenciaListOcorrencia.setCriancacodigo(crianca_1);
                 ocorrenciaListOcorrencia = em.merge(ocorrenciaListOcorrencia);
                 if (oldCriancacodigoOfOcorrenciaListOcorrencia != null) {
@@ -127,7 +127,7 @@ public class Crianca_1JpaController implements Serializable {
                 }
             }
             for (Frequencia frequenciaListFrequencia : crianca_1.getFrequenciaList()) {
-                Crianca_1 oldCriancacodigoOfFrequenciaListFrequencia = frequenciaListFrequencia.getCriancacodigo();
+                Crianca oldCriancacodigoOfFrequenciaListFrequencia = frequenciaListFrequencia.getCriancacodigo();
                 frequenciaListFrequencia.setCriancacodigo(crianca_1);
                 frequenciaListFrequencia = em.merge(frequenciaListFrequencia);
                 if (oldCriancacodigoOfFrequenciaListFrequencia != null) {
@@ -136,7 +136,7 @@ public class Crianca_1JpaController implements Serializable {
                 }
             }
             for (Pessoaautorizada pessoaautorizadaListPessoaautorizada : crianca_1.getPessoaautorizadaList()) {
-                Crianca_1 oldCriancacodigoOfPessoaautorizadaListPessoaautorizada = pessoaautorizadaListPessoaautorizada.getCriancacodigo();
+                Crianca oldCriancacodigoOfPessoaautorizadaListPessoaautorizada = pessoaautorizadaListPessoaautorizada.getCriancacodigo();
                 pessoaautorizadaListPessoaautorizada.setCriancacodigo(crianca_1);
                 pessoaautorizadaListPessoaautorizada = em.merge(pessoaautorizadaListPessoaautorizada);
                 if (oldCriancacodigoOfPessoaautorizadaListPessoaautorizada != null) {
@@ -145,7 +145,7 @@ public class Crianca_1JpaController implements Serializable {
                 }
             }
             for (Controleretirada controleretiradaListControleretirada : crianca_1.getControleretiradaList()) {
-                Crianca_1 oldCriancacodigoOfControleretiradaListControleretirada = controleretiradaListControleretirada.getCriancacodigo();
+                Crianca oldCriancacodigoOfControleretiradaListControleretirada = controleretiradaListControleretirada.getCriancacodigo();
                 controleretiradaListControleretirada.setCriancacodigo(crianca_1);
                 controleretiradaListControleretirada = em.merge(controleretiradaListControleretirada);
                 if (oldCriancacodigoOfControleretiradaListControleretirada != null) {
@@ -161,12 +161,12 @@ public class Crianca_1JpaController implements Serializable {
         }
     }
 
-    public void edit(Crianca_1 crianca_1) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Crianca crianca_1) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca_1 persistentCrianca_1 = em.find(Crianca_1.class, crianca_1.getCodigo());
+            Crianca persistentCrianca_1 = em.find(Crianca.class, crianca_1.getCodigo());
             List<Remedio> remedioListOld = persistentCrianca_1.getRemedioList();
             List<Remedio> remedioListNew = crianca_1.getRemedioList();
             List<Observacao> observacaoListOld = persistentCrianca_1.getObservacaoList();
@@ -276,7 +276,7 @@ public class Crianca_1JpaController implements Serializable {
             crianca_1 = em.merge(crianca_1);
             for (Remedio remedioListNewRemedio : remedioListNew) {
                 if (!remedioListOld.contains(remedioListNewRemedio)) {
-                    Crianca_1 oldCriancacodigoOfRemedioListNewRemedio = remedioListNewRemedio.getCriancacodigo();
+                    Crianca oldCriancacodigoOfRemedioListNewRemedio = remedioListNewRemedio.getCriancacodigo();
                     remedioListNewRemedio.setCriancacodigo(crianca_1);
                     remedioListNewRemedio = em.merge(remedioListNewRemedio);
                     if (oldCriancacodigoOfRemedioListNewRemedio != null && !oldCriancacodigoOfRemedioListNewRemedio.equals(crianca_1)) {
@@ -287,7 +287,7 @@ public class Crianca_1JpaController implements Serializable {
             }
             for (Observacao observacaoListNewObservacao : observacaoListNew) {
                 if (!observacaoListOld.contains(observacaoListNewObservacao)) {
-                    Crianca_1 oldCriancacodigoOfObservacaoListNewObservacao = observacaoListNewObservacao.getCriancacodigo();
+                    Crianca oldCriancacodigoOfObservacaoListNewObservacao = observacaoListNewObservacao.getCriancacodigo();
                     observacaoListNewObservacao.setCriancacodigo(crianca_1);
                     observacaoListNewObservacao = em.merge(observacaoListNewObservacao);
                     if (oldCriancacodigoOfObservacaoListNewObservacao != null && !oldCriancacodigoOfObservacaoListNewObservacao.equals(crianca_1)) {
@@ -298,7 +298,7 @@ public class Crianca_1JpaController implements Serializable {
             }
             for (Ocorrencia ocorrenciaListNewOcorrencia : ocorrenciaListNew) {
                 if (!ocorrenciaListOld.contains(ocorrenciaListNewOcorrencia)) {
-                    Crianca_1 oldCriancacodigoOfOcorrenciaListNewOcorrencia = ocorrenciaListNewOcorrencia.getCriancacodigo();
+                    Crianca oldCriancacodigoOfOcorrenciaListNewOcorrencia = ocorrenciaListNewOcorrencia.getCriancacodigo();
                     ocorrenciaListNewOcorrencia.setCriancacodigo(crianca_1);
                     ocorrenciaListNewOcorrencia = em.merge(ocorrenciaListNewOcorrencia);
                     if (oldCriancacodigoOfOcorrenciaListNewOcorrencia != null && !oldCriancacodigoOfOcorrenciaListNewOcorrencia.equals(crianca_1)) {
@@ -309,7 +309,7 @@ public class Crianca_1JpaController implements Serializable {
             }
             for (Frequencia frequenciaListNewFrequencia : frequenciaListNew) {
                 if (!frequenciaListOld.contains(frequenciaListNewFrequencia)) {
-                    Crianca_1 oldCriancacodigoOfFrequenciaListNewFrequencia = frequenciaListNewFrequencia.getCriancacodigo();
+                    Crianca oldCriancacodigoOfFrequenciaListNewFrequencia = frequenciaListNewFrequencia.getCriancacodigo();
                     frequenciaListNewFrequencia.setCriancacodigo(crianca_1);
                     frequenciaListNewFrequencia = em.merge(frequenciaListNewFrequencia);
                     if (oldCriancacodigoOfFrequenciaListNewFrequencia != null && !oldCriancacodigoOfFrequenciaListNewFrequencia.equals(crianca_1)) {
@@ -320,7 +320,7 @@ public class Crianca_1JpaController implements Serializable {
             }
             for (Pessoaautorizada pessoaautorizadaListNewPessoaautorizada : pessoaautorizadaListNew) {
                 if (!pessoaautorizadaListOld.contains(pessoaautorizadaListNewPessoaautorizada)) {
-                    Crianca_1 oldCriancacodigoOfPessoaautorizadaListNewPessoaautorizada = pessoaautorizadaListNewPessoaautorizada.getCriancacodigo();
+                    Crianca oldCriancacodigoOfPessoaautorizadaListNewPessoaautorizada = pessoaautorizadaListNewPessoaautorizada.getCriancacodigo();
                     pessoaautorizadaListNewPessoaautorizada.setCriancacodigo(crianca_1);
                     pessoaautorizadaListNewPessoaautorizada = em.merge(pessoaautorizadaListNewPessoaautorizada);
                     if (oldCriancacodigoOfPessoaautorizadaListNewPessoaautorizada != null && !oldCriancacodigoOfPessoaautorizadaListNewPessoaautorizada.equals(crianca_1)) {
@@ -331,7 +331,7 @@ public class Crianca_1JpaController implements Serializable {
             }
             for (Controleretirada controleretiradaListNewControleretirada : controleretiradaListNew) {
                 if (!controleretiradaListOld.contains(controleretiradaListNewControleretirada)) {
-                    Crianca_1 oldCriancacodigoOfControleretiradaListNewControleretirada = controleretiradaListNewControleretirada.getCriancacodigo();
+                    Crianca oldCriancacodigoOfControleretiradaListNewControleretirada = controleretiradaListNewControleretirada.getCriancacodigo();
                     controleretiradaListNewControleretirada.setCriancacodigo(crianca_1);
                     controleretiradaListNewControleretirada = em.merge(controleretiradaListNewControleretirada);
                     if (oldCriancacodigoOfControleretiradaListNewControleretirada != null && !oldCriancacodigoOfControleretiradaListNewControleretirada.equals(crianca_1)) {
@@ -362,9 +362,9 @@ public class Crianca_1JpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca_1 crianca_1;
+            Crianca crianca_1;
             try {
-                crianca_1 = em.getReference(Crianca_1.class, id);
+                crianca_1 = em.getReference(Crianca.class, id);
                 crianca_1.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The crianca_1 with id " + id + " no longer exists.", enfe);
@@ -424,19 +424,19 @@ public class Crianca_1JpaController implements Serializable {
         }
     }
 
-    public List<Crianca_1> findCrianca_1Entities() {
+    public List<Crianca> findCrianca_1Entities() {
         return findCrianca_1Entities(true, -1, -1);
     }
 
-    public List<Crianca_1> findCrianca_1Entities(int maxResults, int firstResult) {
+    public List<Crianca> findCrianca_1Entities(int maxResults, int firstResult) {
         return findCrianca_1Entities(false, maxResults, firstResult);
     }
 
-    private List<Crianca_1> findCrianca_1Entities(boolean all, int maxResults, int firstResult) {
+    private List<Crianca> findCrianca_1Entities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Crianca_1.class));
+            cq.select(cq.from(Crianca.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -448,10 +448,10 @@ public class Crianca_1JpaController implements Serializable {
         }
     }
 
-    public Crianca_1 findCrianca_1(Integer id) {
+    public Crianca findCrianca_1(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Crianca_1.class, id);
+            return em.find(Crianca.class, id);
         } finally {
             em.close();
         }
@@ -461,7 +461,7 @@ public class Crianca_1JpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Crianca_1> rt = cq.from(Crianca_1.class);
+            Root<Crianca> rt = cq.from(Crianca.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

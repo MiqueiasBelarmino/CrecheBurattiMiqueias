@@ -50,7 +50,7 @@ public class Controleretirada implements Serializable {
     private String justificativa;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
-    private Crianca_1 criancacodigo;
+    private Crianca criancacodigo;
     @JoinColumn(name = "PessoaAutorizada_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
     private Pessoaautorizada pessoaAutorizadacodigo;
@@ -91,11 +91,11 @@ public class Controleretirada implements Serializable {
         this.justificativa = justificativa;
     }
 
-    public Crianca_1 getCriancacodigo() {
+    public Crianca getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca_1 criancacodigo) {
+    public void setCriancacodigo(Crianca criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 

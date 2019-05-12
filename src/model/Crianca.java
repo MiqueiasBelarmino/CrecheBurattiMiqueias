@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Crianca_1.findByTelefone", query = "SELECT c FROM Crianca_1 c WHERE c.telefone = :telefone")
     , @NamedQuery(name = "Crianca_1.findByCelular", query = "SELECT c FROM Crianca_1 c WHERE c.celular = :celular")
     , @NamedQuery(name = "Crianca_1.findByResponsavel", query = "SELECT c FROM Crianca_1 c WHERE c.responsavel = :responsavel")})
-public class Crianca_1 implements Serializable {
+public class Crianca implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -78,14 +78,14 @@ public class Crianca_1 implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo")
     private List<Controleretirada> controleretiradaList;
 
-    public Crianca_1() {
+    public Crianca() {
     }
 
-    public Crianca_1(Integer codigo) {
+    public Crianca(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public Crianca_1(Integer codigo, String nome, String cpf, Date dataNascimento, String responsavel) {
+    public Crianca(Integer codigo, String nome, String cpf, Date dataNascimento, String responsavel) {
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
@@ -213,10 +213,10 @@ public class Crianca_1 implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Crianca_1)) {
+        if (!(object instanceof Crianca)) {
             return false;
         }
-        Crianca_1 other = (Crianca_1) object;
+        Crianca other = (Crianca) object;
         if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
             return false;
         }

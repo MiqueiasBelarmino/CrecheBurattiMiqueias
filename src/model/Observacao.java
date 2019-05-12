@@ -46,7 +46,7 @@ public class Observacao implements Serializable {
     private Character prioridade;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
-    private Crianca_1 criancacodigo;
+    private Crianca criancacodigo;
 
     public Observacao() {
     }
@@ -84,11 +84,11 @@ public class Observacao implements Serializable {
         this.prioridade = prioridade;
     }
 
-    public Crianca_1 getCriancacodigo() {
+    public Crianca getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca_1 criancacodigo) {
+    public void setCriancacodigo(Crianca criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 

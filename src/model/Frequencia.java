@@ -49,7 +49,7 @@ public class Frequencia implements Serializable {
     private Character situacao;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
-    private Crianca_1 criancacodigo;
+    private Crianca criancacodigo;
 
     public Frequencia() {
     }
@@ -82,11 +82,11 @@ public class Frequencia implements Serializable {
         this.situacao = situacao;
     }
 
-    public Crianca_1 getCriancacodigo() {
+    public Crianca getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca_1 criancacodigo) {
+    public void setCriancacodigo(Crianca criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 

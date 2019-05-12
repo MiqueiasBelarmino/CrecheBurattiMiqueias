@@ -67,7 +67,7 @@ public class Pessoaautorizada implements Serializable {
     private Integer statusContato;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
-    private Crianca_1 criancacodigo;
+    private Crianca criancacodigo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo")
     private List<Controleretirada> controleretiradaList;
 
@@ -149,11 +149,11 @@ public class Pessoaautorizada implements Serializable {
         this.statusContato = statusContato;
     }
 
-    public Crianca_1 getCriancacodigo() {
+    public Crianca getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca_1 criancacodigo) {
+    public void setCriancacodigo(Crianca criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 

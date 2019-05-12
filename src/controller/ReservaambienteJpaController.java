@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controle;
+package controller;
 
-import Controle.exceptions.NonexistentEntityException;
-import Controle.exceptions.PreexistingEntityException;
+import controller.exceptions.NonexistentEntityException;
+import controller.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;

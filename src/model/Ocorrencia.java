@@ -50,7 +50,7 @@ public class Ocorrencia implements Serializable {
     private String descricao;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
-    private Crianca_1 criancacodigo;
+    private Crianca criancacodigo;
     @JoinColumn(name = "Servidor_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
     private Servidor servidorcodigo;
@@ -91,11 +91,11 @@ public class Ocorrencia implements Serializable {
         this.descricao = descricao;
     }
 
-    public Crianca_1 getCriancacodigo() {
+    public Crianca getCriancacodigo() {
         return criancacodigo;
     }
 
-    public void setCriancacodigo(Crianca_1 criancacodigo) {
+    public void setCriancacodigo(Crianca criancacodigo) {
         this.criancacodigo = criancacodigo;
     }
 
