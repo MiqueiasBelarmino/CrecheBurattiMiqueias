@@ -32,14 +32,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "crianca")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Crianca_1.findAll", query = "SELECT c FROM Crianca_1 c")
-    , @NamedQuery(name = "Crianca_1.findByCodigo", query = "SELECT c FROM Crianca_1 c WHERE c.codigo = :codigo")
-    , @NamedQuery(name = "Crianca_1.findByNome", query = "SELECT c FROM Crianca_1 c WHERE c.nome = :nome")
-    , @NamedQuery(name = "Crianca_1.findByCpf", query = "SELECT c FROM Crianca_1 c WHERE c.cpf = :cpf")
-    , @NamedQuery(name = "Crianca_1.findByDataNascimento", query = "SELECT c FROM Crianca_1 c WHERE c.dataNascimento = :dataNascimento")
-    , @NamedQuery(name = "Crianca_1.findByTelefone", query = "SELECT c FROM Crianca_1 c WHERE c.telefone = :telefone")
-    , @NamedQuery(name = "Crianca_1.findByCelular", query = "SELECT c FROM Crianca_1 c WHERE c.celular = :celular")
-    , @NamedQuery(name = "Crianca_1.findByResponsavel", query = "SELECT c FROM Crianca_1 c WHERE c.responsavel = :responsavel")})
+    @NamedQuery(name = "Crianca.findAll", query = "SELECT c FROM Crianca c")
+    , @NamedQuery(name = "Crianca.findByCodigo", query = "SELECT c FROM Crianca c WHERE c.codigo = :codigo")
+    , @NamedQuery(name = "Crianca.findByNome", query = "SELECT c FROM Crianca c WHERE c.nome = :nome")
+    , @NamedQuery(name = "Crianca.findByCpf", query = "SELECT c FROM Crianca c WHERE c.cpf = :cpf")
+    , @NamedQuery(name = "Crianca.findByDataNascimento", query = "SELECT c FROM Crianca c WHERE c.dataNascimento = :dataNascimento")
+    , @NamedQuery(name = "Crianca.findByTelefone", query = "SELECT c FROM Crianca c WHERE c.telefone = :telefone")
+    , @NamedQuery(name = "Crianca.findByCelular", query = "SELECT c FROM Crianca c WHERE c.celular = :celular")
+    , @NamedQuery(name = "Crianca.findByResponsavel", query = "SELECT c FROM Crianca c WHERE c.responsavel = :responsavel")})
 public class Crianca implements Serializable {
 
     private static final long serialVersionUID = 1L;
