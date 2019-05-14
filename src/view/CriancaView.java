@@ -6,11 +6,17 @@
 package view;
 
 import controller.CriancaJpaController;
+import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Persistence;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import model.Crianca;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
@@ -24,15 +30,21 @@ public class CriancaView extends javax.swing.JDialog {
      * Creates new form CriancaView
      */
     private CriancaJpaController controllerCrianca = null;
+    private Crianca crianca = null;
+    private boolean novo;
 
     public CriancaView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         habilitarComponentes(false);
         controllerCrianca = new CriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
-        listCrianca.addAll(controllerCrianca.findCriancaEntities());
+        atualizarFiltro();
     }
 
+    private void atualizarFiltro(){
+        listCrianca.clear();
+        listCrianca.addAll(controllerCrianca.findCriancaEntities());
+    }
     private void montarDadosFormulario(int linha) {
         Crianca c = listCrianca.get(linha);
         txtNomeCompleto.setText(c.getNome());
@@ -42,13 +54,13 @@ public class CriancaView extends javax.swing.JDialog {
         txtResponsavel.setText(c.getResponsavel());
         dataNascimento.setDate(c.getDataNascimento());
     }
-    
-    private void habilitarComponentes(boolean status){
-        
-        for(Component component: painelDados.getComponents()){
+
+    private void habilitarComponentes(boolean status) {
+
+        for (Component component : painelDados.getComponents()) {
             component.setEnabled(status);
         }
-        for(Component component: painelFiltro.getComponents()){
+        for (Component component : painelFiltro.getComponents()) {
             component.setEnabled(!status);
         }
         tableCrianca.setEnabled(!status);
@@ -57,7 +69,11 @@ public class CriancaView extends javax.swing.JDialog {
         btnCancelar.setEnabled(status);
         btnAlterar.setEnabled(!status);
         btnDeletar.setEnabled(!status);
- 
+
+    }
+
+    private void limparFormatados() {
+
     }
 
     /**
@@ -236,6 +252,14 @@ public class CriancaView extends javax.swing.JDialog {
         columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
+        tableCrianca.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableCriancaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tableCriancaMouseEntered(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableCrianca);
         if (tableCrianca.getColumnModel().getColumnCount() > 0) {
             tableCrianca.getColumnModel().getColumn(0).setResizable(false);
@@ -308,6 +332,11 @@ public class CriancaView extends javax.swing.JDialog {
         });
 
         btnDeletar.setText("Deletar");
+        btnDeletar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -390,10 +419,21 @@ public class CriancaView extends javax.swing.JDialog {
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         habilitarComponentes(true);
+        novo = true;
+        crianca = new Crianca();
+        txtNomeCompleto.requestFocus();
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
         habilitarComponentes(true);
+        novo = false;
+        int row;
+        row = tableCrianca.getSelectedRow();
+        if (row > -1) {
+            crianca = listCrianca.get(row);
+            tableCrianca.setRowSelectionInterval(row, row);
+            montarDadosFormulario(row);
+        }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void txtFiltrarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltrarKeyReleased
@@ -405,12 +445,72 @@ public class CriancaView extends javax.swing.JDialog {
     }//GEN-LAST:event_comboFiltrarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        habilitarComponentes(false);
+        if (vazio()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
+        } else {
+            habilitarComponentes(false);
+            crianca.setCelular(txtCelularFormatado.getText());
+            crianca.setCpf(txtCPF.getText());
+            crianca.setDataNascimento(dataNascimento.getDate());
+            crianca.setNome(txtNomeCompleto.getText());
+            crianca.setResponsavel(txtResponsavel.getText());
+            crianca.setTelefone(txtTelefoneFormatado.getText());
+            if (!novo) {
+                try {
+                    controllerCrianca.edit(crianca);
+                } catch (NonexistentEntityException ex) {
+                    Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                controllerCrianca.create(crianca);
+            }
+
+            for (Component c : painelDados.getComponents()) {
+                if (c instanceof JTextField) {
+                    ((JTextField) c).setText("");
+                }
+                if (c instanceof JFormattedTextField) {
+                    ((JFormattedTextField) c).setText("");
+                }
+            }
+            dataNascimento.setDate(null);
+            atualizarFiltro();
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         habilitarComponentes(false);
+        for (Component c : painelDados.getComponents()) {
+            if (c instanceof JTextField) {
+                ((JTextField) c).setText("");
+            }
+            if (c instanceof JFormattedTextField) {
+                ((JFormattedTextField) c).setText("");
+            }
+        }
+        dataNascimento.setDate(null);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
+        atualizarFiltro();
+    }//GEN-LAST:event_btnDeletarActionPerformed
+
+    private void tableCriancaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCriancaMouseEntered
+        tableCrianca.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_tableCriancaMouseEntered
+
+    private void tableCriancaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCriancaMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            int row = tableCrianca.rowAtPoint(evt.getPoint());
+            int col = tableCrianca.columnAtPoint(evt.getPoint());
+            if (row != -1 && col != -1) {
+                montarDadosFormulario(tableCrianca.getSelectedRow());
+            }
+        }
+    }//GEN-LAST:event_tableCriancaMouseClicked
 
     private void pesquisar() {
         listCrianca.clear();
@@ -424,6 +524,26 @@ public class CriancaView extends javax.swing.JDialog {
         if (linha > 0) {
             tableCrianca.setRowSelectionInterval(linha, linha);
         }
+    }
+
+    private boolean vazio() {
+        boolean vazio = false;
+
+        if (txtCelularFormatado.getText().equals("(  )      -    ")) {
+            vazio = true;
+        } else if (txtTelefoneFormatado.getText().equals("(  )     -    ")) {
+            vazio = true;
+        } else if (txtCPF.getText().trim().isEmpty()) {
+            vazio = true;
+        } else if (txtNomeCompleto.getText().trim().isEmpty()) {
+            vazio = true;
+        } else if (txtResponsavel.getText().trim().isEmpty()) {
+            vazio = true;
+        } else if (txtCPF.getText().trim().isEmpty()) {
+            vazio = true;
+        }
+
+        return vazio;
     }
 
     /**
