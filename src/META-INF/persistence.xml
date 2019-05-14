@@ -8,11 +8,11 @@
     <class>model.Frequencia</class>
     <class>model.Controleretirada</class>
     <class>model.Reservaambiente</class>
-    <class>model.Frequenciaservidor</class>
     <class>model.Ocorrencia</class>
     <class>model.Pessoaautorizada</class>
     <class>model.Crianca</class>
     <class>model.Ambiente</class>
+    <class>model.Frequenciaservidor</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/creche_db"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

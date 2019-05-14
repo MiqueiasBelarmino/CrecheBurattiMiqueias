@@ -6,6 +6,7 @@
 package view;
 
 import controller.CriancaJpaController;
+import controller.GeneralController;
 import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
@@ -236,27 +237,18 @@ public class CriancaView extends javax.swing.JDialog {
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
         columnBinding.setColumnName("Nome");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
         columnBinding.setColumnName("Cpf");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${dataNascimento}"));
-        columnBinding.setColumnName("Data Nascimento");
-        columnBinding.setColumnClass(java.util.Date.class);
-        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefone}"));
         columnBinding.setColumnName("Telefone");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${celular}"));
         columnBinding.setColumnName("Celular");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${responsavel}"));
         columnBinding.setColumnName("Responsavel");
         columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         tableCrianca.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -535,7 +527,7 @@ public class CriancaView extends javax.swing.JDialog {
     }//GEN-LAST:event_tableCriancaMouseClicked
 
     private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
-        if(controllerCrianca.verificaCpf(txtCpfFormatado.getText().trim())){
+        if(new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(),"Crianca")){
             JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost

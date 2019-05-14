@@ -75,6 +75,20 @@ public class PessoaautorizadaJpaController implements Serializable {
             }
         }
     }
+    
+    public List<Pessoaautorizada> findNome(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Pessoaautorizada.findByNome");
+        query.setParameter("nome", str + "%");
+        return query.getResultList();
+    }
+
+    public List<Pessoaautorizada> findCPF(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Pessoaautorizada.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return query.getResultList();
+    }
 
     public void edit(Pessoaautorizada pessoaautorizada) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
