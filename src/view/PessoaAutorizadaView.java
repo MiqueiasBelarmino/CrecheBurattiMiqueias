@@ -61,7 +61,14 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         txtCelularFormatado.setText(p.getCelular());
         txtTelefoneFormatado.setText(p.getTelefone());
         txtEmail.setText(p.getEmail());
-        radioStatusSim.setSelected(true);
+        if (p.getStatusContato() == 0) {
+            radioStatusNao.setSelected(true);
+            radioStatusSim.setSelected(false);
+        } else if (p.getStatusContato() == 1) {
+            radioStatusNao.setSelected(false);
+            radioStatusSim.setSelected(true);
+        }
+
     }
 
     private void habilitarComponentes(boolean status) {
@@ -489,7 +496,13 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             pessoa.setEndereco(txtEndereco.getText());
             pessoa.setNome(txtNomeCompleto.getText());
             pessoa.setTelefone(txtTelefoneFormatado.getText());
-            
+            pessoa.setCriancacodigo(crianca);
+            if(radioStatusNao.isSelected()){
+                pessoa.setStatusContato(0);
+            }else{
+                pessoa.setStatusContato(1);
+            }
+
             if (!novo) {
                 try {
                     controllerPessoa.edit(pessoa);
@@ -601,7 +614,9 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             vazio = true;
         } else if (txtEndereco.getText().trim().isEmpty()) {
             vazio = true;
-        }else if(crianca ==  null){
+        } else if (crianca == null) {
+            vazio = true;
+        }else if(!radioStatusNao.isSelected()  && !radioStatusSim.isSelected() ){
             vazio = true;
         }
 

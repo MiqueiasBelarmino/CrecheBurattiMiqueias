@@ -104,10 +104,10 @@ public class CriancaView extends javax.swing.JDialog {
         txtResponsavel = new javax.swing.JTextField();
         txtCpfFormatado = new javax.swing.JFormattedTextField();
         painelFiltro = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tableCrianca = new javax.swing.JTable();
         comboFiltrar = new javax.swing.JComboBox<>();
         txtFiltrar = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableCrianca = new javax.swing.JTable();
         painelBotoes = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
@@ -231,44 +231,6 @@ public class CriancaView extends javax.swing.JDialog {
 
         painelFiltro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        tableCrianca.getTableHeader().setReorderingAllowed(false);
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listCrianca, tableCrianca);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
-        columnBinding.setColumnName("Nome");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
-        columnBinding.setColumnName("Cpf");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefone}"));
-        columnBinding.setColumnName("Telefone");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${celular}"));
-        columnBinding.setColumnName("Celular");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${responsavel}"));
-        columnBinding.setColumnName("Responsavel");
-        columnBinding.setColumnClass(String.class);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
-        tableCrianca.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableCriancaMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                tableCriancaMouseEntered(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tableCrianca);
-        if (tableCrianca.getColumnModel().getColumnCount() > 0) {
-            tableCrianca.getColumnModel().getColumn(0).setResizable(false);
-            tableCrianca.getColumnModel().getColumn(1).setResizable(false);
-            tableCrianca.getColumnModel().getColumn(2).setResizable(false);
-            tableCrianca.getColumnModel().getColumn(3).setResizable(false);
-            tableCrianca.getColumnModel().getColumn(4).setResizable(false);
-            tableCrianca.getColumnModel().getColumn(5).setResizable(false);
-        }
-
         comboFiltrar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nome", "CPF" }));
         comboFiltrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -282,6 +244,24 @@ public class CriancaView extends javax.swing.JDialog {
             }
         });
 
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listCrianca, tableCrianca);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
+        columnBinding.setColumnName("Nome");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
+        columnBinding.setColumnName("Cpf");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${responsavel}"));
+        columnBinding.setColumnName("Responsavel");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefone}"));
+        columnBinding.setColumnName("Telefone");
+        columnBinding.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+
+        jScrollPane2.setViewportView(tableCrianca);
+
         javax.swing.GroupLayout painelFiltroLayout = new javax.swing.GroupLayout(painelFiltro);
         painelFiltro.setLayout(painelFiltroLayout);
         painelFiltroLayout.setHorizontalGroup(
@@ -289,7 +269,7 @@ public class CriancaView extends javax.swing.JDialog {
             .addGroup(painelFiltroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(painelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2)
                     .addGroup(painelFiltroLayout.createSequentialGroup()
                         .addComponent(comboFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -304,9 +284,9 @@ public class CriancaView extends javax.swing.JDialog {
                 .addGroup(painelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnNovo.setText("Novo");
@@ -512,20 +492,6 @@ public class CriancaView extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnDeletarActionPerformed
 
-    private void tableCriancaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCriancaMouseEntered
-        tableCrianca.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_tableCriancaMouseEntered
-
-    private void tableCriancaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCriancaMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1) {
-            int row = tableCrianca.rowAtPoint(evt.getPoint());
-            int col = tableCrianca.columnAtPoint(evt.getPoint());
-            if (row != -1 && col != -1) {
-                montarDadosFormulario(tableCrianca.getSelectedRow());
-            }
-        }
-    }//GEN-LAST:event_tableCriancaMouseClicked
-
     private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
         if(new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(),"Crianca")){
             JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
@@ -623,7 +589,7 @@ public class CriancaView extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private java.util.List<model.Crianca> listCrianca;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelDados;
