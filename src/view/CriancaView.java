@@ -6,6 +6,7 @@
 package view;
 
 import controller.CriancaJpaController;
+import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -41,10 +42,11 @@ public class CriancaView extends javax.swing.JDialog {
         atualizarFiltro();
     }
 
-    private void atualizarFiltro(){
+    private void atualizarFiltro() {
         listCrianca.clear();
         listCrianca.addAll(controllerCrianca.findCriancaEntities());
     }
+
     private void montarDadosFormulario(int linha) {
         Crianca c = listCrianca.get(linha);
         txtNomeCompleto.setText(c.getNome());
@@ -495,7 +497,26 @@ public class CriancaView extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
-        atualizarFiltro();
+        if (tableCrianca.isRowSelected(tableCrianca.getSelectedRow())) {
+            try {
+                controllerCrianca.destroy(listCrianca.get(tableCrianca.getSelectedRow()).getCodigo());
+            } catch (IllegalOrphanException | NonexistentEntityException ex) {
+                Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            atualizarFiltro();
+            habilitarComponentes(false);
+            for (Component c : painelDados.getComponents()) {
+                if (c instanceof JTextField) {
+                    ((JTextField) c).setText("");
+                }
+                if (c instanceof JFormattedTextField) {
+                    ((JFormattedTextField) c).setText("");
+                }
+            }
+            dataNascimento.setDate(null);
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione um registro!");
+        }
     }//GEN-LAST:event_btnDeletarActionPerformed
 
     private void tableCriancaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCriancaMouseEntered
