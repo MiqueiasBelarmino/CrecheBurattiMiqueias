@@ -25,7 +25,7 @@ import static org.jdesktop.observablecollections.ObservableCollections.observabl
  *
  * @author Belarmino
  */
-public class CriancaView extends javax.swing.JDialog {
+public class PessoaAutorizadaView extends javax.swing.JDialog {
 
     /**
      * Creates new form CriancaView
@@ -34,7 +34,7 @@ public class CriancaView extends javax.swing.JDialog {
     private Crianca crianca = null;
     private boolean novo;
 
-    public CriancaView(java.awt.Frame parent, boolean modal) {
+    public PessoaAutorizadaView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         habilitarComponentes(false);
@@ -50,7 +50,7 @@ public class CriancaView extends javax.swing.JDialog {
     private void montarDadosFormulario(int linha) {
         Crianca c = listCrianca.get(linha);
         txtNomeCompleto.setText(c.getNome());
-        txtCpfFormatado.setText(c.getCpf());
+        txtCPF.setText(c.getCpf());
         txtCelularFormatado.setText(c.getCelular());
         txtTelefoneFormatado.setText(c.getTelefone());
         txtResponsavel.setText(c.getResponsavel());
@@ -93,6 +93,7 @@ public class CriancaView extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         txtNomeCompleto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        txtCPF = new javax.swing.JTextField();
         dataNascimento = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -101,7 +102,6 @@ public class CriancaView extends javax.swing.JDialog {
         txtTelefoneFormatado = new javax.swing.JFormattedTextField();
         jLabel6 = new javax.swing.JLabel();
         txtResponsavel = new javax.swing.JTextField();
-        txtCpfFormatado = new javax.swing.JFormattedTextField();
         painelFiltro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableCrianca = new javax.swing.JTable();
@@ -129,6 +129,12 @@ public class CriancaView extends javax.swing.JDialog {
 
         jLabel2.setText("CPF");
 
+        txtCPF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCPFActionPerformed(evt);
+            }
+        });
+
         jLabel3.setText("Data Nascimento");
 
         jLabel4.setText("Celular");
@@ -155,17 +161,6 @@ public class CriancaView extends javax.swing.JDialog {
             }
         });
 
-        try {
-            txtCpfFormatado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txtCpfFormatado.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtCpfFormatadoFocusLost(evt);
-            }
-        });
-
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
@@ -179,8 +174,8 @@ public class CriancaView extends javax.swing.JDialog {
                         .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelDadosLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,7 +206,7 @@ public class CriancaView extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -416,6 +411,10 @@ public class CriancaView extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeCompletoActionPerformed
 
+    private void txtCPFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCPFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCPFActionPerformed
+
     private void txtResponsavelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtResponsavelActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtResponsavelActionPerformed
@@ -453,7 +452,7 @@ public class CriancaView extends javax.swing.JDialog {
         } else {
             habilitarComponentes(false);
             crianca.setCelular(txtCelularFormatado.getText());
-            crianca.setCpf(txtCpfFormatado.getText());
+            crianca.setCpf(txtCPF.getText());
             crianca.setDataNascimento(dataNascimento.getDate());
             crianca.setNome(txtNomeCompleto.getText());
             crianca.setResponsavel(txtResponsavel.getText());
@@ -462,9 +461,9 @@ public class CriancaView extends javax.swing.JDialog {
                 try {
                     controllerCrianca.edit(crianca);
                 } catch (NonexistentEntityException ex) {
-                    Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
-                    Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } else {
@@ -502,7 +501,7 @@ public class CriancaView extends javax.swing.JDialog {
             try {
                 controllerCrianca.destroy(listCrianca.get(tableCrianca.getSelectedRow()).getCodigo());
             } catch (IllegalOrphanException | NonexistentEntityException ex) {
-                Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();
             habilitarComponentes(false);
@@ -534,12 +533,6 @@ public class CriancaView extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tableCriancaMouseClicked
 
-    private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
-        if(controllerCrianca.verificaCpf(txtCpfFormatado.getText().trim())){
-            JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
-        }
-    }//GEN-LAST:event_txtCpfFormatadoFocusLost
-
     private void pesquisar() {
         listCrianca.clear();
 
@@ -561,13 +554,13 @@ public class CriancaView extends javax.swing.JDialog {
             vazio = true;
         } else if (txtTelefoneFormatado.getText().equals("(  )     -    ")) {
             vazio = true;
-        } else if (txtCpfFormatado.getText().equals("   .   .   -  ")) {
+        } else if (txtCPF.getText().trim().isEmpty()) {
             vazio = true;
         } else if (txtNomeCompleto.getText().trim().isEmpty()) {
             vazio = true;
         } else if (txtResponsavel.getText().trim().isEmpty()) {
             vazio = true;
-        } else if (txtCpfFormatado.getText().trim().isEmpty()) {
+        } else if (txtCPF.getText().trim().isEmpty()) {
             vazio = true;
         }
 
@@ -591,21 +584,23 @@ public class CriancaView extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CriancaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CriancaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CriancaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CriancaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CriancaView dialog = new CriancaView(new javax.swing.JFrame(), true);
+                PessoaAutorizadaView dialog = new PessoaAutorizadaView(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -637,8 +632,8 @@ public class CriancaView extends javax.swing.JDialog {
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelFiltro;
     private javax.swing.JTable tableCrianca;
+    private javax.swing.JTextField txtCPF;
     private javax.swing.JFormattedTextField txtCelularFormatado;
-    private javax.swing.JFormattedTextField txtCpfFormatado;
     private javax.swing.JTextField txtFiltrar;
     private javax.swing.JTextField txtNomeCompleto;
     private javax.swing.JTextField txtResponsavel;
