@@ -39,6 +39,20 @@ public class CriancaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
+    public List<Crianca> findNome(String str) {
+        EntityManager em = utilities.GerenciamentoEntidade.getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByNome");
+        query.setParameter("nome", str + "%");
+        return query.getResultList();
+    }
+
+    public List<Crianca> findCPF(String str) {
+        EntityManager em = utilities.GerenciamentoEntidade.getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return query.getResultList();
+    }
+    
     public void create(Crianca crianca) {
         if (crianca.getRemedioList() == null) {
             crianca.setRemedioList(new ArrayList<Remedio>());
@@ -160,6 +174,41 @@ public class CriancaJpaController implements Serializable {
             }
         }
     }
+    
+    public void editSimplefied(Crianca crianca) {
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        em.merge(crianca);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    /*public List<Crianca> findNome(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByNome");
+        query.setParameter("nome", str + "%");
+        return query.getResultList();
+    }
+
+    public List<Crianca> findCPF(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return query.getResultList();
+    }*/
+
+    /*public boolean verificaCpf(String str) {
+        Crianca crianca = null;
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByCPF");
+        query.setParameter("cpf", "%" + str + "%");
+        crianca = (Crianca) query.getSingleResult();
+        if (crianca != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }*/
 
     public void edit(Crianca crianca) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
@@ -357,42 +406,6 @@ public class CriancaJpaController implements Serializable {
         }
     }
 
-    public void editSimplefied(Crianca crianca) {
-        EntityManager em = getEntityManager();
-        em.getTransaction().begin();
-        em.merge(crianca);
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    public List<Crianca> findNome(String str) {
-        EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Crianca.findByNome");
-        query.setParameter("nome", str + "%");
-        return query.getResultList();
-    }
-
-    public List<Crianca> findCPF(String str) {
-        EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Crianca.findByCpf");
-        query.setParameter("cpf", "%" + str + "%");
-        return query.getResultList();
-    }
-
-    /*public boolean verificaCpf(String str) {
-        Crianca crianca = null;
-        EntityManager em = getEntityManager();
-        Query query = em.createNamedQuery("Crianca.findByCPF");
-        query.setParameter("cpf", "%" + str + "%");
-        crianca = (Crianca) query.getSingleResult();
-        if (crianca != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
- 
-
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -505,5 +518,5 @@ public class CriancaJpaController implements Serializable {
             em.close();
         }
     }
-
+    
 }
