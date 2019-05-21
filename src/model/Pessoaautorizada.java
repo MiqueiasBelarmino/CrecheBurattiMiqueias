@@ -65,8 +65,6 @@ public class Pessoaautorizada implements Serializable {
     private String email;
     @Column(name = "statusContato")
     private Integer statusContato;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaautorizada", fetch = FetchType.LAZY)
-    private List<Pessoaautorizadacrianca> pessoaautorizadacriancaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo", fetch = FetchType.LAZY)
     private List<Controleretirada> controleretiradaList;
 
@@ -149,14 +147,6 @@ public class Pessoaautorizada implements Serializable {
         this.statusContato = statusContato;
     }
 
-    @XmlTransient
-    public List<Pessoaautorizadacrianca> getPessoaautorizadacriancaList() {
-        return pessoaautorizadacriancaList;
-    }
-
-    public void setPessoaautorizadacriancaList(List<Pessoaautorizadacrianca> pessoaautorizadacriancaList) {
-        this.pessoaautorizadacriancaList = pessoaautorizadacriancaList;
-    }
 
     @XmlTransient
     public List<Controleretirada> getControleretiradaList() {

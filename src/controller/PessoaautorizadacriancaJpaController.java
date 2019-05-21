@@ -15,7 +15,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import model.Crianca;
-import model.Pessoaautorizada;
 import model.Pessoaautorizadacrianca;
 
 /**
@@ -43,19 +42,10 @@ public class PessoaautorizadacriancaJpaController implements Serializable {
                 crianca = em.getReference(crianca.getClass(), crianca.getCodigo());
                 pessoaautorizadacrianca.setCrianca(crianca);
             }
-            Pessoaautorizada pessoaautorizada = pessoaautorizadacrianca.getPessoaautorizada();
-            if (pessoaautorizada != null) {
-                pessoaautorizada = em.getReference(pessoaautorizada.getClass(), pessoaautorizada.getCodigo());
-                pessoaautorizadacrianca.setPessoaautorizada(pessoaautorizada);
-            }
             em.persist(pessoaautorizadacrianca);
             if (crianca != null) {
                 crianca.getPessoaautorizadacriancaList().add(pessoaautorizadacrianca);
                 crianca = em.merge(crianca);
-            }
-            if (pessoaautorizada != null) {
-                pessoaautorizada.getPessoaautorizadacriancaList().add(pessoaautorizadacrianca);
-                pessoaautorizada = em.merge(pessoaautorizada);
             }
             em.getTransaction().commit();
         } finally {
@@ -73,15 +63,9 @@ public class PessoaautorizadacriancaJpaController implements Serializable {
             Pessoaautorizadacrianca persistentPessoaautorizadacrianca = em.find(Pessoaautorizadacrianca.class, pessoaautorizadacrianca.getCodigo());
             Crianca criancaOld = persistentPessoaautorizadacrianca.getCrianca();
             Crianca criancaNew = pessoaautorizadacrianca.getCrianca();
-            Pessoaautorizada pessoaautorizadaOld = persistentPessoaautorizadacrianca.getPessoaautorizada();
-            Pessoaautorizada pessoaautorizadaNew = pessoaautorizadacrianca.getPessoaautorizada();
             if (criancaNew != null) {
                 criancaNew = em.getReference(criancaNew.getClass(), criancaNew.getCodigo());
                 pessoaautorizadacrianca.setCrianca(criancaNew);
-            }
-            if (pessoaautorizadaNew != null) {
-                pessoaautorizadaNew = em.getReference(pessoaautorizadaNew.getClass(), pessoaautorizadaNew.getCodigo());
-                pessoaautorizadacrianca.setPessoaautorizada(pessoaautorizadaNew);
             }
             pessoaautorizadacrianca = em.merge(pessoaautorizadacrianca);
             if (criancaOld != null && !criancaOld.equals(criancaNew)) {
@@ -91,14 +75,6 @@ public class PessoaautorizadacriancaJpaController implements Serializable {
             if (criancaNew != null && !criancaNew.equals(criancaOld)) {
                 criancaNew.getPessoaautorizadacriancaList().add(pessoaautorizadacrianca);
                 criancaNew = em.merge(criancaNew);
-            }
-            if (pessoaautorizadaOld != null && !pessoaautorizadaOld.equals(pessoaautorizadaNew)) {
-                pessoaautorizadaOld.getPessoaautorizadacriancaList().remove(pessoaautorizadacrianca);
-                pessoaautorizadaOld = em.merge(pessoaautorizadaOld);
-            }
-            if (pessoaautorizadaNew != null && !pessoaautorizadaNew.equals(pessoaautorizadaOld)) {
-                pessoaautorizadaNew.getPessoaautorizadacriancaList().add(pessoaautorizadacrianca);
-                pessoaautorizadaNew = em.merge(pessoaautorizadaNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -133,11 +109,6 @@ public class PessoaautorizadacriancaJpaController implements Serializable {
             if (crianca != null) {
                 crianca.getPessoaautorizadacriancaList().remove(pessoaautorizadacrianca);
                 crianca = em.merge(crianca);
-            }
-            Pessoaautorizada pessoaautorizada = pessoaautorizadacrianca.getPessoaautorizada();
-            if (pessoaautorizada != null) {
-                pessoaautorizada.getPessoaautorizadacriancaList().remove(pessoaautorizadacrianca);
-                pessoaautorizada = em.merge(pessoaautorizada);
             }
             em.remove(pessoaautorizadacrianca);
             em.getTransaction().commit();

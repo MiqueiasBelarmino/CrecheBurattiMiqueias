@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import javax.persistence.Persistence;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import model.Crianca;
 import model.Pessoaautorizadacrianca;
