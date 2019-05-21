@@ -5,74 +5,57 @@
  */
 package view;
 
+import controller.CriancaJpaController;
 import controller.GeneralController;
-import controller.PessoaautorizadaJpaController;
-import controller.PessoaautorizadacriancaJpaController;
 import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Persistence;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import model.Crianca;
-import model.Pessoaautorizadacrianca;
-import model.Pessoaautorizada;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
 /**
  *
  * @author Belarmino
  */
-public class PessoaAutorizadaView extends javax.swing.JDialog {
+public class CriancaViewBACKUP extends javax.swing.JDialog {
 
     /**
      * Creates new form CriancaView
      */
-    private PessoaautorizadaJpaController controllerPessoa = null;
-    private PessoaautorizadacriancaJpaController controllerAutorizada = null;
-    private Pessoaautorizada pessoa = null;
-    private Pessoaautorizadacrianca autorizada = null;
+    private CriancaJpaController controllerCrianca = null;
     private Crianca crianca = null;
     private boolean novo;
-    public static Pessoaautorizada selecionado = new Pessoaautorizada();
 
-    public PessoaAutorizadaView(java.awt.Frame parent, boolean modal, boolean selecionar) {
+    public CriancaViewBACKUP(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        radioGrupo.add(radioStatusSim);
-        radioGrupo.add(radioStatusNao);
         habilitarComponentes(false);
-        btnSelecionar.setVisible(selecionar);
-        controllerPessoa = new PessoaautorizadaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
+        controllerCrianca = new CriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
         atualizarFiltro();
     }
 
     private void atualizarFiltro() {
-        pessoaList.clear();
-        pessoaList.addAll(controllerPessoa.findPessoaautorizadaEntities());
+        listCrianca.clear();
+        listCrianca.addAll(controllerCrianca.findCriancaEntities());
     }
 
     private void montarDadosFormulario(int linha) {
-        Pessoaautorizada p = pessoaList.get(linha);
-        txtNomeCompleto.setText(p.getNome());
-        txtEndereco.setText(p.getEndereco());
-        txtCpfFormatado.setText(p.getCpf());
-        txtCelularFormatado.setText(p.getCelular());
-        txtTelefoneFormatado.setText(p.getTelefone());
-        txtEmail.setText(p.getEmail());
-        if (p.getStatusContato() == 0) {
-            radioStatusNao.setSelected(true);
-            radioStatusSim.setSelected(false);
-        } else if (p.getStatusContato() == 1) {
-            radioStatusNao.setSelected(false);
-            radioStatusSim.setSelected(true);
-        }
-
+        Crianca c = listCrianca.get(linha);
+        txtNomeCompleto.setText(c.getNome());
+        txtCpfFormatado.setText(c.getCpf());
+        txtCelularFormatado.setText(c.getCelular());
+        txtTelefoneFormatado.setText(c.getTelefone());
+        txtResponsavel.setText(c.getResponsavel());
+        dataNascimento.setDate(c.getDataNascimento());
     }
 
     private void habilitarComponentes(boolean status) {
@@ -80,17 +63,19 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         for (Component component : painelDados.getComponents()) {
             component.setEnabled(status);
         }
-        tableCrianca.setEnabled(status);
-        
         for (Component component : painelFiltro.getComponents()) {
             component.setEnabled(!status);
         }
-        tablePessoa.setEnabled(!status);
+        tableCrianca.setEnabled(!status);
         btnNovo.setEnabled(!status);
         btnSalvar.setEnabled(status);
         btnCancelar.setEnabled(status);
         btnAlterar.setEnabled(!status);
         btnDeletar.setEnabled(!status);
+
+    }
+
+    private void limparFormatados() {
 
     }
 
@@ -104,45 +89,32 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        pessoaList = observableList(new ArrayList<model.Pessoaautorizada>());
-        radioGrupo = new javax.swing.ButtonGroup();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tablePessoa1 = new javax.swing.JTable();
-        criancaList = observableList(new ArrayList<model.Crianca>());
+        listCrianca = observableList(new ArrayList<model.Crianca>());
         painelDados = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNomeCompleto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        dataNascimento = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtCelularFormatado = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
         txtTelefoneFormatado = new javax.swing.JFormattedTextField();
         jLabel6 = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
-        txtEndereco = new javax.swing.JTextField();
+        txtResponsavel = new javax.swing.JTextField();
         txtCpfFormatado = new javax.swing.JFormattedTextField();
-        jLabel7 = new javax.swing.JLabel();
-        radioStatusSim = new javax.swing.JRadioButton();
-        radioStatusNao = new javax.swing.JRadioButton();
-        btnBuscarCrianca = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        tableCrianca = new javax.swing.JTable();
-        btnRemoverCrianca = new javax.swing.JButton();
+        btnPessoa = new javax.swing.JButton();
         painelFiltro = new javax.swing.JPanel();
         comboFiltrar = new javax.swing.JComboBox<>();
         txtFiltrar = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tablePessoa = new javax.swing.JTable();
+        tableCrianca = new javax.swing.JTable();
         painelBotoes = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         btnDeletar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        btnSelecionar = new javax.swing.JButton();
-
-        jScrollPane3.setViewportView(tablePessoa1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -159,7 +131,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
 
         jLabel2.setText("CPF");
 
-        jLabel3.setText("Endereço");
+        jLabel3.setText("Data Nascimento");
 
         jLabel4.setText("Celular");
 
@@ -177,17 +149,11 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             ex.printStackTrace();
         }
 
-        jLabel6.setText("email");
+        jLabel6.setText("Responsável");
 
-        txtEmail.addActionListener(new java.awt.event.ActionListener() {
+        txtResponsavel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailActionPerformed(evt);
-            }
-        });
-
-        txtEndereco.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEnderecoActionPerformed(evt);
+                txtResponsavelActionPerformed(evt);
             }
         });
 
@@ -202,39 +168,10 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             }
         });
 
-        jLabel7.setText("Contato Emergencial ?");
-
-        radioStatusSim.setText("Sim");
-        radioStatusSim.addActionListener(new java.awt.event.ActionListener() {
+        btnPessoa.setText("Definir Pessoa Autorizada ou Contato");
+        btnPessoa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioStatusSimActionPerformed(evt);
-            }
-        });
-
-        radioStatusNao.setText("Não");
-
-        btnBuscarCrianca.setText("Adicionar Criança");
-        btnBuscarCrianca.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarCriancaActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, criancaList, tableCrianca);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
-        columnBinding.setColumnName("Nome");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${responsavel}"));
-        columnBinding.setColumnName("Responsavel");
-        columnBinding.setColumnClass(String.class);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
-        jScrollPane4.setViewportView(tableCrianca);
-
-        btnRemoverCrianca.setText("Adicionar Criança");
-        btnRemoverCrianca.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoverCriancaActionPerformed(evt);
+                btnPessoaActionPerformed(evt);
             }
         });
 
@@ -243,47 +180,37 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(radioStatusSim)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radioStatusNao)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosLayout.createSequentialGroup()
-                        .addComponent(btnBuscarCrianca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6))
                         .addGap(18, 18, 18)
-                        .addComponent(btnRemoverCrianca, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane4)
-                    .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel5))
-                        .addGap(24, 24, 24)
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel2))
+                                .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5)
+                                .addGap(10, 10, 10)
+                                .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel6)
+                                .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtEmail)))))
+                                .addComponent(btnPessoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         painelDadosLayout.setVerticalGroup(
@@ -295,30 +222,22 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)
+                        .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel3))
+                    .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(radioStatusSim)
-                    .addComponent(radioStatusNao))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBuscarCrianca)
-                    .addComponent(btnRemoverCrianca))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPessoa))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         painelFiltro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -336,26 +255,23 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             }
         });
 
-        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, pessoaList, tablePessoa);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listCrianca, tableCrianca);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
+        columnBinding.setColumnName("Nome");
+        columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
         columnBinding.setColumnName("Cpf");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
-        columnBinding.setColumnName("Nome");
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${responsavel}"));
+        columnBinding.setColumnName("Responsavel");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefone}"));
         columnBinding.setColumnName("Telefone");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${endereco}"));
-        columnBinding.setColumnName("Endereco");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${email}"));
-        columnBinding.setColumnName("Email");
-        columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
 
-        jScrollPane2.setViewportView(tablePessoa);
+        jScrollPane2.setViewportView(tableCrianca);
 
         javax.swing.GroupLayout painelFiltroLayout = new javax.swing.GroupLayout(painelFiltro);
         painelFiltro.setLayout(painelFiltroLayout);
@@ -380,8 +296,8 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     .addComponent(comboFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnNovo.setText("Novo");
@@ -419,13 +335,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             }
         });
 
-        btnSelecionar.setText("Selecionar");
-        btnSelecionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSelecionarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout painelBotoesLayout = new javax.swing.GroupLayout(painelBotoes);
         painelBotoes.setLayout(painelBotoesLayout);
         painelBotoesLayout.setHorizontalGroup(
@@ -441,8 +350,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                 .addComponent(btnDeletar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSelecionar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelBotoesLayout.setVerticalGroup(
@@ -454,8 +361,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     .addComponent(btnAlterar)
                     .addComponent(btnSalvar)
                     .addComponent(btnDeletar)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnSelecionar))
+                    .addComponent(btnCancelar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -493,14 +399,14 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeCompletoActionPerformed
 
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+    private void txtResponsavelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtResponsavelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
+    }//GEN-LAST:event_txtResponsavelActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         habilitarComponentes(true);
         novo = true;
-        pessoa = new Pessoaautorizada();
+        crianca = new Crianca();
         txtNomeCompleto.requestFocus();
     }//GEN-LAST:event_btnNovoActionPerformed
 
@@ -508,10 +414,10 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         habilitarComponentes(true);
         novo = false;
         int row;
-        row = tablePessoa.getSelectedRow();
+        row = tableCrianca.getSelectedRow();
         if (row > -1) {
-            pessoa = pessoaList.get(row);
-            tablePessoa.setRowSelectionInterval(row, row);
+            crianca = listCrianca.get(row);
+            tableCrianca.setRowSelectionInterval(row, row);
             montarDadosFormulario(row);
         }
     }//GEN-LAST:event_btnAlterarActionPerformed
@@ -528,45 +434,24 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         if (vazio()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
         } else {
-            controllerAutorizada = new PessoaautorizadacriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
             habilitarComponentes(false);
-            pessoa.setCelular(txtCelularFormatado.getText());
-            pessoa.setCpf(txtCpfFormatado.getText());
-            pessoa.setEmail(txtEmail.getText());
-            pessoa.setEndereco(txtEndereco.getText());
-            pessoa.setNome(txtNomeCompleto.getText());
-            pessoa.setTelefone(txtTelefoneFormatado.getText());
-
-            if (radioStatusNao.isSelected()) {
-                pessoa.setStatusContato(0);
-            } else {
-                pessoa.setStatusContato(1);
-            }
-
+            crianca.setCelular(txtCelularFormatado.getText());
+            crianca.setCpf(txtCpfFormatado.getText());
+            crianca.setDataNascimento(dataNascimento.getDate());
+            crianca.setNome(txtNomeCompleto.getText());
+            crianca.setResponsavel(txtResponsavel.getText());
+            crianca.setTelefone(txtTelefoneFormatado.getText());
             if (!novo) {
                 try {
-                    controllerPessoa.edit(pessoa);
-                    for (Crianca c : criancaList) {
-                        autorizada = new Pessoaautorizadacrianca();
-                        autorizada.setCrianca(c);
-                        autorizada.setPessoaautorizada(controllerPessoa.findCPFUnique(pessoa.getCpf()));
-                        controllerAutorizada.edit(autorizada);
-                    }
-
+                    controllerCrianca.edit(crianca);
                 } catch (NonexistentEntityException ex) {
-                    Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CriancaViewBACKUP.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
-                    Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CriancaViewBACKUP.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } else {
-                controllerPessoa.create(pessoa);
-                for (Crianca c : criancaList) {
-                    autorizada = new Pessoaautorizadacrianca();
-                    autorizada.setCrianca(c);
-                    autorizada.setPessoaautorizada(controllerPessoa.findCPFUnique(pessoa.getCpf()));
-                    controllerAutorizada.create(autorizada);
-                }
+                controllerCrianca.create(crianca);
             }
 
             for (Component c : painelDados.getComponents()) {
@@ -577,6 +462,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     ((JFormattedTextField) c).setText("");
                 }
             }
+            dataNascimento.setDate(null);
             atualizarFiltro();
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
@@ -590,19 +476,16 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             if (c instanceof JFormattedTextField) {
                 ((JFormattedTextField) c).setText("");
             }
-            
         }
-        radioGrupo.clearSelection();
+        dataNascimento.setDate(null);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
-        if (tablePessoa.isRowSelected(tablePessoa.getSelectedRow())) {
+        if (tableCrianca.isRowSelected(tableCrianca.getSelectedRow())) {
             try {
-                controllerPessoa.destroy(pessoaList.get(tablePessoa.getSelectedRow()).getCodigo());
-            } catch (NonexistentEntityException ex) {
-                Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalOrphanException ex) {
-                Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
+                controllerCrianca.destroy(listCrianca.get(tableCrianca.getSelectedRow()).getCodigo());
+            } catch (IllegalOrphanException | NonexistentEntityException ex) {
+                Logger.getLogger(CriancaViewBACKUP.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();
             habilitarComponentes(false);
@@ -614,66 +497,34 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     ((JFormattedTextField) c).setText("");
                 }
             }
+            dataNascimento.setDate(null);
         } else {
             JOptionPane.showMessageDialog(null, "Selecione um registro!");
         }
     }//GEN-LAST:event_btnDeletarActionPerformed
 
-    private void txtEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEnderecoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEnderecoActionPerformed
-
-    private void radioStatusSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioStatusSimActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioStatusSimActionPerformed
-
     private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
-        if (new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(), "Pessoaautorizada")) {
-            JOptionPane.showMessageDialog(this, "Já existe uma Pessoa com esse CPF!");
+        if (new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(), "Crianca")) {
+            JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost
 
-    private void btnBuscarCriancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCriancaActionPerformed
-        CriancaBuscarView cbv = new CriancaBuscarView(null, true);
-        cbv.setVisible(true);
-        criancaList.add(CriancaBuscarView.crianca);
-    }//GEN-LAST:event_btnBuscarCriancaActionPerformed
-
-    private void btnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarActionPerformed
-        int linha = tablePessoa.getSelectedRow();
-        if (linha != -1) {
-            selecionado = pessoaList.get(linha);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(null, "Selecione uma Pessoa Autorizado!");
-        }
-    }//GEN-LAST:event_btnSelecionarActionPerformed
-
-    private void btnRemoverCriancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverCriancaActionPerformed
-        int linha = tablePessoa.getSelectedRow();
-        if (linha != -1) {
-            criancaList.remove(linha);
-        } else if (criancaList.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Não há Crianças!");
-        } else {
-            JOptionPane.showMessageDialog(null, "Selecione uma criança!");
-        }
-    }//GEN-LAST:event_btnRemoverCriancaActionPerformed
+    private void btnPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPessoaActionPerformed
+        PessoaAutorizadaView autorizadaView = new PessoaAutorizadaView(null, true, true);
+        autorizadaView.setVisible(true);
+    }//GEN-LAST:event_btnPessoaActionPerformed
 
     private void pesquisar() {
-        pessoaList.clear();
+        listCrianca.clear();
 
         if (comboFiltrar.getSelectedItem().toString().equals("Nome")) {
-            pessoaList.addAll(controllerPessoa.findNome(txtFiltrar.getText().trim()));
+            listCrianca.addAll(controllerCrianca.findNome(txtFiltrar.getText().trim()));
         } else {
-            pessoaList.addAll(controllerPessoa.findCPF(txtFiltrar.getText().trim()));
+            listCrianca.addAll(controllerCrianca.findCPF(txtFiltrar.getText().trim()));
         }
-        int linha = pessoaList.size() - 1;
-        //CABO NET
-        //40 MEGAS 84,90
-        //100 MEGAS 99,90
+        int linha = listCrianca.size() - 1;
         if (linha > 0) {
-            tablePessoa.setRowSelectionInterval(linha, linha);
+            tableCrianca.setRowSelectionInterval(linha, linha);
         }
     }
 
@@ -688,18 +539,12 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             vazio = true;
         } else if (txtNomeCompleto.getText().trim().isEmpty()) {
             vazio = true;
-        } else if (txtEmail.getText().trim().isEmpty()) {
+        } else if (txtResponsavel.getText().trim().isEmpty()) {
             vazio = true;
-        } else if (txtEndereco.getText().trim().isEmpty()) {
+        } else if (txtCpfFormatado.getText().trim().isEmpty()) {
             vazio = true;
-        } else if (criancaList.isEmpty()) {
-            vazio = true;
-            JOptionPane.showMessageDialog(null,"Selecione/Adicione uma criança!");
         }
 
-        if (!radioStatusSim.isSelected() && !radioStatusNao.isSelected()) {
-            vazio = true;
-        }
         return vazio;
     }
 
@@ -720,13 +565,13 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CriancaViewBACKUP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CriancaViewBACKUP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CriancaViewBACKUP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PessoaAutorizadaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CriancaViewBACKUP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -736,7 +581,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                PessoaAutorizadaView dialog = new PessoaAutorizadaView(new javax.swing.JFrame(), true, false);
+                CriancaViewBACKUP dialog = new CriancaViewBACKUP(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -750,41 +595,30 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlterar;
-    private javax.swing.JButton btnBuscarCrianca;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnDeletar;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JButton btnRemoverCrianca;
+    private javax.swing.JButton btnPessoa;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnSelecionar;
     private javax.swing.JComboBox<String> comboFiltrar;
-    private java.util.List<model.Crianca> criancaList;
+    private com.toedter.calendar.JDateChooser dataNascimento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private java.util.List<model.Crianca> listCrianca;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelFiltro;
-    private java.util.List<model.Pessoaautorizada> pessoaList;
-    private javax.swing.ButtonGroup radioGrupo;
-    private javax.swing.JRadioButton radioStatusNao;
-    private javax.swing.JRadioButton radioStatusSim;
     private javax.swing.JTable tableCrianca;
-    private javax.swing.JTable tablePessoa;
-    private javax.swing.JTable tablePessoa1;
     private javax.swing.JFormattedTextField txtCelularFormatado;
     private javax.swing.JFormattedTextField txtCpfFormatado;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtFiltrar;
     private javax.swing.JTextField txtNomeCompleto;
+    private javax.swing.JTextField txtResponsavel;
     private javax.swing.JFormattedTextField txtTelefoneFormatado;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

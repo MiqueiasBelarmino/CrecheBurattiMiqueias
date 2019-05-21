@@ -103,6 +103,7 @@ public class CriancaView extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         txtResponsavel = new javax.swing.JTextField();
         txtCpfFormatado = new javax.swing.JFormattedTextField();
+        btnPessoa = new javax.swing.JButton();
         painelFiltro = new javax.swing.JPanel();
         comboFiltrar = new javax.swing.JComboBox<>();
         txtFiltrar = new javax.swing.JTextField();
@@ -167,6 +168,13 @@ public class CriancaView extends javax.swing.JDialog {
             }
         });
 
+        btnPessoa.setText("Definir Pessoa Autorizada ou Contato");
+        btnPessoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPessoaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
@@ -194,14 +202,15 @@ public class CriancaView extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5)
+                                .addGap(10, 10, 10)
+                                .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(painelDadosLayout.createSequentialGroup()
                                 .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5)
-                        .addGap(10, 10, 10)
-                        .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPessoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         painelDadosLayout.setVerticalGroup(
@@ -223,9 +232,11 @@ public class CriancaView extends javax.swing.JDialog {
                         .addComponent(jLabel3))
                     .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPessoa))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -493,10 +504,15 @@ public class CriancaView extends javax.swing.JDialog {
     }//GEN-LAST:event_btnDeletarActionPerformed
 
     private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
-        if(new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(),"Crianca")){
+        if (new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(), "Crianca")) {
             JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost
+
+    private void btnPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPessoaActionPerformed
+        PessoaAutorizadaView autorizadaView = new PessoaAutorizadaView(null, true, true);
+        autorizadaView.setVisible(true);
+    }//GEN-LAST:event_btnPessoaActionPerformed
 
     private void pesquisar() {
         listCrianca.clear();
@@ -580,6 +596,7 @@ public class CriancaView extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnDeletar;
     private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnPessoa;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> comboFiltrar;
     private com.toedter.calendar.JDateChooser dataNascimento;

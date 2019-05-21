@@ -6,6 +6,7 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
+import controller.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -33,7 +34,7 @@ public class OcorrenciaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Ocorrencia ocorrencia) {
+    public void create(Ocorrencia ocorrencia) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -58,6 +59,11 @@ public class OcorrenciaJpaController implements Serializable {
                 servidorcodigo = em.merge(servidorcodigo);
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findOcorrencia(ocorrencia.getCodigo()) != null) {
+                throw new PreexistingEntityException("Ocorrencia " + ocorrencia + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();

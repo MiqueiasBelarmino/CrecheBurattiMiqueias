@@ -44,7 +44,7 @@ public class AmbienteJpaController implements Serializable {
             em.getTransaction().begin();
             List<Reservaambiente> attachedReservaambienteList = new ArrayList<Reservaambiente>();
             for (Reservaambiente reservaambienteListReservaambienteToAttach : ambiente.getReservaambienteList()) {
-                reservaambienteListReservaambienteToAttach = em.getReference(reservaambienteListReservaambienteToAttach.getClass(), reservaambienteListReservaambienteToAttach.getReservaambientePK());
+                reservaambienteListReservaambienteToAttach = em.getReference(reservaambienteListReservaambienteToAttach.getClass(), reservaambienteListReservaambienteToAttach.getCodigo());
                 attachedReservaambienteList.add(reservaambienteListReservaambienteToAttach);
             }
             ambiente.setReservaambienteList(attachedReservaambienteList);
@@ -88,7 +88,7 @@ public class AmbienteJpaController implements Serializable {
             }
             List<Reservaambiente> attachedReservaambienteListNew = new ArrayList<Reservaambiente>();
             for (Reservaambiente reservaambienteListNewReservaambienteToAttach : reservaambienteListNew) {
-                reservaambienteListNewReservaambienteToAttach = em.getReference(reservaambienteListNewReservaambienteToAttach.getClass(), reservaambienteListNewReservaambienteToAttach.getReservaambientePK());
+                reservaambienteListNewReservaambienteToAttach = em.getReference(reservaambienteListNewReservaambienteToAttach.getClass(), reservaambienteListNewReservaambienteToAttach.getCodigo());
                 attachedReservaambienteListNew.add(reservaambienteListNewReservaambienteToAttach);
             }
             reservaambienteListNew = attachedReservaambienteListNew;

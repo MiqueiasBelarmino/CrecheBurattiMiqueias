@@ -35,4 +35,32 @@ public class GeneralController {
         }
 
     }
+    
+    /*public List<Crianca> findNome(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByNome");
+        query.setParameter("nome", str + "%");
+        return query.getResultList();
+    }
+
+    public List<Crianca> findCPF(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return query.getResultList();
+    }*/
+
+    /*public boolean verificaCpf(String str) {
+        Crianca crianca = null;
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Crianca.findByCPF");
+        query.setParameter("cpf", "%" + str + "%");
+        crianca = (Crianca) query.getSingleResult();
+        if (crianca != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }*/
+
 }

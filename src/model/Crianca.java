@@ -35,8 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Crianca.findAll", query = "SELECT c FROM Crianca c"),
     @NamedQuery(name = "Crianca.findByCodigo", query = "SELECT c FROM Crianca c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "Crianca.findByNome", query = "SELECT c FROM Crianca c WHERE c.nome = :nome"),
-    @NamedQuery(name = "Crianca.findByCpf", query = "SELECT c FROM Crianca c WHERE c.cpf = :cpf"),
+    @NamedQuery(name = "Crianca.findByNome", query = "SELECT c FROM Crianca c WHERE c.nome LIKE :nome"),
+    @NamedQuery(name = "Crianca.findByCpf", query = "SELECT c FROM Crianca c WHERE c.cpf LIKE :cpf"),
     @NamedQuery(name = "Crianca.findByDataNascimento", query = "SELECT c FROM Crianca c WHERE c.dataNascimento = :dataNascimento"),
     @NamedQuery(name = "Crianca.findByTelefone", query = "SELECT c FROM Crianca c WHERE c.telefone = :telefone"),
     @NamedQuery(name = "Crianca.findByCelular", query = "SELECT c FROM Crianca c WHERE c.celular = :celular"),
@@ -74,8 +74,8 @@ public class Crianca implements Serializable {
     private List<Ocorrencia> ocorrenciaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
     private List<Frequencia> frequenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
-    private List<Pessoaautorizada> pessoaautorizadaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crianca", fetch = FetchType.LAZY)
+    private List<Pessoaautorizadacrianca> pessoaautorizadacriancaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
     private List<Controleretirada> controleretiradaList;
 
@@ -187,12 +187,12 @@ public class Crianca implements Serializable {
     }
 
     @XmlTransient
-    public List<Pessoaautorizada> getPessoaautorizadaList() {
-        return pessoaautorizadaList;
+    public List<Pessoaautorizadacrianca> getPessoaautorizadacriancaList() {
+        return pessoaautorizadacriancaList;
     }
 
-    public void setPessoaautorizadaList(List<Pessoaautorizada> pessoaautorizadaList) {
-        this.pessoaautorizadaList = pessoaautorizadaList;
+    public void setPessoaautorizadacriancaList(List<Pessoaautorizadacrianca> pessoaautorizadacriancaList) {
+        this.pessoaautorizadacriancaList = pessoaautorizadacriancaList;
     }
 
     @XmlTransient

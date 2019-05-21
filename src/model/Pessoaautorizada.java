@@ -15,8 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -34,11 +32,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Pessoaautorizada.findAll", query = "SELECT p FROM Pessoaautorizada p"),
     @NamedQuery(name = "Pessoaautorizada.findByCodigo", query = "SELECT p FROM Pessoaautorizada p WHERE p.codigo = :codigo"),
-    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome = :nome"),
-    @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf = :cpf"),
+    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome LIKE :nome"),
+    @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf LIKE :cpf"),
     @NamedQuery(name = "Pessoaautorizada.findByEndereco", query = "SELECT p FROM Pessoaautorizada p WHERE p.endereco = :endereco"),
     @NamedQuery(name = "Pessoaautorizada.findByTelefone", query = "SELECT p FROM Pessoaautorizada p WHERE p.telefone = :telefone"),
-    @NamedQuery(name = "Pessoaautorizada.findByCelular", query = "SELECT p FROM Pessoaautorizada p WHERE p.celular = :celular"),
     @NamedQuery(name = "Pessoaautorizada.findByEmail", query = "SELECT p FROM Pessoaautorizada p WHERE p.email = :email"),
     @NamedQuery(name = "Pessoaautorizada.findByStatusContato", query = "SELECT p FROM Pessoaautorizada p WHERE p.statusContato = :statusContato")})
 public class Pessoaautorizada implements Serializable {
@@ -58,17 +55,18 @@ public class Pessoaautorizada implements Serializable {
     @Basic(optional = false)
     @Column(name = "endereco")
     private String endereco;
+    @Basic(optional = false)
     @Column(name = "telefone")
     private String telefone;
+    @Basic(optional = true)
     @Column(name = "celular")
     private String celular;
     @Column(name = "email")
     private String email;
     @Column(name = "statusContato")
     private Integer statusContato;
-    @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaautorizada", fetch = FetchType.LAZY)
+    private List<Pessoaautorizadacrianca> pessoaautorizadacriancaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo", fetch = FetchType.LAZY)
     private List<Controleretirada> controleretiradaList;
 
@@ -79,11 +77,12 @@ public class Pessoaautorizada implements Serializable {
         this.codigo = codigo;
     }
 
-    public Pessoaautorizada(Integer codigo, String nome, String cpf, String endereco) {
+    public Pessoaautorizada(Integer codigo, String nome, String cpf, String endereco, String telefone) {
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
+        this.telefone = telefone;
     }
 
     public Integer getCodigo() {
@@ -106,6 +105,14 @@ public class Pessoaautorizada implements Serializable {
         return cpf;
     }
 
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
@@ -126,14 +133,6 @@ public class Pessoaautorizada implements Serializable {
         this.telefone = telefone;
     }
 
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -150,12 +149,13 @@ public class Pessoaautorizada implements Serializable {
         this.statusContato = statusContato;
     }
 
-    public Crianca getCriancacodigo() {
-        return criancacodigo;
+    @XmlTransient
+    public List<Pessoaautorizadacrianca> getPessoaautorizadacriancaList() {
+        return pessoaautorizadacriancaList;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
-        this.criancacodigo = criancacodigo;
+    public void setPessoaautorizadacriancaList(List<Pessoaautorizadacrianca> pessoaautorizadacriancaList) {
+        this.pessoaautorizadacriancaList = pessoaautorizadacriancaList;
     }
 
     @XmlTransient

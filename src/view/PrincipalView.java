@@ -5,6 +5,12 @@
  */
 package view;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import static java.awt.image.ImageObserver.WIDTH;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+
 /**
  *
  * @author Belarmino
@@ -14,6 +20,8 @@ public class PrincipalView extends javax.swing.JFrame {
     /**
      * Creates new form PrincipalView
      */
+    public ImageIcon imageIcon = new ImageIcon("teste.png");
+
     public PrincipalView() {
         initComponents();
     }
@@ -70,15 +78,15 @@ public class PrincipalView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPessoaActionPerformed
+        PessoaAutorizadaView autorizadaView = new PessoaAutorizadaView(null, true, false);
+        autorizadaView.setVisible(true);
+    }//GEN-LAST:event_btnPessoaActionPerformed
+
     private void btnCriancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriancaActionPerformed
         CriancaView criancaView = new CriancaView(null, true);
         criancaView.setVisible(true);
     }//GEN-LAST:event_btnCriancaActionPerformed
-
-    private void btnPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPessoaActionPerformed
-        PessoaAutorizadaView autorizadaView = new PessoaAutorizadaView(null, true);
-        autorizadaView.setVisible(true);
-    }//GEN-LAST:event_btnPessoaActionPerformed
 
     /**
      * @param args the command line arguments

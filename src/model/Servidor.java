@@ -32,14 +32,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Servidor.findAll", query = "SELECT s FROM Servidor s"),
     @NamedQuery(name = "Servidor.findByCodigo", query = "SELECT s FROM Servidor s WHERE s.codigo = :codigo"),
-    @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome = :nome"),
-    @NamedQuery(name = "Servidor.findByCpf", query = "SELECT s FROM Servidor s WHERE s.cpf = :cpf"),
+    @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome LIKE :nome"),
     @NamedQuery(name = "Servidor.findByTelefone", query = "SELECT s FROM Servidor s WHERE s.telefone = :telefone"),
-    @NamedQuery(name = "Servidor.findByCelular", query = "SELECT s FROM Servidor s WHERE s.celular = :celular"),
     @NamedQuery(name = "Servidor.findByEmail", query = "SELECT s FROM Servidor s WHERE s.email = :email"),
     @NamedQuery(name = "Servidor.findByEndereco", query = "SELECT s FROM Servidor s WHERE s.endereco = :endereco"),
     @NamedQuery(name = "Servidor.findByNivelacesso", query = "SELECT s FROM Servidor s WHERE s.nivelacesso = :nivelacesso"),
-    @NamedQuery(name = "Servidor.findBySenha", query = "SELECT s FROM Servidor s WHERE s.senha = :senha")})
+    @NamedQuery(name = "Servidor.findBySenha", query = "SELECT s FROM Servidor s WHERE s.senha = :senha"),
+    @NamedQuery(name = "Servidor.findByCpf", query = "SELECT s FROM Servidor s WHERE s.cpf LIKE :cpf")})
 public class Servidor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,12 +51,8 @@ public class Servidor implements Serializable {
     @Column(name = "nome")
     private String nome;
     @Basic(optional = false)
-    @Column(name = "cpf")
-    private String cpf;
     @Column(name = "telefone")
     private String telefone;
-    @Column(name = "celular")
-    private String celular;
     @Column(name = "email")
     private String email;
     @Basic(optional = false)
@@ -68,6 +63,8 @@ public class Servidor implements Serializable {
     private int nivelacesso;
     @Column(name = "senha")
     private String senha;
+    @Column(name = "cpf")
+    private String cpf;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo", fetch = FetchType.LAZY)
     private List<Ocorrencia> ocorrenciaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidor", fetch = FetchType.LAZY)
@@ -82,10 +79,10 @@ public class Servidor implements Serializable {
         this.codigo = codigo;
     }
 
-    public Servidor(Integer codigo, String nome, String cpf, String endereco, int nivelacesso) {
+    public Servidor(Integer codigo, String nome, String telefone, String endereco, int nivelacesso) {
         this.codigo = codigo;
         this.nome = nome;
-        this.cpf = cpf;
+        this.telefone = telefone;
         this.endereco = endereco;
         this.nivelacesso = nivelacesso;
     }
@@ -106,28 +103,12 @@ public class Servidor implements Serializable {
         this.nome = nome;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public String getTelefone() {
         return telefone;
     }
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
     }
 
     public String getEmail() {
@@ -160,6 +141,14 @@ public class Servidor implements Serializable {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     @XmlTransient
