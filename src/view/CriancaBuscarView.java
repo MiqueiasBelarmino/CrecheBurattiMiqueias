@@ -6,9 +6,7 @@
 package view;
 
 import controller.CriancaJpaController;
-import java.awt.Cursor;
 import java.util.ArrayList;
-import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
 import model.Crianca;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
@@ -28,7 +26,7 @@ public class CriancaBuscarView extends javax.swing.JDialog {
     public CriancaBuscarView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        controllerCrianca = new CriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
+        controllerCrianca = new CriancaJpaController();
         atualizarFiltro();
     }
 

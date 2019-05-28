@@ -7,8 +7,6 @@ package view;
 
 import controller.GeneralController;
 import controller.PessoaautorizadaJpaController;
-import controller.PessoaautorizadacriancaJpaController;
-import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -18,8 +16,6 @@ import javax.persistence.Persistence;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import model.Crianca;
-import model.Pessoaautorizadacrianca;
 import model.Pessoaautorizada;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
@@ -33,12 +29,8 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
      * Creates new form CriancaView
      */
     private PessoaautorizadaJpaController controllerPessoa = null;
-    private PessoaautorizadacriancaJpaController controllerAutorizada = null;
     private Pessoaautorizada pessoa = null;
-    private Pessoaautorizadacrianca autorizada = null;
-    private Crianca crianca = null;
     private boolean novo;
-    public static Pessoaautorizada selecionado = new Pessoaautorizada();
 
     public PessoaAutorizadaView(java.awt.Frame parent, boolean modal, boolean selecionar) {
         super(parent, modal);
@@ -46,7 +38,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         radioGrupo.add(radioStatusSim);
         radioGrupo.add(radioStatusNao);
         habilitarComponentes(false);
-        btnSelecionar.setVisible(selecionar);
         controllerPessoa = new PessoaautorizadaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
         atualizarFiltro();
     }
@@ -54,6 +45,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
     private void atualizarFiltro() {
         pessoaList.clear();
         pessoaList.addAll(controllerPessoa.findPessoaautorizadaEntities());
+        criancaList.clear();
     }
 
     private void montarDadosFormulario(int linha) {
@@ -80,7 +72,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             component.setEnabled(status);
         }
         tableCrianca.setEnabled(status);
-        
+
         for (Component component : painelFiltro.getComponents()) {
             component.setEnabled(!status);
         }
@@ -139,7 +131,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         btnSalvar = new javax.swing.JButton();
         btnDeletar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        btnSelecionar = new javax.swing.JButton();
 
         jScrollPane3.setViewportView(tablePessoa1);
 
@@ -230,7 +221,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         jTableBinding.bind();
         jScrollPane4.setViewportView(tableCrianca);
 
-        btnRemoverCrianca.setText("Adicionar Criança");
+        btnRemoverCrianca.setText("teste");
         btnRemoverCrianca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverCriancaActionPerformed(evt);
@@ -379,8 +370,8 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     .addComponent(comboFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnNovo.setText("Novo");
@@ -418,13 +409,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             }
         });
 
-        btnSelecionar.setText("Selecionar");
-        btnSelecionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSelecionarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout painelBotoesLayout = new javax.swing.GroupLayout(painelBotoes);
         painelBotoes.setLayout(painelBotoesLayout);
         painelBotoesLayout.setHorizontalGroup(
@@ -440,8 +424,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                 .addComponent(btnDeletar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSelecionar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelBotoesLayout.setVerticalGroup(
@@ -453,8 +435,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
                     .addComponent(btnAlterar)
                     .addComponent(btnSalvar)
                     .addComponent(btnDeletar)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnSelecionar))
+                    .addComponent(btnCancelar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -512,6 +493,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             pessoa = pessoaList.get(row);
             tablePessoa.setRowSelectionInterval(row, row);
             montarDadosFormulario(row);
+            criancaList.addAll(pessoaList.get(row).getCriancaList());
         }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
@@ -527,7 +509,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         if (vazio()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
         } else {
-            controllerAutorizada = new PessoaautorizadacriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
             habilitarComponentes(false);
             pessoa.setCelular(txtCelularFormatado.getText());
             pessoa.setCpf(txtCpfFormatado.getText());
@@ -535,6 +516,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             pessoa.setEndereco(txtEndereco.getText());
             pessoa.setNome(txtNomeCompleto.getText());
             pessoa.setTelefone(txtTelefoneFormatado.getText());
+            pessoa.setCriancaList(criancaList);
 
             if (radioStatusNao.isSelected()) {
                 pessoa.setStatusContato(0);
@@ -545,12 +527,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             if (!novo) {
                 try {
                     controllerPessoa.edit(pessoa);
-                    for (Crianca c : criancaList) {
-                        autorizada = new Pessoaautorizadacrianca();
-                        autorizada.setCrianca(c);
-                        autorizada.setPessoaautorizada(controllerPessoa.findCPFUnique(pessoa.getCpf()));
-                        controllerAutorizada.edit(autorizada);
-                    }
 
                 } catch (NonexistentEntityException ex) {
                     Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
@@ -560,12 +536,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
 
             } else {
                 controllerPessoa.create(pessoa);
-                for (Crianca c : criancaList) {
-                    autorizada = new Pessoaautorizadacrianca();
-                    autorizada.setCrianca(c);
-                    autorizada.setPessoaautorizada(controllerPessoa.findCPFUnique(pessoa.getCpf()));
-                    controllerAutorizada.create(autorizada);
-                }
             }
 
             for (Component c : painelDados.getComponents()) {
@@ -589,8 +559,9 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             if (c instanceof JFormattedTextField) {
                 ((JFormattedTextField) c).setText("");
             }
-            
+
         }
+        atualizarFiltro();
         radioGrupo.clearSelection();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -599,8 +570,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             try {
                 controllerPessoa.destroy(pessoaList.get(tablePessoa.getSelectedRow()).getCodigo());
             } catch (NonexistentEntityException ex) {
-                Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalOrphanException ex) {
                 Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();
@@ -638,22 +607,10 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         criancaList.add(CriancaBuscarView.crianca);
     }//GEN-LAST:event_btnBuscarCriancaActionPerformed
 
-    private void btnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarActionPerformed
-        int linha = tablePessoa.getSelectedRow();
-        if (linha != -1) {
-            selecionado = pessoaList.get(linha);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(null, "Selecione uma Pessoa Autorizado!");
-        }
-    }//GEN-LAST:event_btnSelecionarActionPerformed
-
     private void btnRemoverCriancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverCriancaActionPerformed
-        int linha = tablePessoa.getSelectedRow();
+        int linha = tableCrianca.getSelectedRow();
         if (linha != -1) {
             criancaList.remove(linha);
-        } else if (criancaList.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Não há Crianças!");
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma criança!");
         }
@@ -693,7 +650,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             vazio = true;
         } else if (criancaList.isEmpty()) {
             vazio = true;
-            JOptionPane.showMessageDialog(null,"Selecione/Adicione uma criança!");
+            JOptionPane.showMessageDialog(null, "Selecione/Adicione uma criança!");
         }
 
         if (!radioStatusSim.isSelected() && !radioStatusNao.isSelected()) {
@@ -755,7 +712,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnRemoverCrianca;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnSelecionar;
     private javax.swing.JComboBox<String> comboFiltrar;
     private java.util.List<model.Crianca> criancaList;
     private javax.swing.JLabel jLabel1;

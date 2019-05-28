@@ -58,6 +58,10 @@ public class Frequencia implements Serializable {
     public Frequencia(Integer codigo) {
         this.codigo = codigo;
     }
+    
+    public Frequencia(Crianca codigo) {
+        this.criancacodigo = codigo;
+    }
 
     public Integer getCodigo() {
         return codigo;

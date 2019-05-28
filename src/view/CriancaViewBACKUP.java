@@ -39,7 +39,7 @@ public class CriancaViewBACKUP extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         habilitarComponentes(false);
-        controllerCrianca = new CriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
+        controllerCrianca = new CriancaJpaController();
         atualizarFiltro();
     }
 
@@ -484,7 +484,7 @@ public class CriancaViewBACKUP extends javax.swing.JDialog {
         if (tableCrianca.isRowSelected(tableCrianca.getSelectedRow())) {
             try {
                 controllerCrianca.destroy(listCrianca.get(tableCrianca.getSelectedRow()).getCodigo());
-            } catch (IllegalOrphanException | NonexistentEntityException ex) {
+            } catch (NonexistentEntityException ex) {
                 Logger.getLogger(CriancaViewBACKUP.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();

@@ -12,9 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -33,18 +30,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Reservaambiente.findAll", query = "SELECT r FROM Reservaambiente r"),
-    @NamedQuery(name = "Reservaambiente.findByAmbientecodigo", query = "SELECT r FROM Reservaambiente r WHERE r.ambiente = :ambientecodigo"),
-    @NamedQuery(name = "Reservaambiente.findByServidorcodigo", query = "SELECT r FROM Reservaambiente r WHERE r.servidor = :servidorcodigo"),
+    @NamedQuery(name = "Reservaambiente.findByCodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.codigo = :codigo"),
+    @NamedQuery(name = "Reservaambiente.findByAmbientecodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.ambientecodigo = :ambientecodigo"),
+    @NamedQuery(name = "Reservaambiente.findByServidorcodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.servidorcodigo = :servidorcodigo"),
     @NamedQuery(name = "Reservaambiente.findByData", query = "SELECT r FROM Reservaambiente r WHERE r.data = :data"),
     @NamedQuery(name = "Reservaambiente.findByHora", query = "SELECT r FROM Reservaambiente r WHERE r.hora = :hora")})
 public class Reservaambiente implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "codigo")
-    private Integer codigo;
+    @EmbeddedId
+    protected ReservaambientePK reservaambientePK;
     @Basic(optional = false)
     @Column(name = "data")
     @Temporal(TemporalType.DATE)
@@ -62,15 +57,27 @@ public class Reservaambiente implements Serializable {
     public Reservaambiente() {
     }
 
-    public Integer getCodigo() {
-        return codigo;
+    public Reservaambiente(ReservaambientePK reservaambientePK) {
+        this.reservaambientePK = reservaambientePK;
     }
 
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
+    public Reservaambiente(ReservaambientePK reservaambientePK, Date data) {
+        this.reservaambientePK = reservaambientePK;
+        this.data = data;
     }
 
-    
+    public Reservaambiente(int codigo, int ambientecodigo, int servidorcodigo) {
+        this.reservaambientePK = new ReservaambientePK(codigo, ambientecodigo, servidorcodigo);
+    }
+
+    public ReservaambientePK getReservaambientePK() {
+        return reservaambientePK;
+    }
+
+    public void setReservaambientePK(ReservaambientePK reservaambientePK) {
+        this.reservaambientePK = reservaambientePK;
+    }
+
     public Date getData() {
         return data;
     }
@@ -103,4 +110,29 @@ public class Reservaambiente implements Serializable {
         this.servidor = servidor;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (reservaambientePK != null ? reservaambientePK.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Reservaambiente)) {
+            return false;
+        }
+        Reservaambiente other = (Reservaambiente) object;
+        if ((this.reservaambientePK == null && other.reservaambientePK != null) || (this.reservaambientePK != null && !this.reservaambientePK.equals(other.reservaambientePK))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "model.Reservaambiente[ reservaambientePK=" + reservaambientePK + " ]";
+    }
+    
 }

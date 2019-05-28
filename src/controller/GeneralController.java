@@ -20,7 +20,7 @@ public class GeneralController {
 
     public boolean verificaCpf(String str, String classe) {
         Object object = null;
-        EntityManager em = utilities.GerenciamentoEntidade.getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         Query query = em.createNamedQuery(classe + ".findByCpf");
         query.setParameter("cpf", "%" + str + "%");
         try {
@@ -36,7 +36,8 @@ public class GeneralController {
 
     }
     
-    /*public List<Crianca> findNome(String str) {
+    /*
+    public List<Crianca> findNome(String str) {
         EntityManager em = getEntityManager();
         Query query = em.createNamedQuery("Crianca.findByNome");
         query.setParameter("nome", str + "%");
@@ -48,7 +49,15 @@ public class GeneralController {
         Query query = em.createNamedQuery("Crianca.findByCpf");
         query.setParameter("cpf", "%" + str + "%");
         return query.getResultList();
-    }*/
+    }
+    
+    public Pessoaautorizada findCPFUnique(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Pessoaautorizada.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return (Pessoaautorizada) query.getSingleResult();
+    }
+    */
 
     /*public boolean verificaCpf(String str) {
         Crianca crianca = null;

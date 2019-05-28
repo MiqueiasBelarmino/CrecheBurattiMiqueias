@@ -14,7 +14,6 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Crianca;
 import model.Observacao;
 
 /**
@@ -37,16 +36,7 @@ public class ObservacaoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = observacao.getCriancacodigo();
-            if (criancacodigo != null) {
-                criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
-                observacao.setCriancacodigo(criancacodigo);
-            }
             em.persist(observacao);
-            if (criancacodigo != null) {
-                criancacodigo.getObservacaoList().add(observacao);
-                criancacodigo = em.merge(criancacodigo);
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -60,22 +50,7 @@ public class ObservacaoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Observacao persistentObservacao = em.find(Observacao.class, observacao.getCodigo());
-            Crianca criancacodigoOld = persistentObservacao.getCriancacodigo();
-            Crianca criancacodigoNew = observacao.getCriancacodigo();
-            if (criancacodigoNew != null) {
-                criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
-                observacao.setCriancacodigo(criancacodigoNew);
-            }
             observacao = em.merge(observacao);
-            if (criancacodigoOld != null && !criancacodigoOld.equals(criancacodigoNew)) {
-                criancacodigoOld.getObservacaoList().remove(observacao);
-                criancacodigoOld = em.merge(criancacodigoOld);
-            }
-            if (criancacodigoNew != null && !criancacodigoNew.equals(criancacodigoOld)) {
-                criancacodigoNew.getObservacaoList().add(observacao);
-                criancacodigoNew = em.merge(criancacodigoNew);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -104,11 +79,6 @@ public class ObservacaoJpaController implements Serializable {
                 observacao.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The observacao with id " + id + " no longer exists.", enfe);
-            }
-            Crianca criancacodigo = observacao.getCriancacodigo();
-            if (criancacodigo != null) {
-                criancacodigo.getObservacaoList().remove(observacao);
-                criancacodigo = em.merge(criancacodigo);
             }
             em.remove(observacao);
             em.getTransaction().commit();

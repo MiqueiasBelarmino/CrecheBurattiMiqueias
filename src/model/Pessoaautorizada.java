@@ -8,16 +8,15 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,12 +31,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Pessoaautorizada.findAll", query = "SELECT p FROM Pessoaautorizada p"),
     @NamedQuery(name = "Pessoaautorizada.findByCodigo", query = "SELECT p FROM Pessoaautorizada p WHERE p.codigo = :codigo"),
-    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome LIKE :nome"),
-    @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf LIKE :cpf"),
+    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome = :nome"),
+    @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf = :cpf"),
     @NamedQuery(name = "Pessoaautorizada.findByEndereco", query = "SELECT p FROM Pessoaautorizada p WHERE p.endereco = :endereco"),
     @NamedQuery(name = "Pessoaautorizada.findByTelefone", query = "SELECT p FROM Pessoaautorizada p WHERE p.telefone = :telefone"),
     @NamedQuery(name = "Pessoaautorizada.findByEmail", query = "SELECT p FROM Pessoaautorizada p WHERE p.email = :email"),
-    @NamedQuery(name = "Pessoaautorizada.findByStatusContato", query = "SELECT p FROM Pessoaautorizada p WHERE p.statusContato = :statusContato")})
+    @NamedQuery(name = "Pessoaautorizada.findByStatusContato", query = "SELECT p FROM Pessoaautorizada p WHERE p.statusContato = :statusContato"),
+    @NamedQuery(name = "Pessoaautorizada.findByCelular", query = "SELECT p FROM Pessoaautorizada p WHERE p.celular = :celular")})
 public class Pessoaautorizada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,18 +55,16 @@ public class Pessoaautorizada implements Serializable {
     @Basic(optional = false)
     @Column(name = "endereco")
     private String endereco;
-    @Basic(optional = false)
     @Column(name = "telefone")
     private String telefone;
-    @Basic(optional = true)
-    @Column(name = "celular")
-    private String celular;
     @Column(name = "email")
     private String email;
     @Column(name = "statusContato")
     private Integer statusContato;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo", fetch = FetchType.LAZY)
-    private List<Controleretirada> controleretiradaList;
+    @Column(name = "celular")
+    private String celular;
+    @ManyToMany(mappedBy = "pessoaautorizadaList", fetch = FetchType.LAZY)
+    private List<Crianca> criancaList;
 
     public Pessoaautorizada() {
     }
@@ -75,12 +73,11 @@ public class Pessoaautorizada implements Serializable {
         this.codigo = codigo;
     }
 
-    public Pessoaautorizada(Integer codigo, String nome, String cpf, String endereco, String telefone) {
+    public Pessoaautorizada(Integer codigo, String nome, String cpf, String endereco) {
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
-        this.telefone = telefone;
     }
 
     public Integer getCodigo() {
@@ -101,14 +98,6 @@ public class Pessoaautorizada implements Serializable {
 
     public String getCpf() {
         return cpf;
-    }
-
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
     }
 
     public void setCpf(String cpf) {
@@ -147,14 +136,21 @@ public class Pessoaautorizada implements Serializable {
         this.statusContato = statusContato;
     }
 
-
-    @XmlTransient
-    public List<Controleretirada> getControleretiradaList() {
-        return controleretiradaList;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setControleretiradaList(List<Controleretirada> controleretiradaList) {
-        this.controleretiradaList = controleretiradaList;
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    @XmlTransient
+    public List<Crianca> getCriancaList() {
+        return criancaList;
+    }
+
+    public void setCriancaList(List<Crianca> criancaList) {
+        this.criancaList = criancaList;
     }
 
     @Override

@@ -10,8 +10,6 @@ import controller.GeneralController;
 import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +37,7 @@ public class CriancaView extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         habilitarComponentes(false);
-        controllerCrianca = new CriancaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
+        controllerCrianca = new CriancaJpaController();
         atualizarFiltro();
     }
 
@@ -63,6 +61,7 @@ public class CriancaView extends javax.swing.JDialog {
         for (Component component : painelDados.getComponents()) {
             component.setEnabled(status);
         }
+        
         for (Component component : painelFiltro.getComponents()) {
             component.setEnabled(!status);
         }
@@ -103,7 +102,6 @@ public class CriancaView extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         txtResponsavel = new javax.swing.JTextField();
         txtCpfFormatado = new javax.swing.JFormattedTextField();
-        btnPessoa = new javax.swing.JButton();
         painelFiltro = new javax.swing.JPanel();
         comboFiltrar = new javax.swing.JComboBox<>();
         txtFiltrar = new javax.swing.JTextField();
@@ -168,13 +166,6 @@ public class CriancaView extends javax.swing.JDialog {
             }
         });
 
-        btnPessoa.setText("Definir Pessoa Autorizada ou Contato");
-        btnPessoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPessoaActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
@@ -209,8 +200,7 @@ public class CriancaView extends javax.swing.JDialog {
                                 .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(painelDadosLayout.createSequentialGroup()
                                 .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPessoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         painelDadosLayout.setVerticalGroup(
@@ -232,12 +222,10 @@ public class CriancaView extends javax.swing.JDialog {
                         .addComponent(jLabel3))
                     .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6)
-                        .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnPessoa))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         painelFiltro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -484,7 +472,7 @@ public class CriancaView extends javax.swing.JDialog {
         if (tableCrianca.isRowSelected(tableCrianca.getSelectedRow())) {
             try {
                 controllerCrianca.destroy(listCrianca.get(tableCrianca.getSelectedRow()).getCodigo());
-            } catch (IllegalOrphanException | NonexistentEntityException ex) {
+            } catch (NonexistentEntityException ex) {
                 Logger.getLogger(CriancaView.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();
@@ -508,11 +496,6 @@ public class CriancaView extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost
-
-    private void btnPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPessoaActionPerformed
-        PessoaAutorizadaView autorizadaView = new PessoaAutorizadaView(null, true, true);
-        autorizadaView.setVisible(true);
-    }//GEN-LAST:event_btnPessoaActionPerformed
 
     private void pesquisar() {
         listCrianca.clear();
@@ -596,7 +579,6 @@ public class CriancaView extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnDeletar;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JButton btnPessoa;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> comboFiltrar;
     private com.toedter.calendar.JDateChooser dataNascimento;

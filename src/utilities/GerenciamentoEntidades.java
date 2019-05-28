@@ -13,7 +13,7 @@ import javax.persistence.Persistence;
  *
  * @author Belarmino
  */
-public class GerenciamentoEntidade {
+public class GerenciamentoEntidades {
     
     private static EntityManagerFactory emf;
 

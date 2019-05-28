@@ -14,7 +14,6 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Crianca;
 import model.Frequencia;
 
 /**
@@ -23,30 +22,12 @@ import model.Frequencia;
  */
 public class FrequenciaJpaController implements Serializable {
 
-    public FrequenciaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
     public void create(Frequencia frequencia) {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = frequencia.getCriancacodigo();
-            if (criancacodigo != null) {
-                criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
-                frequencia.setCriancacodigo(criancacodigo);
-            }
             em.persist(frequencia);
-            if (criancacodigo != null) {
-                criancacodigo.getFrequenciaList().add(frequencia);
-                criancacodigo = em.merge(criancacodigo);
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -58,24 +39,9 @@ public class FrequenciaJpaController implements Serializable {
     public void edit(Frequencia frequencia) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
-            Frequencia persistentFrequencia = em.find(Frequencia.class, frequencia.getCodigo());
-            Crianca criancacodigoOld = persistentFrequencia.getCriancacodigo();
-            Crianca criancacodigoNew = frequencia.getCriancacodigo();
-            if (criancacodigoNew != null) {
-                criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
-                frequencia.setCriancacodigo(criancacodigoNew);
-            }
             frequencia = em.merge(frequencia);
-            if (criancacodigoOld != null && !criancacodigoOld.equals(criancacodigoNew)) {
-                criancacodigoOld.getFrequenciaList().remove(frequencia);
-                criancacodigoOld = em.merge(criancacodigoOld);
-            }
-            if (criancacodigoNew != null && !criancacodigoNew.equals(criancacodigoOld)) {
-                criancacodigoNew.getFrequenciaList().add(frequencia);
-                criancacodigoNew = em.merge(criancacodigoNew);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -96,7 +62,7 @@ public class FrequenciaJpaController implements Serializable {
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Frequencia frequencia;
             try {
@@ -104,11 +70,6 @@ public class FrequenciaJpaController implements Serializable {
                 frequencia.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The frequencia with id " + id + " no longer exists.", enfe);
-            }
-            Crianca criancacodigo = frequencia.getCriancacodigo();
-            if (criancacodigo != null) {
-                criancacodigo.getFrequenciaList().remove(frequencia);
-                criancacodigo = em.merge(criancacodigo);
             }
             em.remove(frequencia);
             em.getTransaction().commit();
@@ -128,7 +89,7 @@ public class FrequenciaJpaController implements Serializable {
     }
 
     private List<Frequencia> findFrequenciaEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Frequencia.class));
@@ -144,7 +105,7 @@ public class FrequenciaJpaController implements Serializable {
     }
 
     public Frequencia findFrequencia(Integer id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             return em.find(Frequencia.class, id);
         } finally {
@@ -153,7 +114,7 @@ public class FrequenciaJpaController implements Serializable {
     }
 
     public int getFrequenciaCount() {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Frequencia> rt = cq.from(Frequencia.class);

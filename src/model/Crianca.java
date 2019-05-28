@@ -9,16 +9,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,8 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Crianca.findAll", query = "SELECT c FROM Crianca c"),
     @NamedQuery(name = "Crianca.findByCodigo", query = "SELECT c FROM Crianca c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "Crianca.findByNome", query = "SELECT c FROM Crianca c WHERE c.nome LIKE :nome"),
-    @NamedQuery(name = "Crianca.findByCpf", query = "SELECT c FROM Crianca c WHERE c.cpf LIKE :cpf"),
+    @NamedQuery(name = "Crianca.findByNome", query = "SELECT c FROM Crianca c WHERE c.nome = :nome"),
+    @NamedQuery(name = "Crianca.findByCpf", query = "SELECT c FROM Crianca c WHERE c.cpf = :cpf"),
     @NamedQuery(name = "Crianca.findByDataNascimento", query = "SELECT c FROM Crianca c WHERE c.dataNascimento = :dataNascimento"),
     @NamedQuery(name = "Crianca.findByTelefone", query = "SELECT c FROM Crianca c WHERE c.telefone = :telefone"),
     @NamedQuery(name = "Crianca.findByCelular", query = "SELECT c FROM Crianca c WHERE c.celular = :celular"),
@@ -66,18 +67,11 @@ public class Crianca implements Serializable {
     @Basic(optional = false)
     @Column(name = "responsavel")
     private String responsavel;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
-    private List<Remedio> remedioList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
-    private List<Observacao> observacaoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
-    private List<Ocorrencia> ocorrenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
-    private List<Frequencia> frequenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crianca", fetch = FetchType.LAZY)
-    private List<Pessoaautorizadacrianca> pessoaautorizadacriancaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criancacodigo", fetch = FetchType.LAZY)
-    private List<Controleretirada> controleretiradaList;
+    @JoinTable(name = "pessoaautorizadacrianca", joinColumns = {
+        @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")}, inverseJoinColumns = {
+        @JoinColumn(name = "PessoaAutorizada_codigo", referencedColumnName = "codigo")})
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Pessoaautorizada> pessoaautorizadaList;
 
     public Crianca() {
     }
@@ -151,57 +145,12 @@ public class Crianca implements Serializable {
     }
 
     @XmlTransient
-    public List<Remedio> getRemedioList() {
-        return remedioList;
+    public List<Pessoaautorizada> getPessoaautorizadaList() {
+        return pessoaautorizadaList;
     }
 
-    public void setRemedioList(List<Remedio> remedioList) {
-        this.remedioList = remedioList;
-    }
-
-    @XmlTransient
-    public List<Observacao> getObservacaoList() {
-        return observacaoList;
-    }
-
-    public void setObservacaoList(List<Observacao> observacaoList) {
-        this.observacaoList = observacaoList;
-    }
-
-    @XmlTransient
-    public List<Ocorrencia> getOcorrenciaList() {
-        return ocorrenciaList;
-    }
-
-    public void setOcorrenciaList(List<Ocorrencia> ocorrenciaList) {
-        this.ocorrenciaList = ocorrenciaList;
-    }
-
-    @XmlTransient
-    public List<Frequencia> getFrequenciaList() {
-        return frequenciaList;
-    }
-
-    public void setFrequenciaList(List<Frequencia> frequenciaList) {
-        this.frequenciaList = frequenciaList;
-    }
-
-    @XmlTransient
-    public List<Pessoaautorizadacrianca> getPessoaautorizadacriancaList() {
-        return pessoaautorizadacriancaList;
-    }
-
-    public void setPessoaautorizadacriancaList(List<Pessoaautorizadacrianca> pessoaautorizadacriancaList) {
-        this.pessoaautorizadacriancaList = pessoaautorizadacriancaList;
-    }
-
-    @XmlTransient
-    public List<Controleretirada> getControleretiradaList() {
-        return controleretiradaList;
-    }
-
-    public void setControleretiradaList(List<Controleretirada> controleretiradaList) {
-        this.controleretiradaList = controleretiradaList;
+    public void setPessoaautorizadaList(List<Pessoaautorizada> pessoaautorizadaList) {
+        this.pessoaautorizadaList = pessoaautorizadaList;
     }
 
     @Override
@@ -226,7 +175,7 @@ public class Crianca implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Crianca[ codigo=" + codigo + " ]";
+        return nome;
     }
     
 }

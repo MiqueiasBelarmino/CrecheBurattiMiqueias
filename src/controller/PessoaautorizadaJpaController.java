@@ -5,14 +5,13 @@
  */
 package controller;
 
-import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Controleretirada;
+import model.Crianca;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -33,7 +32,7 @@ public class PessoaautorizadaJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    
     public List<Pessoaautorizada> findNome(String str) {
         EntityManager em = getEntityManager();
         Query query = em.createNamedQuery("Pessoaautorizada.findByNome");
@@ -47,36 +46,32 @@ public class PessoaautorizadaJpaController implements Serializable {
         query.setParameter("cpf", "%" + str + "%");
         return query.getResultList();
     }
-    
+
     public Pessoaautorizada findCPFUnique(String str) {
         EntityManager em = getEntityManager();
         Query query = em.createNamedQuery("Pessoaautorizada.findByCpf");
         query.setParameter("cpf", "%" + str + "%");
         return (Pessoaautorizada) query.getSingleResult();
     }
+
     public void create(Pessoaautorizada pessoaautorizada) {
-        if (pessoaautorizada.getControleretiradaList() == null) {
-            pessoaautorizada.setControleretiradaList(new ArrayList<Controleretirada>());
+        if (pessoaautorizada.getCriancaList() == null) {
+            pessoaautorizada.setCriancaList(new ArrayList<Crianca>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Controleretirada> attachedControleretiradaList = new ArrayList<Controleretirada>();
-            for (Controleretirada controleretiradaListControleretiradaToAttach : pessoaautorizada.getControleretiradaList()) {
-                controleretiradaListControleretiradaToAttach = em.getReference(controleretiradaListControleretiradaToAttach.getClass(), controleretiradaListControleretiradaToAttach.getCodigo());
-                attachedControleretiradaList.add(controleretiradaListControleretiradaToAttach);
+            List<Crianca> attachedCriancaList = new ArrayList<Crianca>();
+            for (Crianca criancaListCriancaToAttach : pessoaautorizada.getCriancaList()) {
+                criancaListCriancaToAttach = em.getReference(criancaListCriancaToAttach.getClass(), criancaListCriancaToAttach.getCodigo());
+                attachedCriancaList.add(criancaListCriancaToAttach);
             }
-            pessoaautorizada.setControleretiradaList(attachedControleretiradaList);
+            pessoaautorizada.setCriancaList(attachedCriancaList);
             em.persist(pessoaautorizada);
-            for (Controleretirada controleretiradaListControleretirada : pessoaautorizada.getControleretiradaList()) {
-                Pessoaautorizada oldPessoaAutorizadacodigoOfControleretiradaListControleretirada = controleretiradaListControleretirada.getPessoaAutorizadacodigo();
-                controleretiradaListControleretirada.setPessoaAutorizadacodigo(pessoaautorizada);
-                controleretiradaListControleretirada = em.merge(controleretiradaListControleretirada);
-                if (oldPessoaAutorizadacodigoOfControleretiradaListControleretirada != null) {
-                    oldPessoaAutorizadacodigoOfControleretiradaListControleretirada.getControleretiradaList().remove(controleretiradaListControleretirada);
-                    oldPessoaAutorizadacodigoOfControleretiradaListControleretirada = em.merge(oldPessoaAutorizadacodigoOfControleretiradaListControleretirada);
-                }
+            for (Crianca criancaListCrianca : pessoaautorizada.getCriancaList()) {
+                criancaListCrianca.getPessoaautorizadaList().add(pessoaautorizada);
+                criancaListCrianca = em.merge(criancaListCrianca);
             }
             em.getTransaction().commit();
         } finally {
@@ -86,43 +81,32 @@ public class PessoaautorizadaJpaController implements Serializable {
         }
     }
 
-    public void edit(Pessoaautorizada pessoaautorizada) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Pessoaautorizada pessoaautorizada) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Pessoaautorizada persistentPessoaautorizada = em.find(Pessoaautorizada.class, pessoaautorizada.getCodigo());
-            List<Controleretirada> controleretiradaListOld = persistentPessoaautorizada.getControleretiradaList();
-            List<Controleretirada> controleretiradaListNew = pessoaautorizada.getControleretiradaList();
-            List<String> illegalOrphanMessages = null;
-            for (Controleretirada controleretiradaListOldControleretirada : controleretiradaListOld) {
-                if (!controleretiradaListNew.contains(controleretiradaListOldControleretirada)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Controleretirada " + controleretiradaListOldControleretirada + " since its pessoaAutorizadacodigo field is not nullable.");
+            List<Crianca> criancaListOld = persistentPessoaautorizada.getCriancaList();
+            List<Crianca> criancaListNew = pessoaautorizada.getCriancaList();
+            List<Crianca> attachedCriancaListNew = new ArrayList<Crianca>();
+            for (Crianca criancaListNewCriancaToAttach : criancaListNew) {
+                criancaListNewCriancaToAttach = em.getReference(criancaListNewCriancaToAttach.getClass(), criancaListNewCriancaToAttach.getCodigo());
+                attachedCriancaListNew.add(criancaListNewCriancaToAttach);
+            }
+            criancaListNew = attachedCriancaListNew;
+            pessoaautorizada.setCriancaList(criancaListNew);
+            pessoaautorizada = em.merge(pessoaautorizada);
+            for (Crianca criancaListOldCrianca : criancaListOld) {
+                if (!criancaListNew.contains(criancaListOldCrianca)) {
+                    criancaListOldCrianca.getPessoaautorizadaList().remove(pessoaautorizada);
+                    criancaListOldCrianca = em.merge(criancaListOldCrianca);
                 }
             }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            List<Controleretirada> attachedControleretiradaListNew = new ArrayList<Controleretirada>();
-            for (Controleretirada controleretiradaListNewControleretiradaToAttach : controleretiradaListNew) {
-                controleretiradaListNewControleretiradaToAttach = em.getReference(controleretiradaListNewControleretiradaToAttach.getClass(), controleretiradaListNewControleretiradaToAttach.getCodigo());
-                attachedControleretiradaListNew.add(controleretiradaListNewControleretiradaToAttach);
-            }
-            controleretiradaListNew = attachedControleretiradaListNew;
-            pessoaautorizada.setControleretiradaList(controleretiradaListNew);
-            pessoaautorizada = em.merge(pessoaautorizada);
-            for (Controleretirada controleretiradaListNewControleretirada : controleretiradaListNew) {
-                if (!controleretiradaListOld.contains(controleretiradaListNewControleretirada)) {
-                    Pessoaautorizada oldPessoaAutorizadacodigoOfControleretiradaListNewControleretirada = controleretiradaListNewControleretirada.getPessoaAutorizadacodigo();
-                    controleretiradaListNewControleretirada.setPessoaAutorizadacodigo(pessoaautorizada);
-                    controleretiradaListNewControleretirada = em.merge(controleretiradaListNewControleretirada);
-                    if (oldPessoaAutorizadacodigoOfControleretiradaListNewControleretirada != null && !oldPessoaAutorizadacodigoOfControleretiradaListNewControleretirada.equals(pessoaautorizada)) {
-                        oldPessoaAutorizadacodigoOfControleretiradaListNewControleretirada.getControleretiradaList().remove(controleretiradaListNewControleretirada);
-                        oldPessoaAutorizadacodigoOfControleretiradaListNewControleretirada = em.merge(oldPessoaAutorizadacodigoOfControleretiradaListNewControleretirada);
-                    }
+            for (Crianca criancaListNewCrianca : criancaListNew) {
+                if (!criancaListOld.contains(criancaListNewCrianca)) {
+                    criancaListNewCrianca.getPessoaautorizadaList().add(pessoaautorizada);
+                    criancaListNewCrianca = em.merge(criancaListNewCrianca);
                 }
             }
             em.getTransaction().commit();
@@ -142,7 +126,7 @@ public class PessoaautorizadaJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -154,16 +138,10 @@ public class PessoaautorizadaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The pessoaautorizada with id " + id + " no longer exists.", enfe);
             }
-            List<String> illegalOrphanMessages = null;
-            List<Controleretirada> controleretiradaListOrphanCheck = pessoaautorizada.getControleretiradaList();
-            for (Controleretirada controleretiradaListOrphanCheckControleretirada : controleretiradaListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Pessoaautorizada (" + pessoaautorizada + ") cannot be destroyed since the Controleretirada " + controleretiradaListOrphanCheckControleretirada + " in its controleretiradaList field has a non-nullable pessoaAutorizadacodigo field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+            List<Crianca> criancaList = pessoaautorizada.getCriancaList();
+            for (Crianca criancaListCrianca : criancaList) {
+                criancaListCrianca.getPessoaautorizadaList().remove(pessoaautorizada);
+                criancaListCrianca = em.merge(criancaListCrianca);
             }
             em.remove(pessoaautorizada);
             em.getTransaction().commit();
