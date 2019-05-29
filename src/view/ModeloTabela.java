@@ -26,7 +26,7 @@ public class ModeloTabela extends AbstractTableModel {
         this.frequencia = frequencia;
         check = new ArrayList();
         for (int i = 0; i < frequencia.size(); i++) {
-            check.add(Boolean.FALSE); //Valor default.
+            check.add(Boolean.TRUE); //Valor default.
         }
     }
 
@@ -79,10 +79,6 @@ public class ModeloTabela extends AbstractTableModel {
         return null;
     }
 
-    /**
-     * Esse método é para permitir que você pergunte ao modelo se um autor está
-     * ou não selecionado.
-     */
     public boolean isChecked(Frequencia frequencia) {
         return check.get(this.frequencia.indexOf(frequencia)) == Boolean.TRUE;
     }

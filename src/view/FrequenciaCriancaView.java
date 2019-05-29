@@ -9,10 +9,8 @@ import controller.CriancaJpaController;
 import controller.FrequenciaJpaController;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import model.Crianca;
 import model.Frequencia;
-import model.Frequenciaservidor;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
 /**
@@ -46,9 +44,14 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
         
         tableFrequencia.setModel(new ModeloTabela(frequenciaList));
         btnVisualizar.setToolTipText("Escolha uma data para visualizar as frequências");
+        habilitar(false);
     }
 
-    public void limpar(){
+    private void habilitar(boolean status){
+        tableFrequencia.setEnabled(status);
+        dateDataFrequencia.setEnabled(status);
+    }
+    private void limpar(){
         criancaList.clear();
         frequenciaList.clear();
     }
@@ -73,6 +76,7 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -149,6 +153,18 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Novo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -156,6 +172,8 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSalvar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar)
@@ -167,7 +185,8 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnCancelar)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -211,7 +230,7 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
             }
             frequenciaController.create(f);
         }
-        limpar();
+        habilitar(false);
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void dateDataFrequenciaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateDataFrequenciaFocusLost
@@ -221,6 +240,14 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
             tableFrequencia.setEnabled(true);
         }
     }//GEN-LAST:event_dateDataFrequenciaFocusLost
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        habilitar(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -271,6 +298,7 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
     private java.util.List<model.Crianca> criancaList;
     private com.toedter.calendar.JDateChooser dateDataFrequencia;
     private java.util.List<model.Frequencia> frequenciaList;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

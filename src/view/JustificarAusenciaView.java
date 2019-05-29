@@ -7,6 +7,7 @@ package view;
 
 import controller.FrequenciaservidorJpaController;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -34,6 +35,7 @@ public class JustificarAusenciaView extends javax.swing.JDialog {
         frequenciaServidorList.addAll(controller.findFrequenciaservidorEntities());
         System.out.println(frequenciaServidorList.get(0).getServidorcodigo());
         txtJustificar.setEnabled(false);
+        dateData.setDate(new Date());
     }
 
     /**
