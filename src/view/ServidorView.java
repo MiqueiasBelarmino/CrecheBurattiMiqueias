@@ -7,6 +7,8 @@ package view;
 
 import controller.CriancaJpaController;
 import controller.GeneralController;
+import controller.ServidorJpaController;
+import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import model.Crianca;
+import model.Servidor;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
 /**
@@ -27,8 +30,8 @@ public class ServidorView extends javax.swing.JDialog {
     /**
      * Creates new form CriancaView
      */
-    private CriancaJpaController controllerCrianca = null;
-    private Crianca crianca = null;
+    private ServidorJpaController controllerServidor = null;
+    private Servidor servidor = null;
     private boolean novo;
 
     public ServidorView(java.awt.Frame parent, boolean modal) {
@@ -36,23 +39,23 @@ public class ServidorView extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         habilitarComponentes(false);
-        controllerCrianca = new CriancaJpaController();
+        controllerServidor = new ServidorJpaController();
         atualizarFiltro();
     }
 
     private void atualizarFiltro() {
-        listCrianca.clear();
-        listCrianca.addAll(controllerCrianca.findCriancaEntities());
+        listServidor.clear();
+        listServidor.addAll(controllerServidor.findServidorEntities());
     }
 
     private void montarDadosFormulario(int linha) {
-        Crianca c = listCrianca.get(linha);
-        txtNomeCompleto.setText(c.getNome());
-        txtCpfFormatado.setText(c.getCpf());
-        txtCelularFormatado.setText(c.getCelular());
-        txtTelefoneFormatado.setText(c.getTelefone());
-        txtResponsavel.setText(c.getResponsavel());
-        dataNascimento.setDate(c.getDataNascimento());
+        Servidor s = listServidor.get(linha);
+        txtNomeCompleto.setText(s.getNome());
+        txtCpfFormatado.setText(s.getCpf());
+        txtTelefoneFormatado.setText(s.getTelefone());
+        txtEmail.setText(s.getEmail());
+        txtEndereco.setText(s.getEndereco());
+        txtSenha.setText(s.getSenha());
     }
 
     private void habilitarComponentes(boolean status) {
@@ -64,7 +67,7 @@ public class ServidorView extends javax.swing.JDialog {
         for (Component component : painelFiltro.getComponents()) {
             component.setEnabled(!status);
         }
-        tableCrianca.setEnabled(!status);
+        tableServidor.setEnabled(!status);
         btnNovo.setEnabled(!status);
         btnSalvar.setEnabled(status);
         btnCancelar.setEnabled(status);
@@ -73,9 +76,6 @@ public class ServidorView extends javax.swing.JDialog {
 
     }
 
-    private void limparFormatados() {
-
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -87,25 +87,25 @@ public class ServidorView extends javax.swing.JDialog {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        listCrianca = observableList(new ArrayList<model.Crianca>());
+        listServidor = observableList(new ArrayList<model.Servidor>());
         painelDados = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNomeCompleto = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        dataNascimento = new com.toedter.calendar.JDateChooser();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtCelularFormatado = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
         txtTelefoneFormatado = new javax.swing.JFormattedTextField();
-        jLabel6 = new javax.swing.JLabel();
-        txtResponsavel = new javax.swing.JTextField();
         txtCpfFormatado = new javax.swing.JFormattedTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtEndereco = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtSenha = new javax.swing.JTextField();
         painelFiltro = new javax.swing.JPanel();
         comboFiltrar = new javax.swing.JComboBox<>();
         txtFiltrar = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tableCrianca = new javax.swing.JTable();
+        tableServidor = new javax.swing.JTable();
         painelBotoes = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
@@ -128,16 +128,6 @@ public class ServidorView extends javax.swing.JDialog {
 
         jLabel2.setText("CPF");
 
-        jLabel3.setText("Data Nascimento");
-
-        jLabel4.setText("Celular");
-
-        try {
-            txtCelularFormatado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-
         jLabel5.setText("Telefone");
 
         try {
@@ -145,14 +135,6 @@ public class ServidorView extends javax.swing.JDialog {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-
-        jLabel6.setText("Responsável");
-
-        txtResponsavel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtResponsavelActionPerformed(evt);
-            }
-        });
 
         try {
             txtCpfFormatado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
@@ -165,41 +147,46 @@ public class ServidorView extends javax.swing.JDialog {
             }
         });
 
+        jLabel3.setText("Email");
+
+        jLabel4.setText("Endereço");
+
+        jLabel6.setText("Senha");
+
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
+                        .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6))
+                        .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(painelDadosLayout.createSequentialGroup()
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
                                 .addComponent(jLabel5)
                                 .addGap(10, 10, 10)
-                                .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtEmail))
                             .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                                .addComponent(jLabel2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         painelDadosLayout.setVerticalGroup(
@@ -211,20 +198,19 @@ public class ServidorView extends javax.swing.JDialog {
                     .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel3))
-                    .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel3)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         painelFiltro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -242,15 +228,12 @@ public class ServidorView extends javax.swing.JDialog {
             }
         });
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listCrianca, tableCrianca);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listServidor, tableServidor);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
         columnBinding.setColumnName("Nome");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cpf}"));
         columnBinding.setColumnName("Cpf");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${responsavel}"));
-        columnBinding.setColumnName("Responsavel");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefone}"));
         columnBinding.setColumnName("Telefone");
@@ -258,7 +241,7 @@ public class ServidorView extends javax.swing.JDialog {
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
 
-        jScrollPane2.setViewportView(tableCrianca);
+        jScrollPane2.setViewportView(tableServidor);
 
         javax.swing.GroupLayout painelFiltroLayout = new javax.swing.GroupLayout(painelFiltro);
         painelFiltro.setLayout(painelFiltroLayout);
@@ -386,14 +369,10 @@ public class ServidorView extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeCompletoActionPerformed
 
-    private void txtResponsavelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtResponsavelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtResponsavelActionPerformed
-
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         habilitarComponentes(true);
         novo = true;
-        crianca = new Crianca();
+        servidor = new Servidor();
         txtNomeCompleto.requestFocus();
     }//GEN-LAST:event_btnNovoActionPerformed
 
@@ -401,10 +380,10 @@ public class ServidorView extends javax.swing.JDialog {
         habilitarComponentes(true);
         novo = false;
         int row;
-        row = tableCrianca.getSelectedRow();
+        row = tableServidor.getSelectedRow();
         if (row > -1) {
-            crianca = listCrianca.get(row);
-            tableCrianca.setRowSelectionInterval(row, row);
+            servidor = listServidor.get(row);
+            tableServidor.setRowSelectionInterval(row, row);
             montarDadosFormulario(row);
         }
     }//GEN-LAST:event_btnAlterarActionPerformed
@@ -422,15 +401,16 @@ public class ServidorView extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
         } else {
             habilitarComponentes(false);
-            crianca.setCelular(txtCelularFormatado.getText());
-            crianca.setCpf(txtCpfFormatado.getText());
-            crianca.setDataNascimento(dataNascimento.getDate());
-            crianca.setNome(txtNomeCompleto.getText());
-            crianca.setResponsavel(txtResponsavel.getText());
-            crianca.setTelefone(txtTelefoneFormatado.getText());
+            servidor.setEmail(txtEmail.getText());
+            servidor.setCpf(txtCpfFormatado.getText());
+            servidor.setNome(txtNomeCompleto.getText());
+            servidor.setTelefone(txtTelefoneFormatado.getText());
+            servidor.setSenha(txtSenha.getText());
+            servidor.setEndereco(txtEndereco.getText());
+            servidor.setNivelacesso(0);
             if (!novo) {
                 try {
-                    controllerCrianca.edit(crianca);
+                    controllerServidor.edit(servidor);
                 } catch (NonexistentEntityException ex) {
                     Logger.getLogger(ServidorView.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
@@ -438,7 +418,7 @@ public class ServidorView extends javax.swing.JDialog {
                 }
 
             } else {
-                controllerCrianca.create(crianca);
+                controllerServidor.create(servidor);
             }
 
             for (Component c : painelDados.getComponents()) {
@@ -449,7 +429,6 @@ public class ServidorView extends javax.swing.JDialog {
                     ((JFormattedTextField) c).setText("");
                 }
             }
-            dataNascimento.setDate(null);
             atualizarFiltro();
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
@@ -464,14 +443,13 @@ public class ServidorView extends javax.swing.JDialog {
                 ((JFormattedTextField) c).setText("");
             }
         }
-        dataNascimento.setDate(null);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
-        if (tableCrianca.isRowSelected(tableCrianca.getSelectedRow())) {
+        if (tableServidor.isRowSelected(tableServidor.getSelectedRow())) {
             try {
-                controllerCrianca.destroy(listCrianca.get(tableCrianca.getSelectedRow()).getCodigo());
-            } catch (NonexistentEntityException ex) {
+                controllerServidor.destroy(listServidor.get(tableServidor.getSelectedRow()).getCodigo());
+            } catch (NonexistentEntityException | IllegalOrphanException ex) {
                 Logger.getLogger(ServidorView.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();
@@ -484,36 +462,35 @@ public class ServidorView extends javax.swing.JDialog {
                     ((JFormattedTextField) c).setText("");
                 }
             }
-            dataNascimento.setDate(null);
         } else {
             JOptionPane.showMessageDialog(null, "Selecione um registro!");
         }
     }//GEN-LAST:event_btnDeletarActionPerformed
 
     private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
-        if (new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(), "Crianca")) {
-            JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
+        if (new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(), "Servidor")) {
+            JOptionPane.showMessageDialog(this, "Já existe um Servidor com esse CPF!");
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost
 
     private void pesquisar() {
-        listCrianca.clear();
+        listServidor.clear();
 
         if (comboFiltrar.getSelectedItem().toString().equals("Nome")) {
-            listCrianca.addAll(controllerCrianca.findNome(txtFiltrar.getText().trim()));
+            listServidor.addAll(controllerServidor.findNome(txtFiltrar.getText().trim()));
         } else {
-            listCrianca.addAll(controllerCrianca.findCPF(txtFiltrar.getText().trim()));
+            listServidor.addAll(controllerServidor.findCPF(txtFiltrar.getText().trim()));
         }
-        int linha = listCrianca.size() - 1;
+        int linha = listServidor.size() - 1;
         if (linha > 0) {
-            tableCrianca.setRowSelectionInterval(linha, linha);
+            tableServidor.setRowSelectionInterval(linha, linha);
         }
     }
 
     private boolean vazio() {
         boolean vazio = false;
 
-        if (txtCelularFormatado.getText().equals("(  )      -    ")) {
+        if (txtEmail.getText().trim().isEmpty()) {
             vazio = true;
         } else if (txtTelefoneFormatado.getText().equals("(  )     -    ")) {
             vazio = true;
@@ -521,9 +498,9 @@ public class ServidorView extends javax.swing.JDialog {
             vazio = true;
         } else if (txtNomeCompleto.getText().trim().isEmpty()) {
             vazio = true;
-        } else if (txtResponsavel.getText().trim().isEmpty()) {
+        } else if (txtEndereco.getText().trim().isEmpty()) {
             vazio = true;
-        } else if (txtCpfFormatado.getText().trim().isEmpty()) {
+        } else if (txtSenha.getText().trim().isEmpty()) {
             vazio = true;
         }
 
@@ -582,7 +559,6 @@ public class ServidorView extends javax.swing.JDialog {
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> comboFiltrar;
-    private com.toedter.calendar.JDateChooser dataNascimento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -590,16 +566,17 @@ public class ServidorView extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
-    private java.util.List<model.Crianca> listCrianca;
+    private java.util.List<model.Servidor> listServidor;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelFiltro;
-    private javax.swing.JTable tableCrianca;
-    private javax.swing.JFormattedTextField txtCelularFormatado;
+    private javax.swing.JTable tableServidor;
     private javax.swing.JFormattedTextField txtCpfFormatado;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtFiltrar;
     private javax.swing.JTextField txtNomeCompleto;
-    private javax.swing.JTextField txtResponsavel;
+    private javax.swing.JTextField txtSenha;
     private javax.swing.JFormattedTextField txtTelefoneFormatado;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import model.Crianca;
 import model.Servidor;
 
 /**
@@ -25,13 +26,25 @@ import model.Servidor;
  */
 public class ServidorJpaController implements Serializable {
 
-    public ServidorJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public List<Servidor> findNome(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Servidor.findByNome");
+        query.setParameter("nome", str + "%");
+        return query.getResultList();
     }
-    private EntityManagerFactory emf = null;
 
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public List<Servidor> findCPF(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Servidor.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return query.getResultList();
+    }
+
+    public Servidor findCPFUnique(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Servidor.findByCpf");
+        query.setParameter("cpf", "%" + str + "%");
+        return (Servidor) query.getSingleResult();
     }
 
     public void create(Servidor servidor) {
@@ -40,7 +53,7 @@ public class ServidorJpaController implements Serializable {
         }
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             List<Reservaambiente> attachedReservaambienteList = new ArrayList<Reservaambiente>();
             for (Reservaambiente reservaambienteListReservaambienteToAttach : servidor.getReservaambienteList()) {
@@ -69,7 +82,7 @@ public class ServidorJpaController implements Serializable {
     public void edit(Servidor servidor) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Servidor persistentServidor = em.find(Servidor.class, servidor.getCodigo());
             List<Reservaambiente> reservaambienteListOld = persistentServidor.getReservaambienteList();
@@ -125,7 +138,7 @@ public class ServidorJpaController implements Serializable {
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Servidor servidor;
             try {
@@ -163,7 +176,7 @@ public class ServidorJpaController implements Serializable {
     }
 
     private List<Servidor> findServidorEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Servidor.class));
@@ -179,7 +192,7 @@ public class ServidorJpaController implements Serializable {
     }
 
     public Servidor findServidor(Integer id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             return em.find(Servidor.class, id);
         } finally {
@@ -188,7 +201,7 @@ public class ServidorJpaController implements Serializable {
     }
 
     public int getServidorCount() {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Servidor> rt = cq.from(Servidor.class);
@@ -199,5 +212,5 @@ public class ServidorJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
