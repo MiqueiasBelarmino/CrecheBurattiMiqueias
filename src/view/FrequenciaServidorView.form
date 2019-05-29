@@ -2,22 +2,22 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
-    <Component class="java.util.List" name="frequenciaList">
+    <Component class="java.util.List" name="frequenciaServidorList">
       <Properties>
         <Property name="observable" type="boolean" value="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="observableList(new ArrayList&lt;model.Frequencia&gt;());"/>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;model.Frequencia&gt;"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="observableList(new ArrayList&lt;model.Frequenciaservidor&gt;());"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;model.Frequenciaservidor&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="java.util.List" name="criancaList">
+    <Component class="java.util.List" name="servidorList">
       <Properties>
         <Property name="observable" type="boolean" value="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="observableList(new ArrayList&lt;model.Crianca&gt;());"/>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;model.Crianca&gt;"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="observableList(new ArrayList&lt;model.Servidor&gt;());"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;model.Servidor&gt;"/>
       </AuxValues>
     </Component>
   </NonVisualComponents>
@@ -103,9 +103,9 @@
                       <Component id="dateDataFrequencia" min="-2" max="-2" attributes="0"/>
                       <Component id="btnVisualizar" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="411" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="367" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -128,7 +128,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="tableFrequencia">
+            <Component class="javax.swing.JTable" name="tableFrequenciaServidor">
               <Properties>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
@@ -149,7 +149,7 @@
                 </Property>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="elements" source="criancaList" target="tableFrequencia" targetPath="elements" updateStrategy="0" immediately="true">
+                <BindingProperty name="elements" source="servidorList" target="tableFrequenciaServidor" targetPath="elements" updateStrategy="0" immediately="true">
                   <Subbinding sourcePath="${nome}">
                     <BindingParameter name="NAME" value="Nome"/>
                     <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
@@ -163,7 +163,7 @@
                 </BindingProperty>
               </BindingProperties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableFrequenciaMouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableFrequenciaServidorMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>
@@ -172,6 +172,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Visualizar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVisualizarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

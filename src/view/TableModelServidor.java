@@ -8,13 +8,13 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import model.Frequencia;
+import model.Frequenciaservidor;
 
 /**
  *
  * @author Belarmino
  */
-public class ModeloTabela extends AbstractTableModel {
+public class TableModelServidor extends AbstractTableModel {
 
     private static final int COL_CHECK = 1;
     private static final int COL_CRIANCA = 0;
@@ -22,7 +22,7 @@ public class ModeloTabela extends AbstractTableModel {
     private List frequencia;
     private List check;
 
-    public ModeloTabela(List frequencia) {
+    public TableModelServidor(List frequencia) {
         this.frequencia = frequencia;
         check = new ArrayList();
         for (int i = 0; i < frequencia.size(); i++) {
@@ -43,7 +43,7 @@ public class ModeloTabela extends AbstractTableModel {
             return check.get(linha) == Boolean.TRUE;
         }
         if (coluna == COL_CRIANCA) {
-            return ((Frequencia) frequencia.get(linha)).getCriancacodigo();
+            return ((Frequenciaservidor) frequencia.get(linha)).getServidorcodigo();
         }
         return null;
     }
@@ -71,7 +71,7 @@ public class ModeloTabela extends AbstractTableModel {
 
     public String getColumnName(int coluna) {
         if (coluna == 0) {
-            return "Criança";
+            return "Servidor";
         }
         if (coluna == 1) {
             return "Presença";
@@ -83,7 +83,7 @@ public class ModeloTabela extends AbstractTableModel {
      * Esse método é para permitir que você pergunte ao modelo se um autor está
      * ou não selecionado.
      */
-    public boolean isChecked(Frequencia frequencia) {
+    public boolean isChecked(Frequenciaservidor frequencia) {
         return check.get(this.frequencia.indexOf(frequencia)) == Boolean.TRUE;
     }
 }

@@ -32,13 +32,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Servidor.findAll", query = "SELECT s FROM Servidor s"),
     @NamedQuery(name = "Servidor.findByCodigo", query = "SELECT s FROM Servidor s WHERE s.codigo = :codigo"),
-    @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome = :nome"),
+    @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome LIKE :nome"),
     @NamedQuery(name = "Servidor.findByTelefone", query = "SELECT s FROM Servidor s WHERE s.telefone = :telefone"),
     @NamedQuery(name = "Servidor.findByEmail", query = "SELECT s FROM Servidor s WHERE s.email = :email"),
     @NamedQuery(name = "Servidor.findByEndereco", query = "SELECT s FROM Servidor s WHERE s.endereco = :endereco"),
     @NamedQuery(name = "Servidor.findByNivelacesso", query = "SELECT s FROM Servidor s WHERE s.nivelacesso = :nivelacesso"),
     @NamedQuery(name = "Servidor.findBySenha", query = "SELECT s FROM Servidor s WHERE s.senha = :senha"),
-    @NamedQuery(name = "Servidor.findByCpf", query = "SELECT s FROM Servidor s WHERE s.cpf = :cpf")})
+    @NamedQuery(name = "Servidor.findByCpf", query = "SELECT s FROM Servidor s WHERE s.cpf LIKE :cpf")})
 public class Servidor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -178,7 +178,7 @@ public class Servidor implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Servidor[ codigo=" + codigo + " ]";
+        return nome;
     }
     
 }

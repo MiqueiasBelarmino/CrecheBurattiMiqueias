@@ -7,9 +7,9 @@ package controller;
 
 import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
@@ -22,19 +22,24 @@ import model.Frequenciaservidor;
  */
 public class FrequenciaservidorJpaController implements Serializable {
 
-    public FrequenciaservidorJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public List<Frequenciaservidor> findSituacao(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Frequenciaservidor.findBySituacao");
+        query.setParameter("situacao", "%"+str + "%");
+        return query.getResultList();
     }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    
+    public List<Frequenciaservidor> findDate(Date data) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Frequenciaservidor.findByData");
+        query.setParameter("data", data);
+        return query.getResultList();
     }
 
     public void create(Frequenciaservidor frequenciaservidor) {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             em.persist(frequenciaservidor);
             em.getTransaction().commit();
@@ -48,7 +53,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     public void edit(Frequenciaservidor frequenciaservidor) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             frequenciaservidor = em.merge(frequenciaservidor);
             em.getTransaction().commit();
@@ -71,7 +76,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Frequenciaservidor frequenciaservidor;
             try {
@@ -98,7 +103,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     }
 
     private List<Frequenciaservidor> findFrequenciaservidorEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Frequenciaservidor.class));
@@ -114,7 +119,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     }
 
     public Frequenciaservidor findFrequenciaservidor(Integer id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             return em.find(Frequenciaservidor.class, id);
         } finally {
@@ -123,7 +128,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     }
 
     public int getFrequenciaservidorCount() {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Frequenciaservidor> rt = cq.from(Frequenciaservidor.class);

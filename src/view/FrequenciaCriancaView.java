@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import model.Crianca;
 import model.Frequencia;
+import model.Frequenciaservidor;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
 /**
@@ -35,16 +36,22 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
         frequenciaController = new FrequenciaJpaController();
         criancaController = new CriancaJpaController();
         criancaList.addAll(criancaController.findCriancaEntities());
+        dateDataFrequencia.setDate(new Date());
         for (Crianca c : criancaList) {
             Frequencia f = new Frequencia();
             f.setCriancacodigo(c);
+            f.setData(dateDataFrequencia.getDate());
             frequenciaList.add(f);
         }
-        dateDataFrequencia.setDate(new Date());
+        
         tableFrequencia.setModel(new ModeloTabela(frequenciaList));
         btnVisualizar.setToolTipText("Escolha uma data para visualizar as frequências");
     }
 
+    public void limpar(){
+        criancaList.clear();
+        frequenciaList.clear();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -195,9 +202,16 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
     }//GEN-LAST:event_tableFrequenciaMouseClicked
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        for (Frequencia f : frequenciaList) {
+        for (int i = 0; i < frequenciaList.size(); i++) {
+            Frequencia f = frequenciaList.get(i);
+            if(tableFrequencia.getModel().getValueAt(0, 1).equals(Boolean.TRUE)){
+                f.setSituacao("Presente");
+            }else{
+                f.setSituacao("Ausente");
+            }
             frequenciaController.create(f);
         }
+        limpar();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void dateDataFrequenciaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateDataFrequenciaFocusLost

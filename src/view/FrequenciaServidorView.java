@@ -5,13 +5,13 @@
  */
 package view;
 
-import controller.CriancaJpaController;
-import controller.FrequenciaJpaController;
+import controller.FrequenciaservidorJpaController;
+import controller.ServidorJpaController;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import model.Crianca;
-import model.Frequencia;
+import javax.swing.JOptionPane;
+import model.Frequenciaservidor;
+import model.Servidor;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
 /**
@@ -19,10 +19,10 @@ import static org.jdesktop.observablecollections.ObservableCollections.observabl
  * @author Belarmino
  */
 public class FrequenciaServidorView extends javax.swing.JDialog {
-   
-    private Frequencia frequencia = null;
-    private FrequenciaJpaController frequenciaController = null;
-    private CriancaJpaController criancaController = null;
+
+    private Frequenciaservidor frequencaServidor = null;
+    private FrequenciaservidorJpaController frequenciaServidorController = null;
+    private ServidorJpaController servidorController = null;
     private boolean presenca = true;
 
     /**
@@ -32,17 +32,24 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        frequenciaController = new FrequenciaJpaController();
-        criancaController = new CriancaJpaController();
-        criancaList.addAll(criancaController.findCriancaEntities());
-        for (Crianca c : criancaList) {
-            Frequencia f = new Frequencia();
-            f.setCriancacodigo(c);
-            frequenciaList.add(f);
-        }
+        frequenciaServidorController = new FrequenciaservidorJpaController();
+        servidorController = new ServidorJpaController();
+        servidorList.addAll(servidorController.findServidorEntities());
         dateDataFrequencia.setDate(new Date());
-        tableFrequencia.setModel(new ModeloTabela(frequenciaList));
+        for (Servidor s : servidorList) {
+            Frequenciaservidor f = new Frequenciaservidor();
+            f.setServidorcodigo(s);
+            f.setData(dateDataFrequencia.getDate());
+            frequenciaServidorList.add(f);
+        }
+
+        tableFrequenciaServidor.setModel(new TableModelServidor(frequenciaServidorList));
         btnVisualizar.setToolTipText("Escolha uma data para visualizar as frequências");
+    }
+
+    public void limpar() {
+        servidorList.clear();
+        frequenciaServidorList.clear();
     }
 
     /**
@@ -55,13 +62,13 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        frequenciaList = observableList(new ArrayList<model.Frequencia>());
-        criancaList = observableList(new ArrayList<model.Crianca>());
+        frequenciaServidorList = observableList(new ArrayList<model.Frequenciaservidor>());
+        servidorList = observableList(new ArrayList<model.Servidor>());
         jPanel1 = new javax.swing.JPanel();
         dateDataFrequencia = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableFrequencia = new javax.swing.JTable();
+        tableFrequenciaServidor = new javax.swing.JTable();
         btnVisualizar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnSalvar = new javax.swing.JButton();
@@ -79,7 +86,7 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
 
         jLabel1.setText("Data do Controle de Frequência:");
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, criancaList, tableFrequencia);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, servidorList, tableFrequenciaServidor);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
         columnBinding.setColumnName("Nome");
         columnBinding.setColumnClass(String.class);
@@ -90,18 +97,23 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
         columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
-        tableFrequencia.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableFrequenciaServidor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableFrequenciaMouseClicked(evt);
+                tableFrequenciaServidorMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableFrequencia);
-        if (tableFrequencia.getColumnModel().getColumnCount() > 0) {
-            tableFrequencia.getColumnModel().getColumn(0).setResizable(false);
-            tableFrequencia.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane1.setViewportView(tableFrequenciaServidor);
+        if (tableFrequenciaServidor.getColumnModel().getColumnCount() > 0) {
+            tableFrequenciaServidor.getColumnModel().getColumn(0).setResizable(false);
+            tableFrequenciaServidor.getColumnModel().getColumn(1).setResizable(false);
         }
 
         btnVisualizar.setText("Visualizar");
+        btnVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVisualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -128,8 +140,8 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
                     .addComponent(dateDataFrequencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVisualizar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -190,23 +202,34 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tableFrequenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableFrequenciaMouseClicked
+    private void tableFrequenciaServidorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableFrequenciaServidorMouseClicked
 
-    }//GEN-LAST:event_tableFrequenciaMouseClicked
+    }//GEN-LAST:event_tableFrequenciaServidorMouseClicked
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        for (Frequencia f : frequenciaList) {
-            frequenciaController.create(f);
+        for (int i = 0; i < frequenciaServidorList.size(); i++) {
+            Frequenciaservidor f = frequenciaServidorList.get(i);
+            if (tableFrequenciaServidor.getModel().getValueAt(0, 1).equals(Boolean.TRUE)) {
+                f.setSituacao("Presente");
+            } else {
+                f.setSituacao("Ausente");
+            }
+            frequenciaServidorController.create(f);
         }
+        limpar();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void dateDataFrequenciaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateDataFrequenciaFocusLost
-        if(dateDataFrequencia.getDate() != new Date()){
-            tableFrequencia.setEnabled(false);
-        }else{
-            tableFrequencia.setEnabled(true);
+        if (dateDataFrequencia.getDate() != new Date()) {
+            tableFrequenciaServidor.setEnabled(false);
+        } else {
+            tableFrequenciaServidor.setEnabled(true);
         }
     }//GEN-LAST:event_dateDataFrequenciaFocusLost
+
+    private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVisualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -255,14 +278,14 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnVisualizar;
-    private java.util.List<model.Crianca> criancaList;
     private com.toedter.calendar.JDateChooser dateDataFrequencia;
-    private java.util.List<model.Frequencia> frequenciaList;
+    private java.util.List<model.Frequenciaservidor> frequenciaServidorList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableFrequencia;
+    private java.util.List<model.Servidor> servidorList;
+    private javax.swing.JTable tableFrequenciaServidor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

@@ -222,7 +222,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         jTableBinding.bind();
         jScrollPane4.setViewportView(tableCrianca);
 
-        btnRemoverCrianca.setText("teste");
+        btnRemoverCrianca.setText("Remover");
         btnRemoverCrianca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverCriancaActionPerformed(evt);
