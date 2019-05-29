@@ -36,9 +36,11 @@ public class CriancaView extends javax.swing.JDialog {
     public CriancaView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         habilitarComponentes(false);
         controllerCrianca = new CriancaJpaController();
         atualizarFiltro();
+        
     }
 
     private void atualizarFiltro() {

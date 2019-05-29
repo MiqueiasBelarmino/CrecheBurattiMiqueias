@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="frequenciaServidorReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fd539ebe-88c6-473c-b697-bf6ff579980d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     servidor.`codigo` AS servidor_codigo,
+     servidor.`nome` AS servidor_nome,
+     servidor.`telefone` AS servidor_telefone,
+     servidor.`email` AS servidor_email,
+     servidor.`endereco` AS servidor_endereco,
+     servidor.`nivelacesso` AS servidor_nivelacesso,
+     servidor.`senha` AS servidor_senha,
+     servidor.`cpf` AS servidor_cpf,
+     frequenciaservidor.`codigo` AS frequenciaservidor_codigo,
+     frequenciaservidor.`data` AS frequenciaservidor_data,
+     frequenciaservidor.`situacao` AS frequenciaservidor_situacao,
+     frequenciaservidor.`justificativa` AS frequenciaservidor_justificativa,
+     frequenciaservidor.`Servidor_codigo` AS frequenciaservidor_Servidor_codigo
+FROM
+     `servidor` servidor INNER JOIN `frequenciaservidor` frequenciaservidor ON servidor.`codigo` = frequenciaservidor.`Servidor_codigo`]]>
+	</queryString>
+	<field name="servidor_nome" class="java.lang.String"/>
+	<field name="servidor_cpf" class="java.lang.String"/>
+	<field name="frequenciaservidor_data" class="java.sql.Date"/>
+	<field name="frequenciaservidor_situacao" class="java.lang.String"/>
+	<field name="frequenciaservidor_justificativa" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="6e80087b-9eec-4496-bf5e-0e6c096c7291"/>
+				<staticText>
+					<reportElement x="20" y="20" width="460" height="43" forecolor="#FFFFFF" uuid="3e9ba4a3-6a7d-47c7-abda-b8e5ab2221cd"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Frequência de Servidores]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="8d2e1525-db1d-4af6-9948-14c70f67e33c"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="2d0553e8-8b33-49a2-af19-250906ad17af"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="111" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c6ca1b55-d3b5-4005-9491-41fa3e9e70d1"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="222" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="dd946177-51b0-41c7-996f-aad1957bc41e"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="333" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="9fa1a811-9eeb-455a-a448-66c935356830"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="444" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="e497cc2c-aad0-42ff-9680-4253a1b95187"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Justificativa]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="bafa061f-568a-4d50-acfd-42a8ceb6eee8"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="111" height="20" uuid="676b3586-4c56-44ae-ae68-f4dfb779599c"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{servidor_nome}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="111" y="0" width="111" height="20" uuid="2bad077f-8cab-4192-848e-2b0e6347be48"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{servidor_cpf}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="222" y="0" width="111" height="20" uuid="49e3a90c-64a4-4f87-b84f-75fc3083292b"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frequenciaservidor_data}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="333" y="0" width="111" height="20" uuid="bfe26502-41b3-4feb-b5dc-bdfd2060bdd1"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frequenciaservidor_situacao}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="444" y="0" width="111" height="20" uuid="3c818062-da42-4303-b928-84baa6ab8627"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{frequenciaservidor_justificativa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="f70c77b9-b398-4c18-9fca-740f42dcb205"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="f6dc7463-7ce9-43e3-bc1a-dd9c7841b8a7"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="2bf88c08-6afa-4b7f-adbf-e9352dfb0255"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

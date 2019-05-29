@@ -47,7 +47,7 @@ public class Frequencia implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date data;
     @Column(name = "situacao")
-    private Character situacao;
+    private String situacao;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Crianca criancacodigo;
@@ -79,11 +79,11 @@ public class Frequencia implements Serializable {
         this.data = data;
     }
 
-    public Character getSituacao() {
+    public String getSituacao() {
         return situacao;
     }
 
-    public void setSituacao(Character situacao) {
+    public void setSituacao(String situacao) {
         this.situacao = situacao;
     }
 

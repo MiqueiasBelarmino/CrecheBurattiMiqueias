@@ -35,6 +35,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
     public PessoaAutorizadaView(java.awt.Frame parent, boolean modal, boolean selecionar) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         radioGrupo.add(radioStatusSim);
         radioGrupo.add(radioStatusNao);
         habilitarComponentes(false);
