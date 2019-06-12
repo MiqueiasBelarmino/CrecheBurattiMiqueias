@@ -14,19 +14,30 @@ import model.Frequencia;
  *
  * @author Belarmino
  */
-public class ModeloTabela extends AbstractTableModel {
+public class TableModelFrequenciaCrianca extends AbstractTableModel {
 
     private static final int COL_CHECK = 1;
     private static final int COL_CRIANCA = 0;
     private static final int NUM_COLUNAS = 2;
-    private List frequencia;
+    private List<Frequencia> frequencia;
     private List check;
 
-    public ModeloTabela(List frequencia) {
+    public TableModelFrequenciaCrianca(List<Frequencia> frequencia, boolean novo) {
         this.frequencia = frequencia;
         check = new ArrayList();
-        for (int i = 0; i < frequencia.size(); i++) {
-            check.add(Boolean.TRUE); //Valor default.
+        if (novo) {
+            for (int i = 0; i < frequencia.size(); i++) {
+                check.add(Boolean.TRUE); //Valor default.
+            }
+        } else {
+            for (int i = 0; i < frequencia.size(); i++) {
+
+                if (frequencia.get(i).getSituacao().equals("Presente")) {
+                    check.add(Boolean.TRUE);
+                } else {
+                    check.add(Boolean.FALSE);
+                }
+            }
         }
     }
 
@@ -52,7 +63,7 @@ public class ModeloTabela extends AbstractTableModel {
         if (coluna == COL_CHECK) {
             return Boolean.class;
         }
-        if ( coluna == COL_CRIANCA) {
+        if (coluna == COL_CRIANCA) {
             return String.class;
         }
 

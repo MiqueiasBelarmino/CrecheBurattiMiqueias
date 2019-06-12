@@ -148,20 +148,6 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
-              <BindingProperties>
-                <BindingProperty name="elements" source="criancaList" target="tableFrequencia" targetPath="elements" updateStrategy="0" immediately="true">
-                  <Subbinding sourcePath="${nome}">
-                    <BindingParameter name="NAME" value="Nome"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="null">
-                    <BindingParameter name="NAME" value="Presen&#xe7;a"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Boolean.class"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
-                  </Subbinding>
-                </BindingProperty>
-              </BindingProperties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableFrequenciaMouseClicked"/>
               </Events>
@@ -172,6 +158,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Visualizar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVisualizarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -9,6 +9,7 @@ import controller.CriancaJpaController;
 import controller.FrequenciaJpaController;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import model.Crianca;
 import model.Frequencia;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
@@ -18,7 +19,7 @@ import static org.jdesktop.observablecollections.ObservableCollections.observabl
  * @author Belarmino
  */
 public class FrequenciaCriancaView extends javax.swing.JDialog {
-   
+
     private Frequencia frequencia = null;
     private FrequenciaJpaController frequenciaController = null;
     private CriancaJpaController criancaController = null;
@@ -41,20 +42,22 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
             f.setData(dateDataFrequencia.getDate());
             frequenciaList.add(f);
         }
-        
-        tableFrequencia.setModel(new ModeloTabela(frequenciaList));
+
+        tableFrequencia.setModel(new TableModelFrequenciaCrianca(frequenciaList, true));
         btnVisualizar.setToolTipText("Escolha uma data para visualizar as frequências");
         habilitar(false);
     }
 
-    private void habilitar(boolean status){
+    private void habilitar(boolean status) {
         tableFrequencia.setEnabled(status);
         dateDataFrequencia.setEnabled(status);
     }
-    private void limpar(){
+
+    private void limpar() {
         criancaList.clear();
         frequenciaList.clear();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,7 +66,6 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         frequenciaList = observableList(new ArrayList<model.Frequencia>());
         criancaList = observableList(new ArrayList<model.Crianca>());
@@ -90,17 +92,6 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
 
         jLabel1.setText("Data do Controle de Frequência:");
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, criancaList, tableFrequencia);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nome}"));
-        columnBinding.setColumnName("Nome");
-        columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ObjectProperty.create());
-        columnBinding.setColumnName("Presença");
-        columnBinding.setColumnClass(Boolean.class);
-        columnBinding.setEditable(false);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
         tableFrequencia.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableFrequenciaMouseClicked(evt);
@@ -113,6 +104,11 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
         }
 
         btnVisualizar.setText("Visualizar");
+        btnVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVisualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -211,8 +207,6 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -223,20 +217,22 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         for (int i = 0; i < frequenciaList.size(); i++) {
             Frequencia f = frequenciaList.get(i);
-            if(tableFrequencia.getModel().getValueAt(0, 1).equals(Boolean.TRUE)){
+            f.setData(dateDataFrequencia.getDate());
+            if (tableFrequencia.getModel().getValueAt(i, 1).equals(Boolean.TRUE)) {
                 f.setSituacao("Presente");
-            }else{
+            } else {
                 f.setSituacao("Ausente");
             }
             frequenciaController.create(f);
         }
+        this.dispose();
         habilitar(false);
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void dateDataFrequenciaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateDataFrequenciaFocusLost
-        if(dateDataFrequencia.getDate() != new Date()){
+        if (dateDataFrequencia.getDate() != new Date()) {
             tableFrequencia.setEnabled(false);
-        }else{
+        } else {
             tableFrequencia.setEnabled(true);
         }
     }//GEN-LAST:event_dateDataFrequenciaFocusLost
@@ -248,6 +244,15 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
+        frequenciaList = frequenciaController.findFrequenciaByDate(dateDataFrequencia.getDate());
+        if (frequenciaList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Não há frequência para esta data");
+        } else {
+            tableFrequencia.setModel(new TableModelFrequenciaCrianca(frequenciaList, false));
+        }
+    }//GEN-LAST:event_btnVisualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -304,6 +309,5 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableFrequencia;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import model.Frequencia;
 import model.Frequenciaservidor;
 
 /**
@@ -22,6 +23,13 @@ import model.Frequenciaservidor;
  */
 public class FrequenciaservidorJpaController implements Serializable {
 
+    public List<Frequenciaservidor> findFrequenciaByDate(Date str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Frequenciaservidor.findByData");
+        query.setParameter("data", str);
+        return query.getResultList();
+    }
+    
     public List<Frequenciaservidor> findSituacao(String str) {
         EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         Query query = em.createNamedQuery("Frequenciaservidor.findBySituacao");

@@ -7,9 +7,9 @@ package controller;
 
 import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
@@ -22,6 +22,14 @@ import model.Frequencia;
  */
 public class FrequenciaJpaController implements Serializable {
 
+    public List<Frequencia> findFrequenciaByDate(Date str) {
+        System.out.println("CONTROLLER|DATE: "+str);
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Frequencia.findByData");
+        query.setParameter("data", str);
+        return query.getResultList();
+    }
+    
     public void create(Frequencia frequencia) {
         EntityManager em = null;
         try {

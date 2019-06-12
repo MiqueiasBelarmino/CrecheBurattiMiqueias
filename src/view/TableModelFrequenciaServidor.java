@@ -14,7 +14,7 @@ import model.Frequenciaservidor;
  *
  * @author Belarmino
  */
-public class TableModelServidor extends AbstractTableModel {
+public class TableModelFrequenciaServidor extends AbstractTableModel {
 
     private static final int COL_CHECK = 1;
     private static final int COL_CRIANCA = 0;
@@ -22,11 +22,22 @@ public class TableModelServidor extends AbstractTableModel {
     private List frequencia;
     private List check;
 
-    public TableModelServidor(List frequencia) {
+    public TableModelFrequenciaServidor(List frequencia, boolean novo) {
         this.frequencia = frequencia;
         check = new ArrayList();
-        for (int i = 0; i < frequencia.size(); i++) {
-            check.add(Boolean.FALSE); //Valor default.
+        if (novo) {
+            for (int i = 0; i < frequencia.size(); i++) {
+                check.add(Boolean.TRUE); //Valor default.
+            }
+        } else {
+            for (int i = 0; i < frequencia.size(); i++) {
+
+                if (((Frequenciaservidor) frequencia.get(i)).getSituacao().equals("Presente")) {
+                    check.add(Boolean.TRUE);
+                } else {
+                    check.add(Boolean.FALSE);
+                }
+            }
         }
     }
 

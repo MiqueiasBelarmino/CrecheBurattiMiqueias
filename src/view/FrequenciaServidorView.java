@@ -43,7 +43,7 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
             frequenciaServidorList.add(f);
         }
 
-        tableFrequenciaServidor.setModel(new TableModelServidor(frequenciaServidorList));
+        tableFrequenciaServidor.setModel(new TableModelFrequenciaServidor(frequenciaServidorList, true));
         btnVisualizar.setToolTipText("Escolha uma data para visualizar as frequências");
     }
 
@@ -216,6 +216,7 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
             }
             frequenciaServidorController.create(f);
         }
+        this.dispose();
         limpar();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
@@ -228,7 +229,12 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
     }//GEN-LAST:event_dateDataFrequenciaFocusLost
 
     private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
-        // TODO add your handling code here:
+        frequenciaServidorList = frequenciaServidorController.findFrequenciaByDate(dateDataFrequencia.getDate());
+        if (frequenciaServidorList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Não há frequência para esta data");
+        } else {
+            tableFrequenciaServidor.setModel(new TableModelFrequenciaServidor(frequenciaServidorList, false));
+        }
     }//GEN-LAST:event_btnVisualizarActionPerformed
 
     /**
