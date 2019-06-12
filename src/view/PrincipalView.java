@@ -5,7 +5,12 @@
  */
 package view;
 
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
 import java.sql.Connection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -160,8 +165,10 @@ public class PrincipalView extends javax.swing.JFrame {
         Connection con = ConexaoMySQL.getConexaoMySQL();
         String src = "src/report/frequenciaCriancaReport.jasper";
         JasperPrint print = null;
+        Map parametros = new HashMap();
+        parametros.put("dataPesquisa", new JDateChooser());
         try {
-            print = JasperFillManager.fillReport(src, null, con);
+            print = JasperFillManager.fillReport(src, parametros, con);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -200,7 +207,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         FrequenciaServidorView fsv = new FrequenciaServidorView(null, true);
         fsv.setVisible(true);
-        
+
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed

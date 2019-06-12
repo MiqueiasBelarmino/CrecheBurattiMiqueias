@@ -3,7 +3,10 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
+	<parameter name="dataPesquisa" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
 		<![CDATA[SELECT
      servidor.`codigo` AS servidor_codigo,
      servidor.`nome` AS servidor_nome,
@@ -19,13 +22,22 @@
      frequenciaservidor.`justificativa` AS frequenciaservidor_justificativa,
      frequenciaservidor.`Servidor_codigo` AS frequenciaservidor_Servidor_codigo
 FROM
-     `servidor` servidor INNER JOIN `frequenciaservidor` frequenciaservidor ON servidor.`codigo` = frequenciaservidor.`Servidor_codigo`]]>
+     `servidor` servidor INNER JOIN `frequenciaservidor` frequenciaservidor ON servidor.`codigo` = frequenciaservidor.`Servidor_codigo`
+WHERE frequenciaservidor.data = $P{dataPesquisa};]]>
 	</queryString>
+	<field name="servidor_codigo" class="java.lang.Integer"/>
 	<field name="servidor_nome" class="java.lang.String"/>
+	<field name="servidor_telefone" class="java.lang.String"/>
+	<field name="servidor_email" class="java.lang.String"/>
+	<field name="servidor_endereco" class="java.lang.String"/>
+	<field name="servidor_nivelacesso" class="java.lang.Integer"/>
+	<field name="servidor_senha" class="java.lang.String"/>
 	<field name="servidor_cpf" class="java.lang.String"/>
+	<field name="frequenciaservidor_codigo" class="java.lang.Integer"/>
 	<field name="frequenciaservidor_data" class="java.sql.Date"/>
 	<field name="frequenciaservidor_situacao" class="java.lang.String"/>
 	<field name="frequenciaservidor_justificativa" class="java.lang.String"/>
+	<field name="frequenciaservidor_Servidor_codigo" class="java.lang.Integer"/>
 	<background>
 		<band/>
 	</background>
@@ -89,7 +101,7 @@ FROM
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20">
+		<band height="22">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="bafa061f-568a-4d50-acfd-42a8ceb6eee8"/>
 			</line>
@@ -102,21 +114,21 @@ FROM
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="111" y="0" width="111" height="20" uuid="2bad077f-8cab-4192-848e-2b0e6347be48"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{servidor_cpf}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
 				<reportElement x="222" y="0" width="111" height="20" uuid="49e3a90c-64a4-4f87-b84f-75fc3083292b"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{frequenciaservidor_data}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="333" y="0" width="111" height="20" uuid="bfe26502-41b3-4feb-b5dc-bdfd2060bdd1"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{frequenciaservidor_situacao}]]></textFieldExpression>
@@ -126,7 +138,7 @@ FROM
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{frequenciaservidor_justificativa}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(($F{frequenciaservidor_justificativa}.equals(null)) ? "" : $F{frequenciaservidor_justificativa})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -134,7 +146,7 @@ FROM
 		<band/>
 	</columnFooter>
 	<pageFooter>
-		<band height="17">
+		<band height="18">
 			<textField>
 				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="f70c77b9-b398-4c18-9fca-740f42dcb205"/>
 				<textElement textAlignment="Right"/>

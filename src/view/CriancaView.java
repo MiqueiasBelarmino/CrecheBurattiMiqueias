@@ -7,16 +7,15 @@ package view;
 
 import controller.CriancaJpaController;
 import controller.GeneralController;
-import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.Persistence;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import model.CPF;
 import model.Crianca;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 
@@ -40,12 +39,28 @@ public class CriancaView extends javax.swing.JDialog {
         habilitarComponentes(false);
         controllerCrianca = new CriancaJpaController();
         atualizarFiltro();
-        
+
     }
 
     private void atualizarFiltro() {
         listCrianca.clear();
         listCrianca.addAll(controllerCrianca.findCriancaEntities());
+    }
+
+    public void cpf() {
+
+        CPF validacao = new CPF();
+
+        if (!txtCpfFormatado.getText().equals("   .   .   -  ")) {
+            String cpf = txtCpfFormatado.getText();
+            cpf = cpf.replace(".", "");
+            cpf = cpf.replace("-", "");
+            if (!validacao.isCPF(cpf)) {
+                JOptionPane.showMessageDialog(null, "O CPF " + txtCpfFormatado.getText() + " é inválido");
+                txtCpfFormatado.requestFocus();
+                txtCpfFormatado.setValue("");
+            }
+        }
     }
 
     private void montarDadosFormulario(int linha) {
@@ -63,7 +78,7 @@ public class CriancaView extends javax.swing.JDialog {
         for (Component component : painelDados.getComponents()) {
             component.setEnabled(status);
         }
-        
+
         for (Component component : painelFiltro.getComponents()) {
             component.setEnabled(!status);
         }
@@ -495,8 +510,22 @@ public class CriancaView extends javax.swing.JDialog {
     }//GEN-LAST:event_btnDeletarActionPerformed
 
     private void txtCpfFormatadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCpfFormatadoFocusLost
-        if (new GeneralController().verificaCpf(txtCpfFormatado.getText().trim(), "Crianca")) {
-            JOptionPane.showMessageDialog(this, "Já existe uma Criança com esse CPF!");
+        CPF validacao = new CPF();
+        GeneralController controller = new GeneralController();
+
+        if (!txtCpfFormatado.getText().equals("   .   .   -  ")) {
+            String cpf = txtCpfFormatado.getText();
+            cpf = cpf.replace(".", "");
+            cpf = cpf.replace("-", "");
+            if (!validacao.isCPF(cpf)) {
+                JOptionPane.showMessageDialog(null, "O CPF " + txtCpfFormatado.getText() + " é inválido");
+                txtCpfFormatado.requestFocus();
+                txtCpfFormatado.setValue("");
+            } else if (controller.verificaCpf(txtCpfFormatado.getText().trim(), "Crianca") 
+                    || controller.verificaCpf(txtCpfFormatado.getText().trim(), "Servidor")
+                    || controller.verificaCpf(txtCpfFormatado.getText().trim(), "Pessoaautorizada")) {
+                JOptionPane.showMessageDialog(this, "Já existe um registro com para este CPF!");
+            }
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost
 
