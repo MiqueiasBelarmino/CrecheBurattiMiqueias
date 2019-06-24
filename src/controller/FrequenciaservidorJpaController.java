@@ -14,8 +14,9 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Frequencia;
 import model.Frequenciaservidor;
+import model.Servidor;
+import static utilities.GerenciamentoEntidades.getEntityManager;
 
 /**
  *
@@ -43,13 +44,22 @@ public class FrequenciaservidorJpaController implements Serializable {
         query.setParameter("data", data);
         return query.getResultList();
     }
-
+    
     public void create(Frequenciaservidor frequenciaservidor) {
         EntityManager em = null;
         try {
-            em = utilities.GerenciamentoEntidades.getEntityManager();
+            em = getEntityManager();
             em.getTransaction().begin();
+            Servidor servidorcodigo = frequenciaservidor.getServidorcodigo();
+            if (servidorcodigo != null) {
+                servidorcodigo = em.getReference(servidorcodigo.getClass(), servidorcodigo.getCodigo());
+                frequenciaservidor.setServidorcodigo(servidorcodigo);
+            }
             em.persist(frequenciaservidor);
+            if (servidorcodigo != null) {
+                servidorcodigo.getFrequenciaservidorList().add(frequenciaservidor);
+                servidorcodigo = em.merge(servidorcodigo);
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -61,9 +71,24 @@ public class FrequenciaservidorJpaController implements Serializable {
     public void edit(Frequenciaservidor frequenciaservidor) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
-            em = utilities.GerenciamentoEntidades.getEntityManager();
+            em = getEntityManager();
             em.getTransaction().begin();
+            Frequenciaservidor persistentFrequenciaservidor = em.find(Frequenciaservidor.class, frequenciaservidor.getCodigo());
+            Servidor servidorcodigoOld = persistentFrequenciaservidor.getServidorcodigo();
+            Servidor servidorcodigoNew = frequenciaservidor.getServidorcodigo();
+            if (servidorcodigoNew != null) {
+                servidorcodigoNew = em.getReference(servidorcodigoNew.getClass(), servidorcodigoNew.getCodigo());
+                frequenciaservidor.setServidorcodigo(servidorcodigoNew);
+            }
             frequenciaservidor = em.merge(frequenciaservidor);
+            if (servidorcodigoOld != null && !servidorcodigoOld.equals(servidorcodigoNew)) {
+                servidorcodigoOld.getFrequenciaservidorList().remove(frequenciaservidor);
+                servidorcodigoOld = em.merge(servidorcodigoOld);
+            }
+            if (servidorcodigoNew != null && !servidorcodigoNew.equals(servidorcodigoOld)) {
+                servidorcodigoNew.getFrequenciaservidorList().add(frequenciaservidor);
+                servidorcodigoNew = em.merge(servidorcodigoNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -84,7 +109,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
-            em = utilities.GerenciamentoEntidades.getEntityManager();
+            em = getEntityManager();
             em.getTransaction().begin();
             Frequenciaservidor frequenciaservidor;
             try {
@@ -92,6 +117,11 @@ public class FrequenciaservidorJpaController implements Serializable {
                 frequenciaservidor.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The frequenciaservidor with id " + id + " no longer exists.", enfe);
+            }
+            Servidor servidorcodigo = frequenciaservidor.getServidorcodigo();
+            if (servidorcodigo != null) {
+                servidorcodigo.getFrequenciaservidorList().remove(frequenciaservidor);
+                servidorcodigo = em.merge(servidorcodigo);
             }
             em.remove(frequenciaservidor);
             em.getTransaction().commit();
@@ -111,7 +141,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     }
 
     private List<Frequenciaservidor> findFrequenciaservidorEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Frequenciaservidor.class));
@@ -127,7 +157,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     }
 
     public Frequenciaservidor findFrequenciaservidor(Integer id) {
-        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        EntityManager em = getEntityManager();
         try {
             return em.find(Frequenciaservidor.class, id);
         } finally {
@@ -136,7 +166,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     }
 
     public int getFrequenciaservidorCount() {
-        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Frequenciaservidor> rt = cq.from(Frequenciaservidor.class);

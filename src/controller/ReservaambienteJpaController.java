@@ -10,7 +10,6 @@ import controller.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,21 +18,13 @@ import model.Ambiente;
 import model.Reservaambiente;
 import model.ReservaambientePK;
 import model.Servidor;
+import static utilities.GerenciamentoEntidades.getEntityManager;
 
 /**
  *
  * @author Belarmino
  */
 public class ReservaambienteJpaController implements Serializable {
-
-    public ReservaambienteJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
 
     public void create(Reservaambiente reservaambiente) throws PreexistingEntityException, Exception {
         if (reservaambiente.getReservaambientePK() == null) {

@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -31,13 +33,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Pessoaautorizada.findAll", query = "SELECT p FROM Pessoaautorizada p"),
     @NamedQuery(name = "Pessoaautorizada.findByCodigo", query = "SELECT p FROM Pessoaautorizada p WHERE p.codigo = :codigo"),
-    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome = :nome"),
+    @NamedQuery(name = "Pessoaautorizada.findByNome", query = "SELECT p FROM Pessoaautorizada p WHERE p.nome LIKE :nome"),
     @NamedQuery(name = "Pessoaautorizada.findByCpf", query = "SELECT p FROM Pessoaautorizada p WHERE p.cpf LIKE :cpf"),
     @NamedQuery(name = "Pessoaautorizada.findByEndereco", query = "SELECT p FROM Pessoaautorizada p WHERE p.endereco = :endereco"),
     @NamedQuery(name = "Pessoaautorizada.findByTelefone", query = "SELECT p FROM Pessoaautorizada p WHERE p.telefone = :telefone"),
     @NamedQuery(name = "Pessoaautorizada.findByEmail", query = "SELECT p FROM Pessoaautorizada p WHERE p.email = :email"),
-    @NamedQuery(name = "Pessoaautorizada.findByStatusContato", query = "SELECT p FROM Pessoaautorizada p WHERE p.statusContato = :statusContato"),
-    @NamedQuery(name = "Pessoaautorizada.findByCelular", query = "SELECT p FROM Pessoaautorizada p WHERE p.celular = :celular")})
+    @NamedQuery(name = "Pessoaautorizada.findByCelular", query = "SELECT p FROM Pessoaautorizada p WHERE p.celular = :celular"),
+    @NamedQuery(name = "Pessoaautorizada.findByAtivo", query = "SELECT p FROM Pessoaautorizada p WHERE p.ativo = :ativo")})
 public class Pessoaautorizada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,12 +61,15 @@ public class Pessoaautorizada implements Serializable {
     private String telefone;
     @Column(name = "email")
     private String email;
-    @Column(name = "statusContato")
-    private Integer statusContato;
     @Column(name = "celular")
     private String celular;
+    @Basic(optional = false)
+    @Column(name = "ativo")
+    private Character ativo;
     @ManyToMany(mappedBy = "pessoaautorizadaList", fetch = FetchType.LAZY)
     private List<Crianca> criancaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pessoaAutorizadacodigo", fetch = FetchType.LAZY)
+    private List<Controleretirada> controleretiradaList;
 
     public Pessoaautorizada() {
     }
@@ -73,11 +78,12 @@ public class Pessoaautorizada implements Serializable {
         this.codigo = codigo;
     }
 
-    public Pessoaautorizada(Integer codigo, String nome, String cpf, String endereco) {
+    public Pessoaautorizada(Integer codigo, String nome, String cpf, String endereco, Character ativo) {
         this.codigo = codigo;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
+        this.ativo = ativo;
     }
 
     public Integer getCodigo() {
@@ -128,20 +134,20 @@ public class Pessoaautorizada implements Serializable {
         this.email = email;
     }
 
-    public Integer getStatusContato() {
-        return statusContato;
-    }
-
-    public void setStatusContato(Integer statusContato) {
-        this.statusContato = statusContato;
-    }
-
     public String getCelular() {
         return celular;
     }
 
     public void setCelular(String celular) {
         this.celular = celular;
+    }
+
+    public Character getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Character ativo) {
+        this.ativo = ativo;
     }
 
     @XmlTransient
@@ -151,6 +157,15 @@ public class Pessoaautorizada implements Serializable {
 
     public void setCriancaList(List<Crianca> criancaList) {
         this.criancaList = criancaList;
+    }
+
+    @XmlTransient
+    public List<Controleretirada> getControleretiradaList() {
+        return controleretiradaList;
+    }
+
+    public void setControleretiradaList(List<Controleretirada> controleretiradaList) {
+        this.controleretiradaList = controleretiradaList;
     }
 
     @Override

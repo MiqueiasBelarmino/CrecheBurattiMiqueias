@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Frequenciaservidor.findAll", query = "SELECT f FROM Frequenciaservidor f"),
     @NamedQuery(name = "Frequenciaservidor.findByCodigo", query = "SELECT f FROM Frequenciaservidor f WHERE f.codigo = :codigo"),
     @NamedQuery(name = "Frequenciaservidor.findByData", query = "SELECT f FROM Frequenciaservidor f WHERE f.data = :data"),
-    @NamedQuery(name = "Frequenciaservidor.findBySituacao", query = "SELECT f FROM Frequenciaservidor f WHERE f.situacao LIKE :situacao"),
+    @NamedQuery(name = "Frequenciaservidor.findBySituacao", query = "SELECT f FROM Frequenciaservidor f WHERE f.situacao = :situacao"),
     @NamedQuery(name = "Frequenciaservidor.findByJustificativa", query = "SELECT f FROM Frequenciaservidor f WHERE f.justificativa = :justificativa")})
 public class Frequenciaservidor implements Serializable {
 

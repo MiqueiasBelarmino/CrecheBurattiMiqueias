@@ -5,7 +5,6 @@
  */
 package view;
 
-import controller.CriancaJpaController;
 import controller.GeneralController;
 import controller.ServidorJpaController;
 import controller.exceptions.IllegalOrphanException;
@@ -17,7 +16,6 @@ import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import model.Crianca;
 import model.Servidor;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
 

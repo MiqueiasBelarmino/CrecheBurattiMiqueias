@@ -7,6 +7,7 @@ package view;
 
 import controller.GeneralController;
 import controller.PessoaautorizadaJpaController;
+import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         radioGrupo.add(radioStatusSim);
         radioGrupo.add(radioStatusNao);
         habilitarComponentes(false);
-        controllerPessoa = new PessoaautorizadaJpaController(Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU"));
+        controllerPessoa = new PessoaautorizadaJpaController();
         atualizarFiltro();
     }
 
@@ -57,13 +58,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         txtCelularFormatado.setText(p.getCelular());
         txtTelefoneFormatado.setText(p.getTelefone());
         txtEmail.setText(p.getEmail());
-        if (p.getStatusContato() == 0) {
-            radioStatusNao.setSelected(true);
-            radioStatusSim.setSelected(false);
-        } else if (p.getStatusContato() == 1) {
-            radioStatusNao.setSelected(false);
-            radioStatusSim.setSelected(true);
-        }
 
     }
 
@@ -519,12 +513,6 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
             pessoa.setTelefone(txtTelefoneFormatado.getText());
             pessoa.setCriancaList(criancaList);
 
-            if (radioStatusNao.isSelected()) {
-                pessoa.setStatusContato(0);
-            } else {
-                pessoa.setStatusContato(1);
-            }
-
             if (!novo) {
                 try {
                     controllerPessoa.edit(pessoa);
@@ -570,7 +558,7 @@ public class PessoaAutorizadaView extends javax.swing.JDialog {
         if (tablePessoa.isRowSelected(tablePessoa.getSelectedRow())) {
             try {
                 controllerPessoa.destroy(pessoaList.get(tablePessoa.getSelectedRow()).getCodigo());
-            } catch (NonexistentEntityException ex) {
+            } catch (NonexistentEntityException | IllegalOrphanException ex) {
                 Logger.getLogger(PessoaAutorizadaView.class.getName()).log(Level.SEVERE, null, ex);
             }
             atualizarFiltro();

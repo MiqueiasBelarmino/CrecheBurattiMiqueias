@@ -14,6 +14,12 @@
     <class>model.Ambiente</class>
     <class>model.Frequenciaservidor</class>
     <class>model.Pessoaautorizadacrianca</class>
+    <class>model.Produto</class>
+    <class>model.Doacao</class>
+    <class>model.Evento</class>
+    <class>model.Itempedido</class>
+    <class>model.Contatoemergencia</class>
+    <class>model.Pedido</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/creche_db"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

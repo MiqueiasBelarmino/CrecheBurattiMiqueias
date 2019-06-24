@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Reservaambiente.findByAmbientecodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.ambientecodigo = :ambientecodigo"),
     @NamedQuery(name = "Reservaambiente.findByServidorcodigo", query = "SELECT r FROM Reservaambiente r WHERE r.reservaambientePK.servidorcodigo = :servidorcodigo"),
     @NamedQuery(name = "Reservaambiente.findByData", query = "SELECT r FROM Reservaambiente r WHERE r.data = :data"),
-    @NamedQuery(name = "Reservaambiente.findByHora", query = "SELECT r FROM Reservaambiente r WHERE r.hora = :hora")})
+    @NamedQuery(name = "Reservaambiente.findByHora", query = "SELECT r FROM Reservaambiente r WHERE r.hora = :hora"),
+    @NamedQuery(name = "Reservaambiente.findByAtivo", query = "SELECT r FROM Reservaambiente r WHERE r.ativo = :ativo")})
 public class Reservaambiente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,6 +48,9 @@ public class Reservaambiente implements Serializable {
     @Column(name = "hora")
     @Temporal(TemporalType.TIME)
     private Date hora;
+    @Basic(optional = false)
+    @Column(name = "ativo")
+    private Character ativo;
     @JoinColumn(name = "Ambiente_codigo", referencedColumnName = "codigo", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Ambiente ambiente;
@@ -61,9 +65,10 @@ public class Reservaambiente implements Serializable {
         this.reservaambientePK = reservaambientePK;
     }
 
-    public Reservaambiente(ReservaambientePK reservaambientePK, Date data) {
+    public Reservaambiente(ReservaambientePK reservaambientePK, Date data, Character ativo) {
         this.reservaambientePK = reservaambientePK;
         this.data = data;
+        this.ativo = ativo;
     }
 
     public Reservaambiente(int codigo, int ambientecodigo, int servidorcodigo) {
@@ -92,6 +97,14 @@ public class Reservaambiente implements Serializable {
 
     public void setHora(Date hora) {
         this.hora = hora;
+    }
+
+    public Character getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Character ativo) {
+        this.ativo = ativo;
     }
 
     public Ambiente getAmbiente() {

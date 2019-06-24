@@ -10,12 +10,14 @@ import controller.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import model.Crianca;
 import model.Ocorrencia;
+import model.Servidor;
+import static utilities.GerenciamentoEntidades.getEntityManager;
 
 /**
  *
@@ -23,21 +25,30 @@ import model.Ocorrencia;
  */
 public class OcorrenciaJpaController implements Serializable {
 
-    public OcorrenciaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
     public void create(Ocorrencia ocorrencia) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Crianca criancacodigo = ocorrencia.getCriancacodigo();
+            if (criancacodigo != null) {
+                criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
+                ocorrencia.setCriancacodigo(criancacodigo);
+            }
+            Servidor servidorcodigo = ocorrencia.getServidorcodigo();
+            if (servidorcodigo != null) {
+                servidorcodigo = em.getReference(servidorcodigo.getClass(), servidorcodigo.getCodigo());
+                ocorrencia.setServidorcodigo(servidorcodigo);
+            }
             em.persist(ocorrencia);
+            if (criancacodigo != null) {
+                criancacodigo.getOcorrenciaList().add(ocorrencia);
+                criancacodigo = em.merge(criancacodigo);
+            }
+            if (servidorcodigo != null) {
+                servidorcodigo.getOcorrenciaList().add(ocorrencia);
+                servidorcodigo = em.merge(servidorcodigo);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findOcorrencia(ocorrencia.getCodigo()) != null) {
@@ -56,7 +67,36 @@ public class OcorrenciaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Ocorrencia persistentOcorrencia = em.find(Ocorrencia.class, ocorrencia.getCodigo());
+            Crianca criancacodigoOld = persistentOcorrencia.getCriancacodigo();
+            Crianca criancacodigoNew = ocorrencia.getCriancacodigo();
+            Servidor servidorcodigoOld = persistentOcorrencia.getServidorcodigo();
+            Servidor servidorcodigoNew = ocorrencia.getServidorcodigo();
+            if (criancacodigoNew != null) {
+                criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
+                ocorrencia.setCriancacodigo(criancacodigoNew);
+            }
+            if (servidorcodigoNew != null) {
+                servidorcodigoNew = em.getReference(servidorcodigoNew.getClass(), servidorcodigoNew.getCodigo());
+                ocorrencia.setServidorcodigo(servidorcodigoNew);
+            }
             ocorrencia = em.merge(ocorrencia);
+            if (criancacodigoOld != null && !criancacodigoOld.equals(criancacodigoNew)) {
+                criancacodigoOld.getOcorrenciaList().remove(ocorrencia);
+                criancacodigoOld = em.merge(criancacodigoOld);
+            }
+            if (criancacodigoNew != null && !criancacodigoNew.equals(criancacodigoOld)) {
+                criancacodigoNew.getOcorrenciaList().add(ocorrencia);
+                criancacodigoNew = em.merge(criancacodigoNew);
+            }
+            if (servidorcodigoOld != null && !servidorcodigoOld.equals(servidorcodigoNew)) {
+                servidorcodigoOld.getOcorrenciaList().remove(ocorrencia);
+                servidorcodigoOld = em.merge(servidorcodigoOld);
+            }
+            if (servidorcodigoNew != null && !servidorcodigoNew.equals(servidorcodigoOld)) {
+                servidorcodigoNew.getOcorrenciaList().add(ocorrencia);
+                servidorcodigoNew = em.merge(servidorcodigoNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -85,6 +125,16 @@ public class OcorrenciaJpaController implements Serializable {
                 ocorrencia.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The ocorrencia with id " + id + " no longer exists.", enfe);
+            }
+            Crianca criancacodigo = ocorrencia.getCriancacodigo();
+            if (criancacodigo != null) {
+                criancacodigo.getOcorrenciaList().remove(ocorrencia);
+                criancacodigo = em.merge(criancacodigo);
+            }
+            Servidor servidorcodigo = ocorrencia.getServidorcodigo();
+            if (servidorcodigo != null) {
+                servidorcodigo.getOcorrenciaList().remove(ocorrencia);
+                servidorcodigo = em.merge(servidorcodigo);
             }
             em.remove(ocorrencia);
             em.getTransaction().commit();

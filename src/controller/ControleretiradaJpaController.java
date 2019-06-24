@@ -9,12 +9,13 @@ import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import model.Controleretirada;
+import model.Crianca;
+import model.Pessoaautorizada;
 
 /**
  *
@@ -22,21 +23,30 @@ import model.Controleretirada;
  */
 public class ControleretiradaJpaController implements Serializable {
 
-    public ControleretiradaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
     public void create(Controleretirada controleretirada) {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
+            Crianca criancacodigo = controleretirada.getCriancacodigo();
+            if (criancacodigo != null) {
+                criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
+                controleretirada.setCriancacodigo(criancacodigo);
+            }
+            Pessoaautorizada pessoaAutorizadacodigo = controleretirada.getPessoaAutorizadacodigo();
+            if (pessoaAutorizadacodigo != null) {
+                pessoaAutorizadacodigo = em.getReference(pessoaAutorizadacodigo.getClass(), pessoaAutorizadacodigo.getCodigo());
+                controleretirada.setPessoaAutorizadacodigo(pessoaAutorizadacodigo);
+            }
             em.persist(controleretirada);
+            if (criancacodigo != null) {
+                criancacodigo.getControleretiradaList().add(controleretirada);
+                criancacodigo = em.merge(criancacodigo);
+            }
+            if (pessoaAutorizadacodigo != null) {
+                pessoaAutorizadacodigo.getControleretiradaList().add(controleretirada);
+                pessoaAutorizadacodigo = em.merge(pessoaAutorizadacodigo);
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -48,9 +58,38 @@ public class ControleretiradaJpaController implements Serializable {
     public void edit(Controleretirada controleretirada) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
+            Controleretirada persistentControleretirada = em.find(Controleretirada.class, controleretirada.getCodigo());
+            Crianca criancacodigoOld = persistentControleretirada.getCriancacodigo();
+            Crianca criancacodigoNew = controleretirada.getCriancacodigo();
+            Pessoaautorizada pessoaAutorizadacodigoOld = persistentControleretirada.getPessoaAutorizadacodigo();
+            Pessoaautorizada pessoaAutorizadacodigoNew = controleretirada.getPessoaAutorizadacodigo();
+            if (criancacodigoNew != null) {
+                criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
+                controleretirada.setCriancacodigo(criancacodigoNew);
+            }
+            if (pessoaAutorizadacodigoNew != null) {
+                pessoaAutorizadacodigoNew = em.getReference(pessoaAutorizadacodigoNew.getClass(), pessoaAutorizadacodigoNew.getCodigo());
+                controleretirada.setPessoaAutorizadacodigo(pessoaAutorizadacodigoNew);
+            }
             controleretirada = em.merge(controleretirada);
+            if (criancacodigoOld != null && !criancacodigoOld.equals(criancacodigoNew)) {
+                criancacodigoOld.getControleretiradaList().remove(controleretirada);
+                criancacodigoOld = em.merge(criancacodigoOld);
+            }
+            if (criancacodigoNew != null && !criancacodigoNew.equals(criancacodigoOld)) {
+                criancacodigoNew.getControleretiradaList().add(controleretirada);
+                criancacodigoNew = em.merge(criancacodigoNew);
+            }
+            if (pessoaAutorizadacodigoOld != null && !pessoaAutorizadacodigoOld.equals(pessoaAutorizadacodigoNew)) {
+                pessoaAutorizadacodigoOld.getControleretiradaList().remove(controleretirada);
+                pessoaAutorizadacodigoOld = em.merge(pessoaAutorizadacodigoOld);
+            }
+            if (pessoaAutorizadacodigoNew != null && !pessoaAutorizadacodigoNew.equals(pessoaAutorizadacodigoOld)) {
+                pessoaAutorizadacodigoNew.getControleretiradaList().add(controleretirada);
+                pessoaAutorizadacodigoNew = em.merge(pessoaAutorizadacodigoNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -71,7 +110,7 @@ public class ControleretiradaJpaController implements Serializable {
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Controleretirada controleretirada;
             try {
@@ -79,6 +118,16 @@ public class ControleretiradaJpaController implements Serializable {
                 controleretirada.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The controleretirada with id " + id + " no longer exists.", enfe);
+            }
+            Crianca criancacodigo = controleretirada.getCriancacodigo();
+            if (criancacodigo != null) {
+                criancacodigo.getControleretiradaList().remove(controleretirada);
+                criancacodigo = em.merge(criancacodigo);
+            }
+            Pessoaautorizada pessoaAutorizadacodigo = controleretirada.getPessoaAutorizadacodigo();
+            if (pessoaAutorizadacodigo != null) {
+                pessoaAutorizadacodigo.getControleretiradaList().remove(controleretirada);
+                pessoaAutorizadacodigo = em.merge(pessoaAutorizadacodigo);
             }
             em.remove(controleretirada);
             em.getTransaction().commit();
@@ -98,7 +147,7 @@ public class ControleretiradaJpaController implements Serializable {
     }
 
     private List<Controleretirada> findControleretiradaEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Controleretirada.class));
@@ -114,7 +163,7 @@ public class ControleretiradaJpaController implements Serializable {
     }
 
     public Controleretirada findControleretirada(Integer id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             return em.find(Controleretirada.class, id);
         } finally {
@@ -123,7 +172,7 @@ public class ControleretiradaJpaController implements Serializable {
     }
 
     public int getControleretiradaCount() {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Controleretirada> rt = cq.from(Controleretirada.class);

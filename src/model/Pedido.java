@@ -7,37 +7,43 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Belarmino
  */
 @Entity
-@Table(name = "ocorrencia")
+@Table(name = "pedido")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ocorrencia.findAll", query = "SELECT o FROM Ocorrencia o"),
-    @NamedQuery(name = "Ocorrencia.findByCodigo", query = "SELECT o FROM Ocorrencia o WHERE o.codigo = :codigo"),
-    @NamedQuery(name = "Ocorrencia.findByData", query = "SELECT o FROM Ocorrencia o WHERE o.data = :data"),
-    @NamedQuery(name = "Ocorrencia.findByDescricao", query = "SELECT o FROM Ocorrencia o WHERE o.descricao = :descricao"),
-    @NamedQuery(name = "Ocorrencia.findByAtivo", query = "SELECT o FROM Ocorrencia o WHERE o.ativo = :ativo")})
-public class Ocorrencia implements Serializable {
+    @NamedQuery(name = "Pedido.findAll", query = "SELECT p FROM Pedido p"),
+    @NamedQuery(name = "Pedido.findByCodigo", query = "SELECT p FROM Pedido p WHERE p.codigo = :codigo"),
+    @NamedQuery(name = "Pedido.findByData", query = "SELECT p FROM Pedido p WHERE p.data = :data"),
+    @NamedQuery(name = "Pedido.findBySituacao", query = "SELECT p FROM Pedido p WHERE p.situacao = :situacao")})
+public class Pedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "codigo")
     private Integer codigo;
@@ -45,29 +51,26 @@ public class Ocorrencia implements Serializable {
     @Column(name = "data")
     @Temporal(TemporalType.DATE)
     private Date data;
-    @Column(name = "descricao")
-    private String descricao;
     @Basic(optional = false)
-    @Column(name = "ativo")
-    private Character ativo;
-    @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
+    @Column(name = "situacao")
+    private String situacao;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido", fetch = FetchType.LAZY)
+    private List<Itempedido> itempedidoList;
+    @JoinColumn(name = "servidor_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Crianca criancacodigo;
-    @JoinColumn(name = "Servidor_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Servidor servidorcodigo;
+    private Servidor servidorCodigo;
 
-    public Ocorrencia() {
+    public Pedido() {
     }
 
-    public Ocorrencia(Integer codigo) {
+    public Pedido(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public Ocorrencia(Integer codigo, Date data, Character ativo) {
+    public Pedido(Integer codigo, Date data, String situacao) {
         this.codigo = codigo;
         this.data = data;
-        this.ativo = ativo;
+        this.situacao = situacao;
     }
 
     public Integer getCodigo() {
@@ -86,36 +89,29 @@ public class Ocorrencia implements Serializable {
         this.data = data;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getSituacao() {
+        return situacao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setSituacao(String situacao) {
+        this.situacao = situacao;
     }
 
-    public Character getAtivo() {
-        return ativo;
+    @XmlTransient
+    public List<Itempedido> getItempedidoList() {
+        return itempedidoList;
     }
 
-    public void setAtivo(Character ativo) {
-        this.ativo = ativo;
+    public void setItempedidoList(List<Itempedido> itempedidoList) {
+        this.itempedidoList = itempedidoList;
     }
 
-    public Crianca getCriancacodigo() {
-        return criancacodigo;
+    public Servidor getServidorCodigo() {
+        return servidorCodigo;
     }
 
-    public void setCriancacodigo(Crianca criancacodigo) {
-        this.criancacodigo = criancacodigo;
-    }
-
-    public Servidor getServidorcodigo() {
-        return servidorcodigo;
-    }
-
-    public void setServidorcodigo(Servidor servidorcodigo) {
-        this.servidorcodigo = servidorcodigo;
+    public void setServidorCodigo(Servidor servidorCodigo) {
+        this.servidorCodigo = servidorCodigo;
     }
 
     @Override
@@ -128,10 +124,10 @@ public class Ocorrencia implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ocorrencia)) {
+        if (!(object instanceof Pedido)) {
             return false;
         }
-        Ocorrencia other = (Ocorrencia) object;
+        Pedido other = (Pedido) object;
         if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
             return false;
         }
@@ -140,7 +136,7 @@ public class Ocorrencia implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Ocorrencia[ codigo=" + codigo + " ]";
+        return "model.Pedido[ codigo=" + codigo + " ]";
     }
     
 }

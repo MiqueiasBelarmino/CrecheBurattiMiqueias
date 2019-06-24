@@ -16,7 +16,6 @@ import model.Reservaambiente;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import model.Ambiente;
 
 /**
@@ -25,22 +24,13 @@ import model.Ambiente;
  */
 public class AmbienteJpaController implements Serializable {
 
-    public AmbienteJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
     public void create(Ambiente ambiente) {
         if (ambiente.getReservaambienteList() == null) {
             ambiente.setReservaambienteList(new ArrayList<Reservaambiente>());
         }
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             List<Reservaambiente> attachedReservaambienteList = new ArrayList<Reservaambiente>();
             for (Reservaambiente reservaambienteListReservaambienteToAttach : ambiente.getReservaambienteList()) {
@@ -69,7 +59,7 @@ public class AmbienteJpaController implements Serializable {
     public void edit(Ambiente ambiente) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Ambiente persistentAmbiente = em.find(Ambiente.class, ambiente.getCodigo());
             List<Reservaambiente> reservaambienteListOld = persistentAmbiente.getReservaambienteList();
@@ -125,7 +115,7 @@ public class AmbienteJpaController implements Serializable {
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
-            em = getEntityManager();
+            em = utilities.GerenciamentoEntidades.getEntityManager();
             em.getTransaction().begin();
             Ambiente ambiente;
             try {
@@ -163,7 +153,7 @@ public class AmbienteJpaController implements Serializable {
     }
 
     private List<Ambiente> findAmbienteEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Ambiente.class));
@@ -179,7 +169,7 @@ public class AmbienteJpaController implements Serializable {
     }
 
     public Ambiente findAmbiente(Integer id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             return em.find(Ambiente.class, id);
         } finally {
@@ -188,7 +178,7 @@ public class AmbienteJpaController implements Serializable {
     }
 
     public int getAmbienteCount() {
-        EntityManager em = getEntityManager();
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Ambiente> rt = cq.from(Ambiente.class);

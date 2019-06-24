@@ -14,28 +14,28 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import model.Crianca;
-import model.Observacao;
+import model.Remedio;
 import static utilities.GerenciamentoEntidades.getEntityManager;
 
 /**
  *
  * @author Belarmino
  */
-public class ObservacaoJpaController implements Serializable {
+public class RemedioJpaController implements Serializable {
 
-    public void create(Observacao observacao) {
+    public void create(Remedio remedio) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Crianca criancacodigo = observacao.getCriancacodigo();
+            Crianca criancacodigo = remedio.getCriancacodigo();
             if (criancacodigo != null) {
                 criancacodigo = em.getReference(criancacodigo.getClass(), criancacodigo.getCodigo());
-                observacao.setCriancacodigo(criancacodigo);
+                remedio.setCriancacodigo(criancacodigo);
             }
-            em.persist(observacao);
+            em.persist(remedio);
             if (criancacodigo != null) {
-                criancacodigo.getObservacaoList().add(observacao);
+                criancacodigo.getRemedioList().add(remedio);
                 criancacodigo = em.merge(criancacodigo);
             }
             em.getTransaction().commit();
@@ -46,34 +46,34 @@ public class ObservacaoJpaController implements Serializable {
         }
     }
 
-    public void edit(Observacao observacao) throws NonexistentEntityException, Exception {
+    public void edit(Remedio remedio) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Observacao persistentObservacao = em.find(Observacao.class, observacao.getCodigo());
-            Crianca criancacodigoOld = persistentObservacao.getCriancacodigo();
-            Crianca criancacodigoNew = observacao.getCriancacodigo();
+            Remedio persistentRemedio = em.find(Remedio.class, remedio.getCodigo());
+            Crianca criancacodigoOld = persistentRemedio.getCriancacodigo();
+            Crianca criancacodigoNew = remedio.getCriancacodigo();
             if (criancacodigoNew != null) {
                 criancacodigoNew = em.getReference(criancacodigoNew.getClass(), criancacodigoNew.getCodigo());
-                observacao.setCriancacodigo(criancacodigoNew);
+                remedio.setCriancacodigo(criancacodigoNew);
             }
-            observacao = em.merge(observacao);
+            remedio = em.merge(remedio);
             if (criancacodigoOld != null && !criancacodigoOld.equals(criancacodigoNew)) {
-                criancacodigoOld.getObservacaoList().remove(observacao);
+                criancacodigoOld.getRemedioList().remove(remedio);
                 criancacodigoOld = em.merge(criancacodigoOld);
             }
             if (criancacodigoNew != null && !criancacodigoNew.equals(criancacodigoOld)) {
-                criancacodigoNew.getObservacaoList().add(observacao);
+                criancacodigoNew.getRemedioList().add(remedio);
                 criancacodigoNew = em.merge(criancacodigoNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = observacao.getCodigo();
-                if (findObservacao(id) == null) {
-                    throw new NonexistentEntityException("The observacao with id " + id + " no longer exists.");
+                Integer id = remedio.getCodigo();
+                if (findRemedio(id) == null) {
+                    throw new NonexistentEntityException("The remedio with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -89,19 +89,19 @@ public class ObservacaoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Observacao observacao;
+            Remedio remedio;
             try {
-                observacao = em.getReference(Observacao.class, id);
-                observacao.getCodigo();
+                remedio = em.getReference(Remedio.class, id);
+                remedio.getCodigo();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The observacao with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The remedio with id " + id + " no longer exists.", enfe);
             }
-            Crianca criancacodigo = observacao.getCriancacodigo();
+            Crianca criancacodigo = remedio.getCriancacodigo();
             if (criancacodigo != null) {
-                criancacodigo.getObservacaoList().remove(observacao);
+                criancacodigo.getRemedioList().remove(remedio);
                 criancacodigo = em.merge(criancacodigo);
             }
-            em.remove(observacao);
+            em.remove(remedio);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -110,19 +110,19 @@ public class ObservacaoJpaController implements Serializable {
         }
     }
 
-    public List<Observacao> findObservacaoEntities() {
-        return findObservacaoEntities(true, -1, -1);
+    public List<Remedio> findRemedioEntities() {
+        return findRemedioEntities(true, -1, -1);
     }
 
-    public List<Observacao> findObservacaoEntities(int maxResults, int firstResult) {
-        return findObservacaoEntities(false, maxResults, firstResult);
+    public List<Remedio> findRemedioEntities(int maxResults, int firstResult) {
+        return findRemedioEntities(false, maxResults, firstResult);
     }
 
-    private List<Observacao> findObservacaoEntities(boolean all, int maxResults, int firstResult) {
+    private List<Remedio> findRemedioEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Observacao.class));
+            cq.select(cq.from(Remedio.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -134,20 +134,20 @@ public class ObservacaoJpaController implements Serializable {
         }
     }
 
-    public Observacao findObservacao(Integer id) {
+    public Remedio findRemedio(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Observacao.class, id);
+            return em.find(Remedio.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getObservacaoCount() {
+    public int getRemedioCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Observacao> rt = cq.from(Observacao.class);
+            Root<Remedio> rt = cq.from(Remedio.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

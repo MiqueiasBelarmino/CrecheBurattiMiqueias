@@ -6,36 +6,35 @@
 package model;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Belarmino
  */
 @Entity
-@Table(name = "ambiente")
+@Table(name = "contatoemergencia")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ambiente.findAll", query = "SELECT a FROM Ambiente a"),
-    @NamedQuery(name = "Ambiente.findByCodigo", query = "SELECT a FROM Ambiente a WHERE a.codigo = :codigo"),
-    @NamedQuery(name = "Ambiente.findByNome", query = "SELECT a FROM Ambiente a WHERE a.nome = :nome"),
-    @NamedQuery(name = "Ambiente.findByCapacidade", query = "SELECT a FROM Ambiente a WHERE a.capacidade = :capacidade"),
-    @NamedQuery(name = "Ambiente.findByAtivo", query = "SELECT a FROM Ambiente a WHERE a.ativo = :ativo")})
-public class Ambiente implements Serializable {
+    @NamedQuery(name = "Contatoemergencia.findAll", query = "SELECT c FROM Contatoemergencia c"),
+    @NamedQuery(name = "Contatoemergencia.findByCodigo", query = "SELECT c FROM Contatoemergencia c WHERE c.codigo = :codigo"),
+    @NamedQuery(name = "Contatoemergencia.findByNome", query = "SELECT c FROM Contatoemergencia c WHERE c.nome = :nome"),
+    @NamedQuery(name = "Contatoemergencia.findByVinculo", query = "SELECT c FROM Contatoemergencia c WHERE c.vinculo = :vinculo"),
+    @NamedQuery(name = "Contatoemergencia.findByTelefone", query = "SELECT c FROM Contatoemergencia c WHERE c.telefone = :telefone"),
+    @NamedQuery(name = "Contatoemergencia.findByAtivo", query = "SELECT c FROM Contatoemergencia c WHERE c.ativo = :ativo")})
+public class Contatoemergencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,25 +46,30 @@ public class Ambiente implements Serializable {
     @Column(name = "nome")
     private String nome;
     @Basic(optional = false)
-    @Column(name = "capacidade")
-    private int capacidade;
+    @Column(name = "vinculo")
+    private String vinculo;
+    @Basic(optional = false)
+    @Column(name = "telefone")
+    private String telefone;
     @Basic(optional = false)
     @Column(name = "ativo")
     private Character ativo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ambiente", fetch = FetchType.LAZY)
-    private List<Reservaambiente> reservaambienteList;
+    @JoinColumn(name = "crianca_codigo", referencedColumnName = "codigo")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Crianca criancaCodigo;
 
-    public Ambiente() {
+    public Contatoemergencia() {
     }
 
-    public Ambiente(Integer codigo) {
+    public Contatoemergencia(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public Ambiente(Integer codigo, String nome, int capacidade, Character ativo) {
+    public Contatoemergencia(Integer codigo, String nome, String vinculo, String telefone, Character ativo) {
         this.codigo = codigo;
         this.nome = nome;
-        this.capacidade = capacidade;
+        this.vinculo = vinculo;
+        this.telefone = telefone;
         this.ativo = ativo;
     }
 
@@ -85,12 +89,20 @@ public class Ambiente implements Serializable {
         this.nome = nome;
     }
 
-    public int getCapacidade() {
-        return capacidade;
+    public String getVinculo() {
+        return vinculo;
     }
 
-    public void setCapacidade(int capacidade) {
-        this.capacidade = capacidade;
+    public void setVinculo(String vinculo) {
+        this.vinculo = vinculo;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public Character getAtivo() {
@@ -101,13 +113,12 @@ public class Ambiente implements Serializable {
         this.ativo = ativo;
     }
 
-    @XmlTransient
-    public List<Reservaambiente> getReservaambienteList() {
-        return reservaambienteList;
+    public Crianca getCriancaCodigo() {
+        return criancaCodigo;
     }
 
-    public void setReservaambienteList(List<Reservaambiente> reservaambienteList) {
-        this.reservaambienteList = reservaambienteList;
+    public void setCriancaCodigo(Crianca criancaCodigo) {
+        this.criancaCodigo = criancaCodigo;
     }
 
     @Override
@@ -120,10 +131,10 @@ public class Ambiente implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ambiente)) {
+        if (!(object instanceof Contatoemergencia)) {
             return false;
         }
-        Ambiente other = (Ambiente) object;
+        Contatoemergencia other = (Contatoemergencia) object;
         if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
             return false;
         }
@@ -132,7 +143,7 @@ public class Ambiente implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Ambiente[ codigo=" + codigo + " ]";
+        return "model.Contatoemergencia[ codigo=" + codigo + " ]";
     }
     
 }

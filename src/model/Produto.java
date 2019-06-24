@@ -27,15 +27,15 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Belarmino
  */
 @Entity
-@Table(name = "ambiente")
+@Table(name = "produto")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ambiente.findAll", query = "SELECT a FROM Ambiente a"),
-    @NamedQuery(name = "Ambiente.findByCodigo", query = "SELECT a FROM Ambiente a WHERE a.codigo = :codigo"),
-    @NamedQuery(name = "Ambiente.findByNome", query = "SELECT a FROM Ambiente a WHERE a.nome = :nome"),
-    @NamedQuery(name = "Ambiente.findByCapacidade", query = "SELECT a FROM Ambiente a WHERE a.capacidade = :capacidade"),
-    @NamedQuery(name = "Ambiente.findByAtivo", query = "SELECT a FROM Ambiente a WHERE a.ativo = :ativo")})
-public class Ambiente implements Serializable {
+    @NamedQuery(name = "Produto.findAll", query = "SELECT p FROM Produto p"),
+    @NamedQuery(name = "Produto.findByCodigo", query = "SELECT p FROM Produto p WHERE p.codigo = :codigo"),
+    @NamedQuery(name = "Produto.findByDescricao", query = "SELECT p FROM Produto p WHERE p.descricao = :descricao"),
+    @NamedQuery(name = "Produto.findByEstoque", query = "SELECT p FROM Produto p WHERE p.estoque = :estoque"),
+    @NamedQuery(name = "Produto.findByAtivo", query = "SELECT p FROM Produto p WHERE p.ativo = :ativo")})
+public class Produto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,28 +44,28 @@ public class Ambiente implements Serializable {
     @Column(name = "codigo")
     private Integer codigo;
     @Basic(optional = false)
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "descricao")
+    private String descricao;
     @Basic(optional = false)
-    @Column(name = "capacidade")
-    private int capacidade;
+    @Column(name = "estoque")
+    private int estoque;
     @Basic(optional = false)
     @Column(name = "ativo")
     private Character ativo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ambiente", fetch = FetchType.LAZY)
-    private List<Reservaambiente> reservaambienteList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto", fetch = FetchType.LAZY)
+    private List<Itempedido> itempedidoList;
 
-    public Ambiente() {
+    public Produto() {
     }
 
-    public Ambiente(Integer codigo) {
+    public Produto(Integer codigo) {
         this.codigo = codigo;
     }
 
-    public Ambiente(Integer codigo, String nome, int capacidade, Character ativo) {
+    public Produto(Integer codigo, String descricao, int estoque, Character ativo) {
         this.codigo = codigo;
-        this.nome = nome;
-        this.capacidade = capacidade;
+        this.descricao = descricao;
+        this.estoque = estoque;
         this.ativo = ativo;
     }
 
@@ -77,20 +77,20 @@ public class Ambiente implements Serializable {
         this.codigo = codigo;
     }
 
-    public String getNome() {
-        return nome;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public int getCapacidade() {
-        return capacidade;
+    public int getEstoque() {
+        return estoque;
     }
 
-    public void setCapacidade(int capacidade) {
-        this.capacidade = capacidade;
+    public void setEstoque(int estoque) {
+        this.estoque = estoque;
     }
 
     public Character getAtivo() {
@@ -102,12 +102,12 @@ public class Ambiente implements Serializable {
     }
 
     @XmlTransient
-    public List<Reservaambiente> getReservaambienteList() {
-        return reservaambienteList;
+    public List<Itempedido> getItempedidoList() {
+        return itempedidoList;
     }
 
-    public void setReservaambienteList(List<Reservaambiente> reservaambienteList) {
-        this.reservaambienteList = reservaambienteList;
+    public void setItempedidoList(List<Itempedido> itempedidoList) {
+        this.itempedidoList = itempedidoList;
     }
 
     @Override
@@ -120,10 +120,10 @@ public class Ambiente implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ambiente)) {
+        if (!(object instanceof Produto)) {
             return false;
         }
-        Ambiente other = (Ambiente) object;
+        Produto other = (Produto) object;
         if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
             return false;
         }
@@ -132,7 +132,7 @@ public class Ambiente implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Ambiente[ codigo=" + codigo + " ]";
+        return "model.Produto[ codigo=" + codigo + " ]";
     }
     
 }

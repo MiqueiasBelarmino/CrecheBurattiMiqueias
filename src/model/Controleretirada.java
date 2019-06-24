@@ -10,8 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Persistence;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Controleretirada.findAll", query = "SELECT c FROM Controleretirada c"),
     @NamedQuery(name = "Controleretirada.findByCodigo", query = "SELECT c FROM Controleretirada c WHERE c.codigo = :codigo"),
     @NamedQuery(name = "Controleretirada.findByData", query = "SELECT c FROM Controleretirada c WHERE c.data = :data"),
-    @NamedQuery(name = "Controleretirada.findByJustificativa", query = "SELECT c FROM Controleretirada c WHERE c.justificativa = :justificativa")})
+    @NamedQuery(name = "Controleretirada.findByJustificativa", query = "SELECT c FROM Controleretirada c WHERE c.justificativa = :justificativa"),
+    @NamedQuery(name = "Controleretirada.findByAtivo", query = "SELECT c FROM Controleretirada c WHERE c.ativo = :ativo")})
 public class Controleretirada implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +50,9 @@ public class Controleretirada implements Serializable {
     private Date data;
     @Column(name = "justificativa")
     private String justificativa;
+    @Basic(optional = false)
+    @Column(name = "ativo")
+    private Character ativo;
     @JoinColumn(name = "Crianca_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Crianca criancacodigo;
@@ -66,9 +67,10 @@ public class Controleretirada implements Serializable {
         this.codigo = codigo;
     }
 
-    public Controleretirada(Integer codigo, Date data) {
+    public Controleretirada(Integer codigo, Date data, Character ativo) {
         this.codigo = codigo;
         this.data = data;
+        this.ativo = ativo;
     }
 
     public Integer getCodigo() {
@@ -93,6 +95,14 @@ public class Controleretirada implements Serializable {
 
     public void setJustificativa(String justificativa) {
         this.justificativa = justificativa;
+    }
+
+    public Character getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Character ativo) {
+        this.ativo = ativo;
     }
 
     public Crianca getCriancacodigo() {
@@ -134,21 +144,6 @@ public class Controleretirada implements Serializable {
     @Override
     public String toString() {
         return "model.Controleretirada[ codigo=" + codigo + " ]";
-    }
-
-    public void persist(Object object) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("CrecheBurattiMiqueiasPU");
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        try {
-            em.persist(object);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
-        }
     }
     
 }
