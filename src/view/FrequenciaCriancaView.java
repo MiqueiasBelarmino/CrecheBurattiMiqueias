@@ -36,6 +36,7 @@ public class FrequenciaCriancaView extends javax.swing.JDialog {
         criancaController = new CriancaJpaController();
         criancaList.addAll(criancaController.findCriancaEntities());
         dateDataFrequencia.setDate(new Date());
+        
         for (Crianca c : criancaList) {
             Frequencia f = new Frequencia();
             f.setCriancacodigo(c);
