@@ -23,6 +23,14 @@ import model.Ambiente;
  * @author Belarmino
  */
 public class AmbienteJpaController implements Serializable {
+    
+    public List<Ambiente> findNome(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Ambiente.findByNome");
+        query.setParameter("nome", "%" + str + "%");
+        return query.getResultList();
+    }
+    
 
     public void create(Ambiente ambiente) {
         if (ambiente.getReservaambienteList() == null) {

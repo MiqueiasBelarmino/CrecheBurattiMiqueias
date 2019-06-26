@@ -5,18 +5,14 @@
  */
 package controller;
 
-import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Servidor;
-import model.Itempedido;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
 import model.Pedido;
 import static utilities.GerenciamentoEntidades.getEntityManager;
 
@@ -25,40 +21,39 @@ import static utilities.GerenciamentoEntidades.getEntityManager;
  * @author Belarmino
  */
 public class PedidoJpaController implements Serializable {
-
-    public void create(Pedido pedido) {
-        if (pedido.getItempedidoList() == null) {
-            pedido.setItempedidoList(new ArrayList<Itempedido>());
+    
+    public List<Pedido> findAtivo(int ativo) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Pedido.findByAtivo");
+        query.setParameter("ativo", ativo);
+        return query.getResultList();
+    }
+    
+    public List<Pedido> findSituacao(String situacao) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Pedido.findBySituacao");
+        query.setParameter("situacao", "%" + situacao + "%");
+        return query.getResultList();
+    }
+    
+    public int findLastCodigo() {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Pedido.findLast");
+        Pedido p = (Pedido) query.getSingleResult();
+        System.out.println();
+        if(p != null){
+            return p.getCodigo();
+        }else{
+            return 0;
         }
+    }
+    
+    public void create(Pedido pedido) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Servidor servidorCodigo = pedido.getServidorCodigo();
-            if (servidorCodigo != null) {
-                servidorCodigo = em.getReference(servidorCodigo.getClass(), servidorCodigo.getCodigo());
-                pedido.setServidorCodigo(servidorCodigo);
-            }
-            List<Itempedido> attachedItempedidoList = new ArrayList<Itempedido>();
-            for (Itempedido itempedidoListItempedidoToAttach : pedido.getItempedidoList()) {
-                itempedidoListItempedidoToAttach = em.getReference(itempedidoListItempedidoToAttach.getClass(), itempedidoListItempedidoToAttach.getItempedidoPK());
-                attachedItempedidoList.add(itempedidoListItempedidoToAttach);
-            }
-            pedido.setItempedidoList(attachedItempedidoList);
             em.persist(pedido);
-            if (servidorCodigo != null) {
-                servidorCodigo.getPedidoList().add(pedido);
-                servidorCodigo = em.merge(servidorCodigo);
-            }
-            for (Itempedido itempedidoListItempedido : pedido.getItempedidoList()) {
-                Pedido oldPedidoOfItempedidoListItempedido = itempedidoListItempedido.getPedido();
-                itempedidoListItempedido.setPedido(pedido);
-                itempedidoListItempedido = em.merge(itempedidoListItempedido);
-                if (oldPedidoOfItempedidoListItempedido != null) {
-                    oldPedidoOfItempedidoListItempedido.getItempedidoList().remove(itempedidoListItempedido);
-                    oldPedidoOfItempedidoListItempedido = em.merge(oldPedidoOfItempedidoListItempedido);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -67,59 +62,12 @@ public class PedidoJpaController implements Serializable {
         }
     }
 
-    public void edit(Pedido pedido) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Pedido pedido) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Pedido persistentPedido = em.find(Pedido.class, pedido.getCodigo());
-            Servidor servidorCodigoOld = persistentPedido.getServidorCodigo();
-            Servidor servidorCodigoNew = pedido.getServidorCodigo();
-            List<Itempedido> itempedidoListOld = persistentPedido.getItempedidoList();
-            List<Itempedido> itempedidoListNew = pedido.getItempedidoList();
-            List<String> illegalOrphanMessages = null;
-            for (Itempedido itempedidoListOldItempedido : itempedidoListOld) {
-                if (!itempedidoListNew.contains(itempedidoListOldItempedido)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Itempedido " + itempedidoListOldItempedido + " since its pedido field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (servidorCodigoNew != null) {
-                servidorCodigoNew = em.getReference(servidorCodigoNew.getClass(), servidorCodigoNew.getCodigo());
-                pedido.setServidorCodigo(servidorCodigoNew);
-            }
-            List<Itempedido> attachedItempedidoListNew = new ArrayList<Itempedido>();
-            for (Itempedido itempedidoListNewItempedidoToAttach : itempedidoListNew) {
-                itempedidoListNewItempedidoToAttach = em.getReference(itempedidoListNewItempedidoToAttach.getClass(), itempedidoListNewItempedidoToAttach.getItempedidoPK());
-                attachedItempedidoListNew.add(itempedidoListNewItempedidoToAttach);
-            }
-            itempedidoListNew = attachedItempedidoListNew;
-            pedido.setItempedidoList(itempedidoListNew);
             pedido = em.merge(pedido);
-            if (servidorCodigoOld != null && !servidorCodigoOld.equals(servidorCodigoNew)) {
-                servidorCodigoOld.getPedidoList().remove(pedido);
-                servidorCodigoOld = em.merge(servidorCodigoOld);
-            }
-            if (servidorCodigoNew != null && !servidorCodigoNew.equals(servidorCodigoOld)) {
-                servidorCodigoNew.getPedidoList().add(pedido);
-                servidorCodigoNew = em.merge(servidorCodigoNew);
-            }
-            for (Itempedido itempedidoListNewItempedido : itempedidoListNew) {
-                if (!itempedidoListOld.contains(itempedidoListNewItempedido)) {
-                    Pedido oldPedidoOfItempedidoListNewItempedido = itempedidoListNewItempedido.getPedido();
-                    itempedidoListNewItempedido.setPedido(pedido);
-                    itempedidoListNewItempedido = em.merge(itempedidoListNewItempedido);
-                    if (oldPedidoOfItempedidoListNewItempedido != null && !oldPedidoOfItempedidoListNewItempedido.equals(pedido)) {
-                        oldPedidoOfItempedidoListNewItempedido.getItempedidoList().remove(itempedidoListNewItempedido);
-                        oldPedidoOfItempedidoListNewItempedido = em.merge(oldPedidoOfItempedidoListNewItempedido);
-                    }
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -137,7 +85,7 @@ public class PedidoJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -148,22 +96,6 @@ public class PedidoJpaController implements Serializable {
                 pedido.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The pedido with id " + id + " no longer exists.", enfe);
-            }
-            List<String> illegalOrphanMessages = null;
-            List<Itempedido> itempedidoListOrphanCheck = pedido.getItempedidoList();
-            for (Itempedido itempedidoListOrphanCheckItempedido : itempedidoListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Pedido (" + pedido + ") cannot be destroyed since the Itempedido " + itempedidoListOrphanCheckItempedido + " in its itempedidoList field has a non-nullable pedido field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            Servidor servidorCodigo = pedido.getServidorCodigo();
-            if (servidorCodigo != null) {
-                servidorCodigo.getPedidoList().remove(pedido);
-                servidorCodigo = em.merge(servidorCodigo);
             }
             em.remove(pedido);
             em.getTransaction().commit();

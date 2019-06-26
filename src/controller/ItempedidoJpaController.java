@@ -16,8 +16,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import model.Itempedido;
 import model.ItempedidoPK;
-import model.Pedido;
-import model.Produto;
 import static utilities.GerenciamentoEntidades.getEntityManager;
 
 /**
@@ -25,6 +23,13 @@ import static utilities.GerenciamentoEntidades.getEntityManager;
  * @author Belarmino
  */
 public class ItempedidoJpaController implements Serializable {
+    
+    public List<Itempedido> findAll(int codigo) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Itempedido.findByPedidoCodigo");
+        query.setParameter("pedidoCodigo", codigo);
+        return query.getResultList();
+    }
 
     public void create(Itempedido itempedido) throws PreexistingEntityException, Exception {
         if (itempedido.getItempedidoPK() == null) {
@@ -36,25 +41,7 @@ public class ItempedidoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Pedido pedido = itempedido.getPedido();
-            if (pedido != null) {
-                pedido = em.getReference(pedido.getClass(), pedido.getCodigo());
-                itempedido.setPedido(pedido);
-            }
-            Produto produto = itempedido.getProduto();
-            if (produto != null) {
-                produto = em.getReference(produto.getClass(), produto.getCodigo());
-                itempedido.setProduto(produto);
-            }
             em.persist(itempedido);
-            if (pedido != null) {
-                pedido.getItempedidoList().add(itempedido);
-                pedido = em.merge(pedido);
-            }
-            if (produto != null) {
-                produto.getItempedidoList().add(itempedido);
-                produto = em.merge(produto);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findItempedido(itempedido.getItempedidoPK()) != null) {
@@ -75,36 +62,7 @@ public class ItempedidoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Itempedido persistentItempedido = em.find(Itempedido.class, itempedido.getItempedidoPK());
-            Pedido pedidoOld = persistentItempedido.getPedido();
-            Pedido pedidoNew = itempedido.getPedido();
-            Produto produtoOld = persistentItempedido.getProduto();
-            Produto produtoNew = itempedido.getProduto();
-            if (pedidoNew != null) {
-                pedidoNew = em.getReference(pedidoNew.getClass(), pedidoNew.getCodigo());
-                itempedido.setPedido(pedidoNew);
-            }
-            if (produtoNew != null) {
-                produtoNew = em.getReference(produtoNew.getClass(), produtoNew.getCodigo());
-                itempedido.setProduto(produtoNew);
-            }
             itempedido = em.merge(itempedido);
-            if (pedidoOld != null && !pedidoOld.equals(pedidoNew)) {
-                pedidoOld.getItempedidoList().remove(itempedido);
-                pedidoOld = em.merge(pedidoOld);
-            }
-            if (pedidoNew != null && !pedidoNew.equals(pedidoOld)) {
-                pedidoNew.getItempedidoList().add(itempedido);
-                pedidoNew = em.merge(pedidoNew);
-            }
-            if (produtoOld != null && !produtoOld.equals(produtoNew)) {
-                produtoOld.getItempedidoList().remove(itempedido);
-                produtoOld = em.merge(produtoOld);
-            }
-            if (produtoNew != null && !produtoNew.equals(produtoOld)) {
-                produtoNew.getItempedidoList().add(itempedido);
-                produtoNew = em.merge(produtoNew);
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -133,16 +91,6 @@ public class ItempedidoJpaController implements Serializable {
                 itempedido.getItempedidoPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The itempedido with id " + id + " no longer exists.", enfe);
-            }
-            Pedido pedido = itempedido.getPedido();
-            if (pedido != null) {
-                pedido.getItempedidoList().remove(itempedido);
-                pedido = em.merge(pedido);
-            }
-            Produto produto = itempedido.getProduto();
-            if (produto != null) {
-                produto.getItempedidoList().remove(itempedido);
-                produto = em.merge(produto);
             }
             em.remove(itempedido);
             em.getTransaction().commit();

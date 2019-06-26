@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "servidor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Servidor.findAll", query = "SELECT s FROM Servidor s WHERE s.ativo = '1'"),
+    @NamedQuery(name = "Servidor.findAll", query = "SELECT s FROM Servidor s"),
     @NamedQuery(name = "Servidor.findByCodigo", query = "SELECT s FROM Servidor s WHERE s.codigo = :codigo"),
     @NamedQuery(name = "Servidor.findByNome", query = "SELECT s FROM Servidor s WHERE s.nome LIKE :nome"),
     @NamedQuery(name = "Servidor.findByTelefone", query = "SELECT s FROM Servidor s WHERE s.telefone = :telefone"),
@@ -41,6 +41,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Servidor.findByCpf", query = "SELECT s FROM Servidor s WHERE s.cpf LIKE :cpf"),
     @NamedQuery(name = "Servidor.findByAtivo", query = "SELECT s FROM Servidor s WHERE s.ativo = :ativo")})
 public class Servidor implements Serializable {
+
+    @Basic(optional = false)
+    @Column(name = "ativo")
+    private int ativo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorCodigo", fetch = FetchType.LAZY)
+    private List<Pedido> pedidoList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,17 +72,6 @@ public class Servidor implements Serializable {
     private String senha;
     @Column(name = "cpf")
     private String cpf;
-    @Basic(optional = false)
-    @Column(name = "ativo")
-    private Character ativo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo", fetch = FetchType.LAZY)
-    private List<Frequenciaservidor> frequenciaservidorList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorcodigo", fetch = FetchType.LAZY)
-    private List<Ocorrencia> ocorrenciaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidor", fetch = FetchType.LAZY)
-    private List<Reservaambiente> reservaambienteList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servidorCodigo", fetch = FetchType.LAZY)
-    private List<Pedido> pedidoList;
 
     public Servidor() {
     }
@@ -85,7 +80,7 @@ public class Servidor implements Serializable {
         this.codigo = codigo;
     }
 
-    public Servidor(Integer codigo, String nome, String telefone, String endereco, int nivelacesso, Character ativo) {
+    public Servidor(Integer codigo, String nome, String telefone, String endereco, int nivelacesso, int ativo) {
         this.codigo = codigo;
         this.nome = nome;
         this.telefone = telefone;
@@ -158,49 +153,6 @@ public class Servidor implements Serializable {
         this.cpf = cpf;
     }
 
-    public Character getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Character ativo) {
-        this.ativo = ativo;
-    }
-
-    @XmlTransient
-    public List<Frequenciaservidor> getFrequenciaservidorList() {
-        return frequenciaservidorList;
-    }
-
-    public void setFrequenciaservidorList(List<Frequenciaservidor> frequenciaservidorList) {
-        this.frequenciaservidorList = frequenciaservidorList;
-    }
-
-    @XmlTransient
-    public List<Ocorrencia> getOcorrenciaList() {
-        return ocorrenciaList;
-    }
-
-    public void setOcorrenciaList(List<Ocorrencia> ocorrenciaList) {
-        this.ocorrenciaList = ocorrenciaList;
-    }
-
-    @XmlTransient
-    public List<Reservaambiente> getReservaambienteList() {
-        return reservaambienteList;
-    }
-
-    public void setReservaambienteList(List<Reservaambiente> reservaambienteList) {
-        this.reservaambienteList = reservaambienteList;
-    }
-
-    @XmlTransient
-    public List<Pedido> getPedidoList() {
-        return pedidoList;
-    }
-
-    public void setPedidoList(List<Pedido> pedidoList) {
-        this.pedidoList = pedidoList;
-    }
 
     @Override
     public int hashCode() {
@@ -224,7 +176,24 @@ public class Servidor implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Servidor[ codigo=" + codigo + " ]";
+        return nome;
+    }
+
+    public int getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(int ativo) {
+        this.ativo = ativo;
+    }
+
+    @XmlTransient
+    public List<Pedido> getPedidoList() {
+        return pedidoList;
+    }
+
+    public void setPedidoList(List<Pedido> pedidoList) {
+        this.pedidoList = pedidoList;
     }
     
 }

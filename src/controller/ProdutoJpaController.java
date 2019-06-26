@@ -5,17 +5,14 @@
  */
 package controller;
 
-import controller.exceptions.IllegalOrphanException;
 import controller.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import model.Itempedido;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
 import model.Produto;
 import static utilities.GerenciamentoEntidades.getEntityManager;
 
@@ -25,30 +22,26 @@ import static utilities.GerenciamentoEntidades.getEntityManager;
  */
 public class ProdutoJpaController implements Serializable {
 
+   public List<Produto> findDescricao(String str) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Produto.findByDescricao");
+        query.setParameter("descricao", "%" + str + "%");
+        return query.getResultList();
+    }
+   
+   public List<Produto> findAtivo(int ativo) {
+        EntityManager em = getEntityManager();
+        Query query = em.createNamedQuery("Produto.findByAtivo");
+        query.setParameter("ativo", ativo);
+        return query.getResultList();
+    }
+   
     public void create(Produto produto) {
-        if (produto.getItempedidoList() == null) {
-            produto.setItempedidoList(new ArrayList<Itempedido>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Itempedido> attachedItempedidoList = new ArrayList<Itempedido>();
-            for (Itempedido itempedidoListItempedidoToAttach : produto.getItempedidoList()) {
-                itempedidoListItempedidoToAttach = em.getReference(itempedidoListItempedidoToAttach.getClass(), itempedidoListItempedidoToAttach.getItempedidoPK());
-                attachedItempedidoList.add(itempedidoListItempedidoToAttach);
-            }
-            produto.setItempedidoList(attachedItempedidoList);
             em.persist(produto);
-            for (Itempedido itempedidoListItempedido : produto.getItempedidoList()) {
-                Produto oldProdutoOfItempedidoListItempedido = itempedidoListItempedido.getProduto();
-                itempedidoListItempedido.setProduto(produto);
-                itempedidoListItempedido = em.merge(itempedidoListItempedido);
-                if (oldProdutoOfItempedidoListItempedido != null) {
-                    oldProdutoOfItempedidoListItempedido.getItempedidoList().remove(itempedidoListItempedido);
-                    oldProdutoOfItempedidoListItempedido = em.merge(oldProdutoOfItempedidoListItempedido);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -57,45 +50,12 @@ public class ProdutoJpaController implements Serializable {
         }
     }
 
-    public void edit(Produto produto) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Produto produto) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Produto persistentProduto = em.find(Produto.class, produto.getCodigo());
-            List<Itempedido> itempedidoListOld = persistentProduto.getItempedidoList();
-            List<Itempedido> itempedidoListNew = produto.getItempedidoList();
-            List<String> illegalOrphanMessages = null;
-            for (Itempedido itempedidoListOldItempedido : itempedidoListOld) {
-                if (!itempedidoListNew.contains(itempedidoListOldItempedido)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Itempedido " + itempedidoListOldItempedido + " since its produto field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            List<Itempedido> attachedItempedidoListNew = new ArrayList<Itempedido>();
-            for (Itempedido itempedidoListNewItempedidoToAttach : itempedidoListNew) {
-                itempedidoListNewItempedidoToAttach = em.getReference(itempedidoListNewItempedidoToAttach.getClass(), itempedidoListNewItempedidoToAttach.getItempedidoPK());
-                attachedItempedidoListNew.add(itempedidoListNewItempedidoToAttach);
-            }
-            itempedidoListNew = attachedItempedidoListNew;
-            produto.setItempedidoList(itempedidoListNew);
             produto = em.merge(produto);
-            for (Itempedido itempedidoListNewItempedido : itempedidoListNew) {
-                if (!itempedidoListOld.contains(itempedidoListNewItempedido)) {
-                    Produto oldProdutoOfItempedidoListNewItempedido = itempedidoListNewItempedido.getProduto();
-                    itempedidoListNewItempedido.setProduto(produto);
-                    itempedidoListNewItempedido = em.merge(itempedidoListNewItempedido);
-                    if (oldProdutoOfItempedidoListNewItempedido != null && !oldProdutoOfItempedidoListNewItempedido.equals(produto)) {
-                        oldProdutoOfItempedidoListNewItempedido.getItempedidoList().remove(itempedidoListNewItempedido);
-                        oldProdutoOfItempedidoListNewItempedido = em.merge(oldProdutoOfItempedidoListNewItempedido);
-                    }
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -113,7 +73,7 @@ public class ProdutoJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -124,17 +84,6 @@ public class ProdutoJpaController implements Serializable {
                 produto.getCodigo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The produto with id " + id + " no longer exists.", enfe);
-            }
-            List<String> illegalOrphanMessages = null;
-            List<Itempedido> itempedidoListOrphanCheck = produto.getItempedidoList();
-            for (Itempedido itempedidoListOrphanCheckItempedido : itempedidoListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Produto (" + produto + ") cannot be destroyed since the Itempedido " + itempedidoListOrphanCheckItempedido + " in its itempedidoList field has a non-nullable produto field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(produto);
             em.getTransaction().commit();

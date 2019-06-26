@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Ambiente.findAll", query = "SELECT a FROM Ambiente a"),
     @NamedQuery(name = "Ambiente.findByCodigo", query = "SELECT a FROM Ambiente a WHERE a.codigo = :codigo"),
-    @NamedQuery(name = "Ambiente.findByNome", query = "SELECT a FROM Ambiente a WHERE a.nome = :nome"),
+    @NamedQuery(name = "Ambiente.findByNome", query = "SELECT a FROM Ambiente a WHERE a.nome LIKE :nome"),
     @NamedQuery(name = "Ambiente.findByCapacidade", query = "SELECT a FROM Ambiente a WHERE a.capacidade = :capacidade"),
     @NamedQuery(name = "Ambiente.findByAtivo", query = "SELECT a FROM Ambiente a WHERE a.ativo = :ativo")})
 public class Ambiente implements Serializable {
@@ -51,7 +51,7 @@ public class Ambiente implements Serializable {
     private int capacidade;
     @Basic(optional = false)
     @Column(name = "ativo")
-    private Character ativo;
+    private int ativo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ambiente", fetch = FetchType.LAZY)
     private List<Reservaambiente> reservaambienteList;
 
@@ -93,11 +93,11 @@ public class Ambiente implements Serializable {
         this.capacidade = capacidade;
     }
 
-    public Character getAtivo() {
+    public int getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(Character ativo) {
+    public void setAtivo(int ativo) {
         this.ativo = ativo;
     }
 

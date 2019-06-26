@@ -36,14 +36,24 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Pedido.findAll", query = "SELECT p FROM Pedido p"),
+    @NamedQuery(name = "Pedido.findLast", query = "SELECT MAX(p.codigo) FROM Pedido p"),
     @NamedQuery(name = "Pedido.findByCodigo", query = "SELECT p FROM Pedido p WHERE p.codigo = :codigo"),
     @NamedQuery(name = "Pedido.findByData", query = "SELECT p FROM Pedido p WHERE p.data = :data"),
-    @NamedQuery(name = "Pedido.findBySituacao", query = "SELECT p FROM Pedido p WHERE p.situacao = :situacao")})
+    @NamedQuery(name = "Pedido.findBySituacao", query = "SELECT p FROM Pedido p WHERE p.situacao LIKE :situacao"),
+    @NamedQuery(name = "Pedido.findByAtivo", query = "SELECT p FROM Pedido p WHERE p.ativo = :ativo")})
 public class Pedido implements Serializable {
+
+    @Basic(optional = false)
+    @Column(name = "ativo")
+    private int ativo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido", fetch = FetchType.LAZY)
+    private List<Itempedido> itempedidoList;
+    @JoinColumn(name = "servidor_codigo", referencedColumnName = "codigo")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Servidor servidorCodigo;
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "codigo")
     private Integer codigo;
@@ -54,11 +64,6 @@ public class Pedido implements Serializable {
     @Basic(optional = false)
     @Column(name = "situacao")
     private String situacao;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido", fetch = FetchType.LAZY)
-    private List<Itempedido> itempedidoList;
-    @JoinColumn(name = "servidor_codigo", referencedColumnName = "codigo")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Servidor servidorCodigo;
 
     public Pedido() {
     }
@@ -97,23 +102,7 @@ public class Pedido implements Serializable {
         this.situacao = situacao;
     }
 
-    @XmlTransient
-    public List<Itempedido> getItempedidoList() {
-        return itempedidoList;
-    }
-
-    public void setItempedidoList(List<Itempedido> itempedidoList) {
-        this.itempedidoList = itempedidoList;
-    }
-
-    public Servidor getServidorCodigo() {
-        return servidorCodigo;
-    }
-
-    public void setServidorCodigo(Servidor servidorCodigo) {
-        this.servidorCodigo = servidorCodigo;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -137,6 +126,31 @@ public class Pedido implements Serializable {
     @Override
     public String toString() {
         return "model.Pedido[ codigo=" + codigo + " ]";
+    }
+
+    public int getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(int ativo) {
+        this.ativo = ativo;
+    }
+
+    @XmlTransient
+    public List<Itempedido> getItempedidoList() {
+        return itempedidoList;
+    }
+
+    public void setItempedidoList(List<Itempedido> itempedidoList) {
+        this.itempedidoList = itempedidoList;
+    }
+
+    public Servidor getServidorCodigo() {
+        return servidorCodigo;
+    }
+
+    public void setServidorCodigo(Servidor servidorCodigo) {
+        this.servidorCodigo = servidorCodigo;
     }
     
 }

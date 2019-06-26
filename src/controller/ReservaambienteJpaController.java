@@ -17,7 +17,6 @@ import javax.persistence.criteria.Root;
 import model.Ambiente;
 import model.Reservaambiente;
 import model.ReservaambientePK;
-import model.Servidor;
 import static utilities.GerenciamentoEntidades.getEntityManager;
 
 /**
@@ -30,8 +29,8 @@ public class ReservaambienteJpaController implements Serializable {
         if (reservaambiente.getReservaambientePK() == null) {
             reservaambiente.setReservaambientePK(new ReservaambientePK());
         }
-        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         reservaambiente.getReservaambientePK().setServidorcodigo(reservaambiente.getServidor().getCodigo());
+        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -41,19 +40,10 @@ public class ReservaambienteJpaController implements Serializable {
                 ambiente = em.getReference(ambiente.getClass(), ambiente.getCodigo());
                 reservaambiente.setAmbiente(ambiente);
             }
-            Servidor servidor = reservaambiente.getServidor();
-            if (servidor != null) {
-                servidor = em.getReference(servidor.getClass(), servidor.getCodigo());
-                reservaambiente.setServidor(servidor);
-            }
             em.persist(reservaambiente);
             if (ambiente != null) {
                 ambiente.getReservaambienteList().add(reservaambiente);
                 ambiente = em.merge(ambiente);
-            }
-            if (servidor != null) {
-                servidor.getReservaambienteList().add(reservaambiente);
-                servidor = em.merge(servidor);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -69,8 +59,8 @@ public class ReservaambienteJpaController implements Serializable {
     }
 
     public void edit(Reservaambiente reservaambiente) throws NonexistentEntityException, Exception {
-        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         reservaambiente.getReservaambientePK().setServidorcodigo(reservaambiente.getServidor().getCodigo());
+        reservaambiente.getReservaambientePK().setAmbientecodigo(reservaambiente.getAmbiente().getCodigo());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -78,15 +68,9 @@ public class ReservaambienteJpaController implements Serializable {
             Reservaambiente persistentReservaambiente = em.find(Reservaambiente.class, reservaambiente.getReservaambientePK());
             Ambiente ambienteOld = persistentReservaambiente.getAmbiente();
             Ambiente ambienteNew = reservaambiente.getAmbiente();
-            Servidor servidorOld = persistentReservaambiente.getServidor();
-            Servidor servidorNew = reservaambiente.getServidor();
             if (ambienteNew != null) {
                 ambienteNew = em.getReference(ambienteNew.getClass(), ambienteNew.getCodigo());
                 reservaambiente.setAmbiente(ambienteNew);
-            }
-            if (servidorNew != null) {
-                servidorNew = em.getReference(servidorNew.getClass(), servidorNew.getCodigo());
-                reservaambiente.setServidor(servidorNew);
             }
             reservaambiente = em.merge(reservaambiente);
             if (ambienteOld != null && !ambienteOld.equals(ambienteNew)) {
@@ -96,14 +80,6 @@ public class ReservaambienteJpaController implements Serializable {
             if (ambienteNew != null && !ambienteNew.equals(ambienteOld)) {
                 ambienteNew.getReservaambienteList().add(reservaambiente);
                 ambienteNew = em.merge(ambienteNew);
-            }
-            if (servidorOld != null && !servidorOld.equals(servidorNew)) {
-                servidorOld.getReservaambienteList().remove(reservaambiente);
-                servidorOld = em.merge(servidorOld);
-            }
-            if (servidorNew != null && !servidorNew.equals(servidorOld)) {
-                servidorNew.getReservaambienteList().add(reservaambiente);
-                servidorNew = em.merge(servidorNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -138,11 +114,6 @@ public class ReservaambienteJpaController implements Serializable {
             if (ambiente != null) {
                 ambiente.getReservaambienteList().remove(reservaambiente);
                 ambiente = em.merge(ambiente);
-            }
-            Servidor servidor = reservaambiente.getServidor();
-            if (servidor != null) {
-                servidor.getReservaambienteList().remove(reservaambiente);
-                servidor = em.merge(servidor);
             }
             em.remove(reservaambiente);
             em.getTransaction().commit();
