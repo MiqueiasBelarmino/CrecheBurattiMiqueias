@@ -67,7 +67,7 @@ public class PedidoListarView extends javax.swing.JDialog {
         btnConfirmar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Gerenciamento - Produto");
+        setTitle("Gerenciamento - Pedido");
         setResizable(false);
 
         painelFiltro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -242,8 +242,7 @@ public class PedidoListarView extends javax.swing.JDialog {
     }//GEN-LAST:event_tablePedidoMouseClicked
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
-        ProdutoView produtoView = new ProdutoView(null, true);
-        produtoView.setVisible(true);
+        
     }//GEN-LAST:event_btnProdutosActionPerformed
 
     private void btnListarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarTodosActionPerformed
@@ -267,9 +266,12 @@ public class PedidoListarView extends javax.swing.JDialog {
             pedido.setSituacao("Recebido");
             try {
                 controllerPedido.edit(pedido);
+                listPedido.clear();
+                listPedido.addAll(controllerPedido.findPedidoEntities());
             } catch (Exception ex) {
                 Logger.getLogger(PedidoListarView.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         } else {
             JOptionPane.showMessageDialog(null, "Selecione um pedido para confirmar recebimento");
         }

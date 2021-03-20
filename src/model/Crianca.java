@@ -295,7 +295,7 @@ public class Crianca implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Crianca[ codigo=" + codigo + " ]";
+        return nome;
     }
     
 }

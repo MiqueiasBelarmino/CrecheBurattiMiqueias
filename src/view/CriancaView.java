@@ -72,6 +72,9 @@ public class CriancaView extends javax.swing.JDialog {
         txtTelefoneFormatado.setText(c.getTelefone());
         txtResponsavel.setText(c.getResponsavel());
         dataNascimento.setDate(c.getDataNascimento());
+        txtContato.setText(c.getContatoResponsavel());
+        txtTelefoneContato.setText(c.getTelefoneContato());
+        txtVinculo.setText(c.getVinculoContato());
     }
 
     private void habilitarComponentes(boolean status) {
@@ -89,10 +92,6 @@ public class CriancaView extends javax.swing.JDialog {
         btnCancelar.setEnabled(status);
         btnAlterar.setEnabled(!status);
         btnDeletar.setEnabled(!status);
-
-    }
-
-    private void limparFormatados() {
 
     }
 
@@ -114,6 +113,9 @@ public class CriancaView extends javax.swing.JDialog {
         txtTelefoneFormatado = new javax.swing.JFormattedTextField();
         txtResponsavel = new javax.swing.JTextField();
         txtCpfFormatado = new javax.swing.JFormattedTextField();
+        txtContato = new javax.swing.JTextField();
+        txtTelefoneContato = new javax.swing.JFormattedTextField();
+        txtVinculo = new javax.swing.JTextField();
         painelFiltro = new javax.swing.JPanel();
         comboFiltrar = new javax.swing.JComboBox<>();
         txtFiltrar = new javax.swing.JTextField();
@@ -173,46 +175,77 @@ public class CriancaView extends javax.swing.JDialog {
             }
         });
 
+        txtContato.setBorder(javax.swing.BorderFactory.createTitledBorder("Contato Emergencia"));
+        txtContato.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtContatoActionPerformed(evt);
+            }
+        });
+
+        txtTelefoneContato.setBorder(javax.swing.BorderFactory.createTitledBorder("Telefone"));
+        try {
+            txtTelefoneContato.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) ####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        txtVinculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Vinculo do Contato"));
+        txtVinculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtVinculoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(painelDadosLayout.createSequentialGroup()
-                                .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(txtContato, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTelefoneContato, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtVinculo, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelDadosLayout.setVerticalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNomeCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefoneFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCpfFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCelularFormatado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtContato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTelefoneContato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtVinculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         painelFiltro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -243,9 +276,14 @@ public class CriancaView extends javax.swing.JDialog {
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefone}"));
         columnBinding.setColumnName("Telefone");
         columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${contatoResponsavel}"));
+        columnBinding.setColumnName("Contato Responsavel");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefoneContato}"));
+        columnBinding.setColumnName("Telefone Contato");
+        columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
-
         jScrollPane2.setViewportView(tableCrianca);
 
         javax.swing.GroupLayout painelFiltroLayout = new javax.swing.GroupLayout(painelFiltro);
@@ -260,7 +298,7 @@ public class CriancaView extends javax.swing.JDialog {
                         .addComponent(comboFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 120, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         painelFiltroLayout.setVerticalGroup(
@@ -271,8 +309,8 @@ public class CriancaView extends javax.swing.JDialog {
                     .addComponent(comboFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         btnNovo.setText("Novo");
@@ -416,6 +454,10 @@ public class CriancaView extends javax.swing.JDialog {
             crianca.setNome(txtNomeCompleto.getText());
             crianca.setResponsavel(txtResponsavel.getText());
             crianca.setTelefone(txtTelefoneFormatado.getText());
+            crianca.setContatoResponsavel(txtContato.getText());
+            crianca.setTelefoneContato(txtTelefoneContato.getText());
+            crianca.setVinculoContato(txtVinculo.getText());
+            crianca.setAtivo('1');
             if (!novo) {
                 try {
                     controllerCrianca.edit(crianca);
@@ -498,6 +540,14 @@ public class CriancaView extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_txtCpfFormatadoFocusLost
 
+    private void txtContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContatoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtContatoActionPerformed
+
+    private void txtVinculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVinculoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtVinculoActionPerformed
+
     private void pesquisar() {
         listCrianca.clear();
 
@@ -526,6 +576,12 @@ public class CriancaView extends javax.swing.JDialog {
         } else if (txtResponsavel.getText().trim().isEmpty()) {
             vazio = true;
         } else if (txtCpfFormatado.getText().trim().isEmpty()) {
+            vazio = true;
+        }else if (txtContato.getText().trim().isEmpty()) {
+            vazio = true;
+        }else if (txtVinculo.getText().trim().isEmpty()) {
+            vazio = true;
+        }else if (txtTelefoneContato.getText().equals("(  )     -    ")) {
             vazio = true;
         }
 
@@ -590,11 +646,14 @@ public class CriancaView extends javax.swing.JDialog {
     private javax.swing.JPanel painelFiltro;
     private javax.swing.JTable tableCrianca;
     private javax.swing.JFormattedTextField txtCelularFormatado;
+    private javax.swing.JTextField txtContato;
     private javax.swing.JFormattedTextField txtCpfFormatado;
     private javax.swing.JTextField txtFiltrar;
     private javax.swing.JTextField txtNomeCompleto;
     private javax.swing.JTextField txtResponsavel;
+    private javax.swing.JFormattedTextField txtTelefoneContato;
     private javax.swing.JFormattedTextField txtTelefoneFormatado;
+    private javax.swing.JTextField txtVinculo;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

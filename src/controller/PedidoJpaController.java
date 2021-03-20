@@ -39,13 +39,7 @@ public class PedidoJpaController implements Serializable {
     public int findLastCodigo() {
         EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         Query query = em.createNamedQuery("Pedido.findLast");
-        Pedido p = (Pedido) query.getSingleResult();
-        System.out.println();
-        if(p != null){
-            return p.getCodigo();
-        }else{
-            return 0;
-        }
+        return (int) query.getSingleResult();
     }
     
     public void create(Pedido pedido) {

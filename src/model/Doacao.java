@@ -56,6 +56,10 @@ public class Doacao implements Serializable {
     @JoinColumn(name = "evento_codigo", referencedColumnName = "codigo")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Evento eventoCodigo;
+    
+     @Basic(optional = false)
+    @Column(name = "ativo")
+    private int ativo;
 
     public Doacao() {
     }
@@ -119,6 +123,15 @@ public class Doacao implements Serializable {
         this.eventoCodigo = eventoCodigo;
     }
 
+    public int getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(int ativo) {
+        this.ativo = ativo;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;

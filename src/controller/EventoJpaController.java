@@ -16,6 +16,7 @@ import model.Doacao;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import model.Crianca;
 import model.Evento;
 import static utilities.GerenciamentoEntidades.getEntityManager;
 
@@ -25,6 +26,21 @@ import static utilities.GerenciamentoEntidades.getEntityManager;
  */
 public class EventoJpaController implements Serializable {
 
+    public List<Evento> findNome(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Evento.findByNome");
+        query.setParameter("nome", "%" + str + "%");
+        return query.getResultList();
+    }
+    
+     public List<Evento> findAtivo(int ativo) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Evento.findByAtivo");
+        query.setParameter("ativo",ativo);
+        return query.getResultList();
+    }
+    
+    
     public void create(Evento evento) {
         if (evento.getDoacaoList() == null) {
             evento.setDoacaoList(new ArrayList<Doacao>());

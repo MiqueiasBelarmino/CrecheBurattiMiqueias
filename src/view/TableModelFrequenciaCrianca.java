@@ -70,16 +70,19 @@ public class TableModelFrequenciaCrianca extends AbstractTableModel {
         return super.getColumnClass(coluna);
     }
 
+    @Override
     public boolean isCellEditable(int linha, int coluna) {
         return (coluna == COL_CHECK);
     }
 
+    @Override
     public void setValueAt(Object aValue, int linha, int coluna) {
         if (coluna == COL_CHECK) {
             check.set(linha, (Boolean) aValue);
         }
     }
 
+    @Override
     public String getColumnName(int coluna) {
         if (coluna == 0) {
             return "Criança";

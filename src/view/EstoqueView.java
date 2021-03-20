@@ -250,6 +250,8 @@ public class EstoqueView extends javax.swing.JDialog {
                     if (result == 1) {
                         if(atual >= num){
                             produto.setEstoque((atual - num));
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Valor acima do estoque do produto\n(deve ser menor ou igual ao estoque)");
                         }
                     }else{
                         produto.setEstoque((atual + num));

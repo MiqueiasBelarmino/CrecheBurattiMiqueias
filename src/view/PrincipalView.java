@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import model.Servidor;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
@@ -28,10 +29,15 @@ public class PrincipalView extends javax.swing.JFrame {
      * Creates new form PrincipalView
      */
     public ImageIcon imageIcon = new ImageIcon("teste.png");
+    private Servidor servidor = null;
 
-    public PrincipalView() {
+    public PrincipalView(Servidor servidor) {
         initComponents();
         setLocationRelativeTo(null);
+        this.servidor = servidor;
+        if(this.servidor != null){
+            labelLogado.setText("Logado como: "+this.servidor.getNome());
+        }
     }
 
     /**
@@ -45,6 +51,8 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        labelLogado = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -54,16 +62,23 @@ public class PrincipalView extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
-        jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem15 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
 
         jMenuItem6.setText("jMenuItem6");
 
         jMenuItem9.setText("jMenuItem9");
 
+        jMenuItem13.setText("jMenuItem13");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        labelLogado.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelLogado.setText("Logado como:");
 
         jMenu1.setText("Gerenciamento");
 
@@ -123,13 +138,21 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem11);
 
-        jMenuItem12.setText("Pedido");
-        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem16.setText("Pedido");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem12ActionPerformed(evt);
+                jMenuItem16ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem12);
+        jMenu1.add(jMenuItem16);
+
+        jMenuItem15.setText("Produtos");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem15);
 
         jMenuBar1.add(jMenu1);
 
@@ -151,6 +174,14 @@ public class PrincipalView extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem4);
 
+        jMenuItem14.setText("Doação por evento");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem14ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem14);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -159,11 +190,17 @@ public class PrincipalView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 867, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelLogado)
+                .addContainerGap(770, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 495, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(469, Short.MAX_VALUE)
+                .addComponent(labelLogado)
+                .addContainerGap())
         );
 
         pack();
@@ -233,10 +270,28 @@ public class PrincipalView extends javax.swing.JFrame {
         ambienteView.setVisible(true);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        PedidoListarView listarView = new PedidoListarView(null, true);
-        listarView.setVisible(true);
-    }//GEN-LAST:event_jMenuItem12ActionPerformed
+    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+        Connection con = ConexaoMySQL.getConexaoMySQL();
+        String src = "src/report/doacaoList.jasper";
+        JasperPrint print = null;
+        try {
+            print = JasperFillManager.fillReport(src, null, con);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        JasperViewer view = new JasperViewer(print, false);
+        view.setVisible(true);
+    }//GEN-LAST:event_jMenuItem14ActionPerformed
+
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        ProdutoView produtoView = new ProdutoView(this, true);
+        produtoView.setVisible(true);
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
+
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        PedidoView pedidoView = new PedidoView(null, true, servidor);
+        pedidoView.setVisible(true);
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -268,7 +323,7 @@ public class PrincipalView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PrincipalView().setVisible(true);
+                new PrincipalView(null).setVisible(true);
             }
         });
     }
@@ -280,7 +335,10 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -289,5 +347,6 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JLabel labelLogado;
     // End of variables declaration//GEN-END:variables
 }

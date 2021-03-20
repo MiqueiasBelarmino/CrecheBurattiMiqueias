@@ -23,6 +23,13 @@ import static utilities.GerenciamentoEntidades.getEntityManager;
  */
 public class DoacaoJpaController implements Serializable {
 
+    public List<Doacao> findDescricao(String str) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        Query query = em.createNamedQuery("Doacao.findByDescricao");
+        query.setParameter("descricao", "%" + str + "%");
+        return query.getResultList();
+    }
+    
     public void create(Doacao doacao) {
         EntityManager em = null;
         try {

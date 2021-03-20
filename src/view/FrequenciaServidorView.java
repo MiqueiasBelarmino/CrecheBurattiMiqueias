@@ -5,11 +5,15 @@
  */
 package view;
 
+import com.sun.javafx.binding.StringFormatter;
 import controller.FrequenciaservidorJpaController;
 import controller.ServidorJpaController;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.text.DateFormatter;
+import model.Frequencia;
 import model.Frequenciaservidor;
 import model.Servidor;
 import static org.jdesktop.observablecollections.ObservableCollections.observableList;
@@ -153,7 +157,12 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
             }
         });
 
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setText("Sair");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -209,7 +218,8 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         for (int i = 0; i < frequenciaServidorList.size(); i++) {
             Frequenciaservidor f = frequenciaServidorList.get(i);
-            if (tableFrequenciaServidor.getModel().getValueAt(0, 1).equals(Boolean.TRUE)) {
+            f.setData(dateDataFrequencia.getDate());
+            if (tableFrequenciaServidor.getModel().getValueAt(i, 1).equals(Boolean.TRUE)) {
                 f.setSituacao("Presente");
             } else {
                 f.setSituacao("Ausente");
@@ -229,6 +239,7 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
     }//GEN-LAST:event_dateDataFrequenciaFocusLost
 
     private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
+        frequenciaServidorList.clear();
         frequenciaServidorList = frequenciaServidorController.findFrequenciaByDate(dateDataFrequencia.getDate());
         if (frequenciaServidorList.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Não há frequência para esta data");
@@ -236,6 +247,10 @@ public class FrequenciaServidorView extends javax.swing.JDialog {
             tableFrequenciaServidor.setModel(new TableModelFrequenciaServidor(frequenciaServidorList, false));
         }
     }//GEN-LAST:event_btnVisualizarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments

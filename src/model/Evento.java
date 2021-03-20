@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
     @NamedQuery(name = "Evento.findByCodigo", query = "SELECT e FROM Evento e WHERE e.codigo = :codigo"),
-    @NamedQuery(name = "Evento.findByNome", query = "SELECT e FROM Evento e WHERE e.nome = :nome"),
+    @NamedQuery(name = "Evento.findByNome", query = "SELECT e FROM Evento e WHERE e.nome LIKE :nome"),
     @NamedQuery(name = "Evento.findByDescricao", query = "SELECT e FROM Evento e WHERE e.descricao = :descricao"),
     @NamedQuery(name = "Evento.findByData", query = "SELECT e FROM Evento e WHERE e.data = :data"),
     @NamedQuery(name = "Evento.findByCategoria", query = "SELECT e FROM Evento e WHERE e.categoria = :categoria"),
@@ -63,7 +63,7 @@ public class Evento implements Serializable {
     private String categoria;
     @Basic(optional = false)
     @Column(name = "ativo")
-    private Character ativo;
+    private int ativo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventoCodigo", fetch = FetchType.LAZY)
     private List<Doacao> doacaoList;
 
@@ -123,11 +123,11 @@ public class Evento implements Serializable {
         this.categoria = categoria;
     }
 
-    public Character getAtivo() {
+    public int getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(Character ativo) {
+    public void setAtivo(int ativo) {
         this.ativo = ativo;
     }
 

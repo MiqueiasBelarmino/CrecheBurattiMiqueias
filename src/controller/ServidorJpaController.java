@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import model.Servidor;
@@ -22,6 +24,18 @@ import static utilities.GerenciamentoEntidades.getEntityManager;
  */
 public class ServidorJpaController implements Serializable {
 
+    public Servidor validaLogin(String login, String senha) {
+        EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
+        TypedQuery<Servidor> query = em.createQuery("SELECT s FROM Servidor s WHERE s.cpf = :scpf AND s.senha =:ssenha", Servidor.class);
+        query.setParameter("scpf", login);
+        query.setParameter("ssenha", senha);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    
     public List<Servidor> findNome(String str) {
         EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         Query query = em.createNamedQuery("Servidor.findByNome");

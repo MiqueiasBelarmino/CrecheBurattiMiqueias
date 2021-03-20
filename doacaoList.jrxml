@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="doacaoList" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="76766cc8-3bbb-426f-bd3e-f2d2fbd4f5f6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     doacao.`codigo` AS doacao_codigo,
+     doacao.`descricao` AS doacao_descricao,
+     doacao.`quantidade` AS doacao_quantidade,
+     doacao.`unidade` AS doacao_unidade,
+     doacao.`categoria` AS doacao_categoria,
+     doacao.`evento_codigo` AS doacao_evento_codigo,
+     doacao.`ativo` AS doacao_ativo,
+     evento.`codigo` AS evento_codigo,
+     evento.`nome` AS evento_nome,
+     evento.`descricao` AS evento_descricao,
+     evento.`data` AS evento_data,
+     evento.`categoria` AS evento_categoria,
+     evento.`ativo` AS evento_ativo
+FROM
+     `evento` evento INNER JOIN `doacao` doacao ON evento.`codigo` = doacao.`evento_codigo`]]>
+	</queryString>
+	<field name="evento_nome" class="java.lang.String"/>
+	<field name="doacao_descricao" class="java.lang.String"/>
+	<field name="doacao_quantidade" class="java.lang.Integer"/>
+	<group name="evento_nome">
+		<groupExpression><![CDATA[$F{evento_nome}]]></groupExpression>
+		<groupHeader>
+			<band height="33">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="100" height="32" forecolor="#666666" backcolor="#E6E6E6" uuid="284c1e48-fcce-4723-a95d-600ced0467c0"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Evento]]></text>
+				</staticText>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="0" width="455" height="32" forecolor="#006699" backcolor="#E6E6E6" uuid="c331b5c5-08a6-45f1-80c7-e341988b2a2e"/>
+					<textElement>
+						<font size="24" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{evento_nome}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="-20" y="32" width="595" height="1" forecolor="#666666" uuid="85991ce7-edd5-444d-b627-4474ccf60d65"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="791e73c4-c718-445e-8726-321b99df1d50"/>
+				<staticText>
+					<reportElement x="20" y="20" width="342" height="43" forecolor="#FFFFFF" uuid="3456e82a-8e71-4435-9e7b-b0d5dcdddfd6"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Doações por evento]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="ebd83d54-bbb8-4f03-bf64-953414b6b4c3"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="277" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="f9e0ef2a-55a8-4ae1-af2d-e756f5bc730f"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="277" y="0" width="277" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="e779479b-68df-4213-9861-201935ecac29"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantidade]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="8e2713bc-3b50-4da0-a534-986fb2c973aa"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="277" height="20" uuid="66677975-8130-40f3-9e0d-d43644380923"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{doacao_descricao}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="277" y="0" width="277" height="20" uuid="09cbaf31-732e-4aed-b0ee-c758c8761512"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{doacao_quantidade}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="9f0890f0-6ef2-429b-97db-394c413cb1c8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="d299dd20-fbfe-4e2b-a13d-d5f6524cca8e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="9d67a96e-c105-43a0-9dbf-495763e7efbd"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

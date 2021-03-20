@@ -33,7 +33,7 @@ public class FrequenciaservidorJpaController implements Serializable {
     public List<Frequenciaservidor> findSituacao(String str) {
         EntityManager em = utilities.GerenciamentoEntidades.getEntityManager();
         Query query = em.createNamedQuery("Frequenciaservidor.findBySituacao");
-        query.setParameter("situacao", "%"+str + "%");
+        query.setParameter("situacao", "%" +str + "%");
         return query.getResultList();
     }
     

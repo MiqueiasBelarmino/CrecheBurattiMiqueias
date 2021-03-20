@@ -8,17 +8,12 @@ package view;
 import controller.ItempedidoJpaController;
 import controller.PedidoJpaController;
 import controller.ProdutoJpaController;
-import controller.exceptions.NonexistentEntityException;
-import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import model.Itempedido;
 import model.ItempedidoPK;
 import model.Pedido;
@@ -94,11 +89,12 @@ public class PedidoView extends javax.swing.JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableProduto = new javax.swing.JTable();
         btnAdicionar = new javax.swing.JButton();
-        spinQuantidade = new javax.swing.JSpinner();
+        txtQtd = new javax.swing.JTextField();
         painelBotoes = new javax.swing.JPanel();
         btnFinalizar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         painelFiltro1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableItensPedido = new javax.swing.JTable();
@@ -144,6 +140,8 @@ public class PedidoView extends javax.swing.JDialog {
             }
         });
 
+        tableProduto.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, listProduto, tableProduto);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${descricao}"));
         columnBinding.setColumnName("Descricao");
@@ -156,7 +154,6 @@ public class PedidoView extends javax.swing.JDialog {
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${estoque}"));
         columnBinding.setColumnName("Estoque");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         jScrollPane2.setViewportView(tableProduto);
@@ -175,7 +172,7 @@ public class PedidoView extends javax.swing.JDialog {
             }
         });
 
-        spinQuantidade.setBorder(javax.swing.BorderFactory.createTitledBorder("Quantidade"));
+        txtQtd.setBorder(javax.swing.BorderFactory.createTitledBorder("Quantidade"));
 
         javax.swing.GroupLayout painelFiltroLayout = new javax.swing.GroupLayout(painelFiltro);
         painelFiltro.setLayout(painelFiltroLayout);
@@ -186,7 +183,7 @@ public class PedidoView extends javax.swing.JDialog {
                 .addGroup(painelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
                     .addGroup(painelFiltroLayout.createSequentialGroup()
-                        .addComponent(spinQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE))
                     .addComponent(txtFiltrar))
@@ -201,10 +198,8 @@ public class PedidoView extends javax.swing.JDialog {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(spinQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(painelFiltroLayout.createSequentialGroup()
-                        .addComponent(btnAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(2, 2, 2)))
+                    .addComponent(btnAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtQtd))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -231,6 +226,13 @@ public class PedidoView extends javax.swing.JDialog {
             }
         });
 
+        jButton1.setText("Visualizar Pedidos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelBotoesLayout = new javax.swing.GroupLayout(painelBotoes);
         painelBotoes.setLayout(painelBotoesLayout);
         painelBotoesLayout.setHorizontalGroup(
@@ -242,6 +244,8 @@ public class PedidoView extends javax.swing.JDialog {
                 .addComponent(btnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSair)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelBotoesLayout.setVerticalGroup(
@@ -251,7 +255,8 @@ public class PedidoView extends javax.swing.JDialog {
                 .addGroup(painelBotoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFinalizar)
                     .addComponent(btnCancelar)
-                    .addComponent(btnSair))
+                    .addComponent(btnSair)
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -353,6 +358,7 @@ public class PedidoView extends javax.swing.JDialog {
                     itempedidoJpaController.create(item);
                 }
                 listItens.clear();
+                JOptionPane.showMessageDialog(this, "Pedido finalizado!");
             } catch (Exception ex) {
                 Logger.getLogger(PedidoView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -369,7 +375,7 @@ public class PedidoView extends javax.swing.JDialog {
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
         if (tableProduto.isRowSelected(tableProduto.getSelectedRow())) {
-            int valor = Integer.parseInt(spinQuantidade.getValue().toString());
+            int valor = Integer.parseInt(txtQtd.getText().trim());
             if (valor < 1) {
                 JOptionPane.showMessageDialog(null, "A quantidade deve ser no mínimo 1(um) produto");
             } else {
@@ -384,6 +390,7 @@ public class PedidoView extends javax.swing.JDialog {
                 itempedido.setQuantidade(valor);
 
                 validaItem(itempedido);
+                txtQtd.setText("");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Selecione um produto!");
@@ -418,6 +425,11 @@ public class PedidoView extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Selecione um item!");
         }
     }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        PedidoListarView listarView = new PedidoListarView(null, true);
+        listarView.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void pesquisar() {
         listProduto.clear();
@@ -507,6 +519,7 @@ public class PedidoView extends javax.swing.JDialog {
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSair;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelDate;
@@ -517,10 +530,10 @@ public class PedidoView extends javax.swing.JDialog {
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelFiltro;
     private javax.swing.JPanel painelFiltro1;
-    private javax.swing.JSpinner spinQuantidade;
     private javax.swing.JTable tableItensPedido;
     private javax.swing.JTable tableProduto;
     private javax.swing.JTextField txtFiltrar;
+    private javax.swing.JTextField txtQtd;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

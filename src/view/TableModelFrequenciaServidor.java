@@ -17,13 +17,13 @@ import model.Frequenciaservidor;
 public class TableModelFrequenciaServidor extends AbstractTableModel {
 
     private static final int COL_CHECK = 1;
-    private static final int COL_CRIANCA = 0;
+    private static final int COL_SERVIDOR = 0;
     private static final int NUM_COLUNAS = 2;
-    private List frequencia;
+    private List servicos;
     private List check;
 
     public TableModelFrequenciaServidor(List frequencia, boolean novo) {
-        this.frequencia = frequencia;
+        this.servicos = frequencia;
         check = new ArrayList();
         if (novo) {
             for (int i = 0; i < frequencia.size(); i++) {
@@ -46,15 +46,15 @@ public class TableModelFrequenciaServidor extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        return frequencia.size();
+        return servicos.size();
     }
 
     public Object getValueAt(int linha, int coluna) {
         if (coluna == COL_CHECK) {
             return check.get(linha) == Boolean.TRUE;
         }
-        if (coluna == COL_CRIANCA) {
-            return ((Frequenciaservidor) frequencia.get(linha)).getServidorcodigo();
+        if (coluna == COL_SERVIDOR) {
+            return ((Frequenciaservidor) servicos.get(linha)).getServidorcodigo();
         }
         return null;
     }
@@ -63,23 +63,26 @@ public class TableModelFrequenciaServidor extends AbstractTableModel {
         if (coluna == COL_CHECK) {
             return Boolean.class;
         }
-        if ( coluna == COL_CRIANCA) {
+        if ( coluna == COL_SERVIDOR) {
             return String.class;
         }
 
         return super.getColumnClass(coluna);
     }
 
+    @Override
     public boolean isCellEditable(int linha, int coluna) {
         return (coluna == COL_CHECK);
     }
 
+    @Override
     public void setValueAt(Object aValue, int linha, int coluna) {
         if (coluna == COL_CHECK) {
             check.set(linha, (Boolean) aValue);
         }
     }
 
+    @Override
     public String getColumnName(int coluna) {
         if (coluna == 0) {
             return "Servidor";
@@ -93,8 +96,10 @@ public class TableModelFrequenciaServidor extends AbstractTableModel {
     /**
      * Esse método é para permitir que você pergunte ao modelo se um autor está
      * ou não selecionado.
+     * @param frequencia
+     * @return 
      */
     public boolean isChecked(Frequenciaservidor frequencia) {
-        return check.get(this.frequencia.indexOf(frequencia)) == Boolean.TRUE;
+        return check.get(this.servicos.indexOf(frequencia)) == Boolean.TRUE;
     }
 }

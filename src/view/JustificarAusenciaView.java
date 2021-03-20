@@ -31,8 +31,8 @@ public class JustificarAusenciaView extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         controller = new FrequenciaservidorJpaController();
-        //frequenciaServidorList.addAll(controller.findSituacao("Ausente"));
-        frequenciaServidorList.addAll(controller.findFrequenciaservidorEntities());
+        frequenciaServidorList.addAll(controller.findSituacao("Ausente"));
+        //frequenciaServidorList.addAll(controller.findFrequenciaservidorEntities());
         System.out.println(frequenciaServidorList.get(0).getServidorcodigo());
         txtJustificar.setEnabled(false);
         dateData.setDate(new Date());
